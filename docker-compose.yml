@@ -9,12 +9,16 @@ services:
       - manager-php-fpm
     ports:
       - "8080:80"
+    networks:
+      - manager
   manager-php-fpm:
     build:
       context: ./manager/docker/development
       dockerfile: php-fpm.docker
     volumes:
       - ./manager:/app
+    networks:
+      - manager
   manager-php-cli:
     build:
       context: ./manager/docker/development
@@ -22,6 +26,23 @@ services:
     volumes:
       - ./manager:/app
       - composer:/root/.composer/cache
-
+    networks:
+      - manager
+  manager-postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: manager
+      POSTGRES_USER: symfony
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "54321:5432"
+    networks:
+      - manager
 volumes:
   composer:
+  pgdata:
+
+networks:
+  manager:
