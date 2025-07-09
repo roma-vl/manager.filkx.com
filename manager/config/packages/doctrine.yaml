@@ -8,6 +8,10 @@ doctrine:
 
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
+        types:
+            user_user_id: App\Model\User\Entity\User\IdType
+            user_user_email: App\Model\User\Entity\User\EmailType
+            user_user_role: App\Model\User\Entity\User\RoleType
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
@@ -18,12 +22,12 @@ doctrine:
             Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
         auto_mapping: true
         mappings:
-            App:
+            User:
                 type: attribute
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Entity'
-                prefix: 'App\Entity'
-                alias: App
+                dir: '%kernel.project_dir%/src/Model/User/Entity/User'
+                prefix: 'App\Model\User\Entity\User'
+                alias: User
         controller_resolver:
             auto_mapping: false
 

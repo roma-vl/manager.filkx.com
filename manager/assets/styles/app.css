@@ -1,3 +1,16 @@
 body {
     background-color: skyblue;
 }
+.sidebar .nav-link.active {
+    background-color: #e9ecef;
+    font-weight: 600;
+}
+.sidebar .nav-label {
+    padding-left: 0.5rem;
+    color: #6c757d;
+    font-size: 0.75rem;
+}
+
+.nav-title {
+    padding-left: 0.5rem;
+}
