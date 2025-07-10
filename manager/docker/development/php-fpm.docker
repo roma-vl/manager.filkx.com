@@ -1,12 +1,23 @@
 FROM php:8.3-fpm
 
-RUN apt-get update \
-  && apt-get install -y \
+RUN apt-get update && apt-get install -y \
     libpq-dev \
     zlib1g-dev \
     zip \
     libzip-dev \
-  && docker-php-ext-configure zip \
-  && docker-php-ext-install zip pdo pdo_pgsql
+    vim \
+    git \
+    curl \
+    unzip \
+    && docker-php-ext-configure zip \
+    && docker-php-ext-install zip pdo pdo_pgsql
+
+# Встановлюємо Xdebug
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug
+
+# Копіюємо налаштування Xdebug (можна змінити шлях)
+COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 WORKDIR /app
+

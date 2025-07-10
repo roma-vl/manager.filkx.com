@@ -12,8 +12,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class SignUpController extends AbstractController
 {
@@ -50,11 +50,10 @@ class SignUpController extends AbstractController
         Request $request,
         string $token,
         SignUp\Confirm\ByToken\Handler $handler,
-        UserProviderInterface $userProvider,
-        GuardAuthenticatorHandler $guardHandler,
         LoginFormAuthenticator $authenticator,
+        UserAuthenticatorInterface $userAuthenticator,
     ): Response {
-        if (!$user = $this->users->findBySignUpConfirmToken($token)) {
+        if (!$user = $this->users->findUserEntityBySignUpConfirmToken($token)) {
             $this->addFlash('error', 'Incorrect or already confirmed token.');
             return $this->redirectToRoute('auth.signup');
         }
@@ -64,11 +63,10 @@ class SignUpController extends AbstractController
         try {
             $handler->handle($command);
 
-            return $guardHandler->authenticateUserAndHandleSuccess(
-                $userProvider->loadUserByIdentifier($user->email), // замінили на loadUserByIdentifier
-                $request,
+            return $userAuthenticator->authenticateUser(
+                $user,
                 $authenticator,
-                'main',
+                $request
             );
         } catch (\DomainException $e) {
             $this->errors->handle($e);

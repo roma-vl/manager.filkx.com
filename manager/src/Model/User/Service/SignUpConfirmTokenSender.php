@@ -27,7 +27,7 @@ class SignUpConfirmTokenSender
         ]);
 
         $message = (new SymfonyEmail())
-            ->from('noreply@yourdomain.com') // 🔁 Замінити на реальний email
+            ->from('noreply@filkx.com') // 🔁 Замінити на реальний email
             ->to($email->getValue())
             ->subject('Sign Up Confirmation')
             ->html($body);

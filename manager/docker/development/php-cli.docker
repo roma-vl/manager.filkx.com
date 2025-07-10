@@ -9,5 +9,12 @@ RUN apt-get update \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --filename=composer --quiet
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
+# Встановлюємо Xdebug
+#RUN pecl install xdebug \
+ #   && docker-php-ext-enable xdebug
+
+# Копіюємо налаштування Xdebug (можна змінити шлях)
+#COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
 
 WORKDIR /app
