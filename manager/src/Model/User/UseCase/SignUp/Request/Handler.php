@@ -16,11 +16,11 @@ use App\Model\User\Service\PasswordHasher;
 
 class Handler
 {
-    private $users;
-    private $hasher;
-    private $tokenizer;
-    private $sender;
-    private $flusher;
+    private UserRepository $users;
+    private PasswordHasher $hasher;
+    private SignUpConfirmTokenizer $tokenizer;
+    private SignUpConfirmTokenSender $sender;
+    private Flusher $flusher;
 
     public function __construct(
         UserRepository $users,
@@ -53,14 +53,16 @@ class Handler
                 $command->lastName
             ),
             $email,
-            $this->hasher->hash($command->password),
+            'placeholder',
             $token = $this->tokenizer->generate()
         );
 
+        $hashedPassword = $this->hasher->hash($user, $command->password);
+        $user->updatePasswordHash($hashedPassword);
+
         $this->users->add($user);
-
         $this->sender->send($email, $token);
-
         $this->flusher->flush();
     }
+
 }

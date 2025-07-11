@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace App\Model\User\Service;
 
-class PasswordHasher
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+
+readonly class PasswordHasher
 {
-    public function hash(string $password): string
+    public function __construct(
+        private UserPasswordHasherInterface $hasher
+    ) {}
+
+    public function hash(PasswordAuthenticatedUserInterface $user, string $password): string
     {
-        $hash = password_hash($password, PASSWORD_ARGON2I);
-        if ($hash === false) {
-            throw new \RuntimeException('Unable to generate hash.');
-        }
-        return $hash;
+        return $this->hasher->hashPassword($user, $password);
     }
 
-    public function validate(string $password, string $hash): bool
+    public function validate(PasswordAuthenticatedUserInterface $user, string $password): bool
     {
-        return password_verify($password, $hash);
+        return $this->hasher->isPasswordValid($user, $password);
     }
 }

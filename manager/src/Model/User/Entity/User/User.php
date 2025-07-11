@@ -319,6 +319,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email->getValue(); // або id, або login
     }
 
+    public function updatePasswordHash(string $hash): void
+    {
+        $this->passwordHash = $hash;
+    }
+
+
     public function getPassword(): ?string
     {
         return $this->passwordHash;
