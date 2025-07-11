@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app.url: '%env(APP_URL)%'
 
 services:
     # default configuration for services in *this* file
@@ -22,3 +23,9 @@ services:
     App\Model\User\Service\ResetTokenizer:
         factory: 'App\Container\Model\User\Service\ResetTokenizerFactory::create'
         arguments: [ 'PT1H' ]
+    App\Model\User\Service\ResetTokenSender:
+        arguments:
+            $appUrl: '%app.url%'
+framework:
+    router:
+        default_uri: '%env(resolve:APP_URL)%'

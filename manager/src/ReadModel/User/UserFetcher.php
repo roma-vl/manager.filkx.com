@@ -48,8 +48,21 @@ class UserFetcher
 
         $result = $stmt->fetchAssociative();
 
-        return $result ?: null;
+        if (!$result) {
+            return null;
+        }
+
+        $authView = new AuthView();
+        $authView->id = $result['id'];
+        $authView->email = $result['email'];
+        $authView->password_hash = $result['password_hash'];
+        $authView->name = $result['name'];
+        $authView->role = $result['role'];
+        $authView->status = $result['status'];
+
+        return $authView;
     }
+
 
     public function findForAuthByNetwork(string $network, string $identity): ?AuthView
     {

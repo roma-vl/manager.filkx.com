@@ -8,11 +8,11 @@ use App\Controller\ErrorHandler;
 use App\Model\User\UseCase\SignUp;
 use App\ReadModel\User\UserFetcher;
 use App\Security\LoginFormAuthenticator;
+use App\Security\UserProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class SignUpController extends AbstractController
@@ -20,6 +20,7 @@ class SignUpController extends AbstractController
     public function __construct(
         private readonly UserFetcher $users,
         private readonly ErrorHandler $errors,
+        private readonly UserProvider $userProvider,
     ) {}
 
     #[Route('/signup', name: 'auth.signup')]
@@ -59,12 +60,12 @@ class SignUpController extends AbstractController
         }
 
         $command = new SignUp\Confirm\ByToken\Command($token);
-
+        $userIdentity = $this->userProvider->loadUserByIdentifier($user->getEmail()->getValue());
         try {
             $handler->handle($command);
-
+            $this->addFlash('success', 'Вдало. Можна логінитися');
             return $userAuthenticator->authenticateUser(
-                $user,
+                $userIdentity,
                 $authenticator,
                 $request
             );

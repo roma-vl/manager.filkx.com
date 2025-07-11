@@ -1,0 +1,29 @@
+snc_redis:
+    clients:
+        default:
+            type: phpredis         # або 'predis', якщо використовуєш цей клієнт (phpredis швидший)
+            alias: default
+            dsn: '%env(REDIS_URL)%'
+            logging: false
+#        doctrine:
+#            # якщо використовуєш Redis для кешу Doctrine, кешування метаданих, кешування запитів і т.д.
+#            metadata_cache:
+#                client: default
+#                entity_manager: default
+#                document_manager: default
+#            result_cache:
+#                client: default
+#                entity_manager: default
+#            query_cache:
+#                client: default
+#                entity_manager: default
+
+# Define your clients here. The example below connects to database 0 of the default Redis server.
+#
+# See https://github.com/snc/SncRedisBundle/blob/master/docs/README.md for instructions on
+# how to configure the bundle.
+#
+#        default:
+#            type: phpredis
+#            alias: default
+#            dsn: "%env(REDIS_URL)%"

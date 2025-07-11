@@ -6,9 +6,11 @@ security:
     providers:
         # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
-            entity:
-                class: App\Model\User\Entity\User\User
-                property: email
+#            entity:
+#                class: App\Model\User\Entity\User\User
+#                property: email
+            id: App\Security\UserProvider
+#    hide_user_not_found: false
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -18,7 +20,8 @@ security:
             lazy: true
             pattern: ^/
             provider: app_user_provider
-            user_checker: security.user_checker
+#            user_checker: security.user_checker
+            user_checker: App\Security\UserChecker
             custom_authenticator: App\Security\LoginFormAuthenticator
             custom_authenticators:
                 - App\Security\LoginFormAuthenticator

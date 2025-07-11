@@ -29,7 +29,7 @@ class Handler
 
         $user->passwordReset(
             new \DateTimeImmutable(),
-            $this->hasher->hash($command->password)
+            $this->hasher->hash($user, $command->password)
         );
 
         $this->flusher->flush();

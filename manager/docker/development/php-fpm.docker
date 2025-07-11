@@ -5,12 +5,14 @@ RUN apt-get update && apt-get install -y \
     zlib1g-dev \
     zip \
     libzip-dev \
+    libicu-dev \
     vim \
     git \
     curl \
     unzip \
     && docker-php-ext-configure zip \
-    && docker-php-ext-install zip pdo pdo_pgsql
+    && docker-php-ext-install zip pdo pdo_pgsql \
+    && docker-php-ext-install intl
 
 # Встановлюємо Xdebug
 RUN pecl install xdebug \
