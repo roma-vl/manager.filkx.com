@@ -51,33 +51,23 @@ class InertiaService
             $this->share('csrfToken', $this->csrfTokenManager->getToken('authenticate')->getValue());
         }
 
-        if ($request->attributes->has('_csrf_token_error')) {
-            $this->withErrors(['_token' => $request->attributes->get('_csrf_token_error')]);
-        }
-
         $session = $request->getSession();
-        if ($session instanceof Session && $session->has('_errors')) {
-            $errors = $session->get('_errors');
-            if ($errors instanceof FlashBagInterface) {
-                $this->withErrors($errors->all());
-            }
-        }
-
-        $props = array_merge($this->shared, $props);
-
-        if (!empty($this->errors)) {
-            $props['errors'] = $this->errors;
+        if ($session instanceof Session && $session->getFlashBag()->has('error')) {
+            $props['error'] = $session->getFlashBag()->get('error')[0];
         }
 
         $page = [
             'component' => $component,
-            'props' => $props,
+            'props' => array_merge($this->shared, $props),
             'url' => $request->getRequestUri(),
             'version' => null,
         ];
 
         if ($request->headers->get('X-Inertia')) {
-            return new JsonResponse($page);
+            return new JsonResponse($page, 200, [
+                'Vary' => 'Accept',
+                'X-Inertia' => 'true',
+            ]);
         }
 
         return new Response(

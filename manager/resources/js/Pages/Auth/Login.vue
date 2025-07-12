@@ -39,40 +39,21 @@
     password: '',
     _remember_me: false,
   })
-
-  function submit() {
-    axios
-      .post(
-        '/login',
-        {
-          email: form.email,
-          password: form.password,
-          _csrf_token: form._csrf_token,
-          _remember_me: form._remember_me,
-        },
-        {
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          withCredentials: true,
-        }
-      )
-      .then(response => {
-        // Якщо успіх — редірект або оновлення сторінки через Inertia
-        window.location.href = response.data.redirect || '/'
-      })
-      .catch(error => {
-        // Обробка помилки
-      })
-  }
+      function submit() {
+          form.post('/login', {
+              preserveScroll: true,
+              onError: () => {
+                  // Очищаємо пароль при помилці
+                  form._password = ''
+              }
+          })
+      }
 </script>
 
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-100">
     <div class="max-w-md w-full bg-white p-8 rounded shadow">
       <h1 class="text-2xl font-bold mb-6">Log In</h1>
-
-      <div v-if="flash.error" class="mb-4 text-red-600 font-semibold">
-        {{ flash.error }}
-      </div>
 
       <div v-if="showFlash && flash.error" class="mb-4 p-3 bg-red-100 text-red-700 rounded">
         {{ flash.error }}
@@ -82,10 +63,6 @@
         {{ flash.success }}
       </div>
 
-      <!-- Помилки форми -->
-      <div v-if="form.errors.email" class="mb-4 p-3 bg-red-100 text-red-700 rounded">
-        {{ form.errors.email }}
-      </div>
 
       <form @submit.prevent="submit" novalidate>
         <input type="hidden" name="_csrf_token" :value="form._csrf_token" />

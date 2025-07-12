@@ -33,9 +33,18 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        $email = (string) $request->request->get('email', '');
-        $password = (string) $request->request->get('password', '');
-        $csrfToken = $request->request->get('_csrf_token', '');
+        $contentType = $request->headers->get('Content-Type');
+
+        if (str_contains($contentType, 'json')) {
+            $data = json_decode($request->getContent(), true) ?? [];
+            $email = $data['email'] ?? '';
+            $password = $data['password'] ?? '';
+            $csrfToken = $data['_csrf_token'] ?? '';
+        } else {
+            $email = $request->request->get('email', '');
+            $password = $request->request->get('password', '');
+            $csrfToken = $request->request->get('_csrf_token');
+        }
 
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 
@@ -43,7 +52,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             new UserBadge($email),
             new PasswordCredentials($password),
             [
-                new CsrfTokenBadge('authenticate', $csrfToken !== '' ? $csrfToken : null),
+                new CsrfTokenBadge('authenticate', $csrfToken),
             ]
         );
     }
@@ -54,10 +63,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         string $firewallName
     ): JsonResponse|RedirectResponse {
         if ($request->headers->get('X-Inertia')) {
-            return new JsonResponse([
-                'success' => true,
-                'redirect' => $this->urlGenerator->generate('home'),
-            ]);
+            return new RedirectResponse($this->urlGenerator->generate('home'));
         }
 
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
@@ -77,6 +83,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             if ($flashBag instanceof FlashBagInterface) {
                 $flashBag->add('error', $exception->getMessageKey());
             }
+            $request->getSession()->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception);
             $session->set(SecurityRequestAttributes::LAST_USERNAME, (string) $request->request->get('email', ''));
         }
 
