@@ -9,7 +9,7 @@ use Ramsey\Uuid\Uuid;
 
 class ResetTokenizer
 {
-    private $interval;
+    private \DateInterval $interval;
 
     public function __construct(\DateInterval $interval)
     {

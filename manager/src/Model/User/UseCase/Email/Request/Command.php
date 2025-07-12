@@ -13,7 +13,7 @@ class Command
      *
      * @Assert\NotBlank()
      */
-    public $id;
+    public string $id;
     /**
      * @var string
      *
@@ -21,7 +21,7 @@ class Command
      *
      * @Assert\Email()
      */
-    public $email;
+    public string $email;
 
     public function __construct(string $id)
     {

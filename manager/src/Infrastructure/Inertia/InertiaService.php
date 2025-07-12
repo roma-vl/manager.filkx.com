@@ -8,17 +8,23 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Twig\Environment as Twig;
 
 class InertiaService
 {
+    /** @var array<string, mixed> */
     private array $shared = [];
+
+    /** @var array<string, string> */
     private array $errors = [];
 
     public function __construct(
         private readonly Twig $twig,
-        private readonly CsrfTokenManagerInterface $csrfTokenManager, // 🆕 додано
+        private readonly CsrfTokenManagerInterface $csrfTokenManager,
     ) {
     }
 
@@ -27,13 +33,18 @@ class InertiaService
         $this->shared[$key] = $value;
     }
 
+    /**
+     * @param array<string, string> $errors
+     */
     public function withErrors(array $errors): self
     {
         $this->errors = $errors;
-
         return $this;
     }
 
+    /**
+     * @param array<string, mixed> $props
+     */
     public function render(Request $request, string $component, array $props = []): Response
     {
         if (!$request->isMethod('POST')) {
@@ -45,8 +56,11 @@ class InertiaService
         }
 
         $session = $request->getSession();
-        if ($session && $session->get('_errors')) {
-            $this->withErrors($session->get('_errors')->all());
+        if ($session instanceof Session && $session->has('_errors')) {
+            $errors = $session->get('_errors');
+            if ($errors instanceof FlashBagInterface) {
+                $this->withErrors($errors->all());
+            }
         }
 
         $props = array_merge($this->shared, $props);
@@ -84,9 +98,11 @@ class InertiaService
     public function shareFromSession(Request $request): void
     {
         $session = $request->getSession();
-
-        if ($session?->getFlashBag()) {
-            $this->share('flash', $session->getFlashBag()->all());
+        if ($session instanceof Session) {
+            $flashBag = $session->getFlashBag();
+            if ($flashBag instanceof FlashBagInterface) {
+                $this->share('flash', $flashBag->all());
+            }
         }
     }
 }

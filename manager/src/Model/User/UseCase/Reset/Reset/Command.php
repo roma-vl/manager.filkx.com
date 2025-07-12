@@ -13,7 +13,7 @@ class Command
      *
      * @Assert\NotBlank()
      */
-    public $token;
+    public string $token;
     /**
      * @var string
      *
@@ -21,7 +21,7 @@ class Command
      *
      * @Assert\Length(min=6)
      */
-    public $password;
+    public string $password;
 
     public function __construct(string $token)
     {

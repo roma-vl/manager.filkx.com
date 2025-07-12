@@ -24,15 +24,12 @@ class AuthController extends AbstractController
 
             if ($error) {
                 $request->getSession()->getFlashBag()->add('error', $error->getMessageKey());
-
-                return $inertia->location($request->getUri()); // Використовуємо location для Inertia
+                return $inertia->location($request->getUri());
             }
 
-            // Успішна автентифікація
             return $inertia->redirect('/');
         }
 
-        // GET-запит - показуємо форму
         return $inertia->render($request, 'Auth/Login', [
             'lastUsername' => $authenticationUtils->getLastUsername(),
         ]);
@@ -41,7 +38,6 @@ class AuthController extends AbstractController
     #[Route('/logout', name: 'app_logout', methods: ['GET'])]
     public function logout(): never
     {
-        // Це ніколи не буде викликано, бо обробка виходу відбувається у firewall
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new \LogicException('This method will be intercepted by the logout key on your firewall.');
     }
 }

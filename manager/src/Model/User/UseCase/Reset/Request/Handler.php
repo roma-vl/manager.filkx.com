@@ -12,10 +12,10 @@ use App\Model\User\Service\ResetTokenSender;
 
 class Handler
 {
-    private $users;
-    private $tokenizer;
-    private $flusher;
-    private $sender;
+    private UserRepository $users;
+    private ResetTokenizer $tokenizer;
+    private Flusher $flusher;
+    private ResetTokenSender $sender;
 
     public function __construct(
         UserRepository $users,

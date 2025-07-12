@@ -8,23 +8,25 @@ use App\Model\User\Entity\User\User;
 use App\ReadModel\User\AuthView;
 use App\ReadModel\User\UserFetcher;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * @implements UserProviderInterface<UserIdentity>
+ */
 class UserProvider implements UserProviderInterface
 {
-    private $users;
+    private UserFetcher $users;
 
     public function __construct(UserFetcher $users)
     {
         $this->users = $users;
     }
 
-    public function loadUserByUsername($username): UserInterface
+    public function loadUserByUsername(string $username): UserInterface
     {
         $user = $this->loadUser($username);
-
         return self::identityByUser($user, $username);
     }
 
@@ -35,20 +37,18 @@ class UserProvider implements UserProviderInterface
         }
 
         $user = $this->loadUser($identity->getUsername());
-
         return self::identityByUser($user, $identity->getUsername());
     }
 
-    public function supportsClass($class): bool
+    public function supportsClass(string $class): bool
     {
-        return
-            $class === UserIdentity::class
+        return $class === UserIdentity::class
             || is_subclass_of($class, UserIdentity::class)
             || $class === User::class
             || is_subclass_of($class, User::class);
     }
 
-    private function loadUser($username): AuthView
+    private function loadUser(string $username): AuthView
     {
         $chunks = explode(':', $username);
 
@@ -60,7 +60,7 @@ class UserProvider implements UserProviderInterface
             return $user;
         }
 
-        throw new UsernameNotFoundException('');
+        throw new UserNotFoundException('User not found');
     }
 
     private static function identityByUser(AuthView $user, string $username): UserIdentity
@@ -75,8 +75,9 @@ class UserProvider implements UserProviderInterface
         );
     }
 
-    public function loadUserByIdentifier(string $identifier): UserInterface
+    public function loadUserByIdentifier(string $identifier): UserIdentity
     {
-        return $this->loadUserByUsername($identifier); // якщо однакові логіки
+        $user = $this->loadUser($identifier);
+        return self::identityByUser($user, $identifier);
     }
 }

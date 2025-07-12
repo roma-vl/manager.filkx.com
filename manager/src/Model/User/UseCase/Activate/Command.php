@@ -11,7 +11,7 @@ class Command
     /**
      * @Assert\NotBlank()
      */
-    public $id;
+    public string $id;
 
     public function __construct(string $id)
     {

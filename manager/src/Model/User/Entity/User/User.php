@@ -59,9 +59,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Network::class, orphanRemoval: true, cascade: ['persist'])]
     private Collection $networks;
 
-    #[ORM\Version]
-    #[ORM\Column(type: 'integer')]
-    private int $version;
 
     public function __construct(Id $id, \DateTimeImmutable $date, Name $name)
     {

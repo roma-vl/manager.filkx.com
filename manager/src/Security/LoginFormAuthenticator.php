@@ -7,7 +7,10 @@ namespace App\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
@@ -30,9 +33,9 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        $email = $request->request->get('email', '');
-        $password = $request->request->get('password', '');
-        $csrfToken = $request->request->get('_csrf_token');
+        $email = (string) $request->request->get('email', '');
+        $password = (string) $request->request->get('password', '');
+        $csrfToken = $request->request->get('_csrf_token', '');
 
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 
@@ -40,13 +43,16 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             new UserBadge($email),
             new PasswordCredentials($password),
             [
-                new CsrfTokenBadge('authenticate', $csrfToken),
+                new CsrfTokenBadge('authenticate', $csrfToken !== '' ? $csrfToken : null),
             ]
         );
     }
 
-    public function onAuthenticationSuccess(Request $request, $token, string $firewallName): JsonResponse|RedirectResponse
-    {
+    public function onAuthenticationSuccess(
+        Request $request,
+        TokenInterface $token,
+        string $firewallName
+    ): JsonResponse|RedirectResponse {
         if ($request->headers->get('X-Inertia')) {
             return new JsonResponse([
                 'success' => true,
@@ -61,11 +67,18 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         return new RedirectResponse($this->urlGenerator->generate('home'));
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): JsonResponse|RedirectResponse
-    {
-        $request->getSession()->getFlashBag()->add('error', $exception->getMessageKey());
-
-        $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $request->request->get('email'));
+    public function onAuthenticationFailure(
+        Request $request,
+        AuthenticationException $exception
+    ): JsonResponse|RedirectResponse {
+        $session = $request->getSession();
+        if ($session instanceof Session) {
+            $flashBag = $session->getFlashBag();
+            if ($flashBag instanceof FlashBagInterface) {
+                $flashBag->add('error', $exception->getMessageKey());
+            }
+            $session->set(SecurityRequestAttributes::LAST_USERNAME, (string) $request->request->get('email', ''));
+        }
 
         if ($request->headers->get('X-Inertia')) {
             return new RedirectResponse($this->getLoginUrl($request));

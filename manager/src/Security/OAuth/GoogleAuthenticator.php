@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Security\OAuth;
 
+use App\Security\UserIdentity;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
 use League\OAuth2\Client\Provider\GoogleUser;
@@ -18,6 +19,9 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 
 class GoogleAuthenticator extends OAuth2Authenticator
 {
+    /**
+     * @param UserProviderInterface<UserIdentity> $userProvider
+     */
     public function __construct(
         private ClientRegistry $clientRegistry,
         private UrlGeneratorInterface $urlGenerator,
@@ -33,17 +37,21 @@ class GoogleAuthenticator extends OAuth2Authenticator
     public function authenticate(Request $request): SelfValidatingPassport
     {
         $client = $this->clientRegistry->getClient('google_main');
-
         $accessToken = $this->fetchAccessToken($client);
 
         return new SelfValidatingPassport(
-            new UserBadge($accessToken->getToken(), function () use ($accessToken, $client) {
+            new UserBadge($accessToken->getToken(), function () use ($accessToken, $client): UserIdentity {
                 /** @var GoogleUser $googleUser */
                 $googleUser = $client->fetchUserFromToken($accessToken);
                 $email = $googleUser->getEmail();
 
-                // Логіка пошуку/створення користувача
-                return $this->userProvider->loadUserByIdentifier($email);
+                if ($email === null) {
+                    throw new AuthenticationException('Email is required');
+                }
+
+                /** @var UserIdentity $user */
+                $user = $this->userProvider->loadUserByIdentifier($email);
+                return $user;
             })
         );
     }

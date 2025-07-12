@@ -11,12 +11,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface
 {
-    private $id;
-    private $username;
-    private $password;
-    private $display;
-    private $role;
-    private $status;
+    private string $id;
+    private string $username;
+    private string $password;
+    private string $display;
+    private string $role;
+    private string $status;
 
     public function __construct(
         string $id,
@@ -93,6 +93,9 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
 
     public function getUserIdentifier(): string
     {
+        if ($this->username === '') {
+            throw new \RuntimeException('Username cannot be empty');
+        }
         return $this->username;
     }
 }

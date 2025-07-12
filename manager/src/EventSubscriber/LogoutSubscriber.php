@@ -18,7 +18,7 @@ class LogoutSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onLogout(LogoutEvent $event)
+    public function onLogout(LogoutEvent $event): void
     {
         $request = $event->getRequest();
 

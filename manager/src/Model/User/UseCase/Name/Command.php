@@ -14,19 +14,19 @@ class Command
      *
      * @Assert\NotBlank()
      */
-    public $id;
+    public string $id;
     /**
      * @var string
      *
      * @Assert\NotBlank()
      */
-    public $first;
+    public string $first;
     /**
      * @var string
      *
      * @Assert\NotBlank()
      */
-    public $last;
+    public string $last;
 
     public function __construct(string $id)
     {

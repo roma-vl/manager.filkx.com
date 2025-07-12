@@ -15,10 +15,10 @@ use App\Model\User\Service\PasswordHasher;
 
 class Handler
 {
-    private $users;
-    private $hasher;
-    private $generator;
-    private $flusher;
+    private UserRepository $users;
+    private PasswordHasher $hasher;
+    private PasswordGenerator $generator;
+    private Flusher $flusher;
 
     public function __construct(
         UserRepository $users,

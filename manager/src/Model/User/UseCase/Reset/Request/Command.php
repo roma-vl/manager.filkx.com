@@ -15,5 +15,5 @@ class Command
      *
      * @Assert\Email()
      */
-    public $email;
+    public string $email;
 }
