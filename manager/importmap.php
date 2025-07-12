@@ -25,4 +25,73 @@ return [
     '@hotwired/turbo' => [
         'version' => '7.3.0',
     ],
+    'vite' => [
+        'version' => '7.0.4',
+    ],
+    '@vitejs/plugin-vue' => [
+        'version' => '6.0.0',
+    ],
+    'path' => [
+        'version' => '0.12.7',
+    ],
+    '@inertiajs/inertia-vue3' => [
+        'version' => '0.6.0',
+    ],
+    'lodash.isequal' => [
+        'version' => '4.5.0',
+    ],
+    'vue' => [
+        'version' => '3.2.26',
+    ],
+    'lodash.clonedeep' => [
+        'version' => '4.5.0',
+    ],
+    '@inertiajs/inertia' => [
+        'version' => '0.11.0',
+    ],
+    '@vue/runtime-dom' => [
+        'version' => '3.2.26',
+    ],
+    'axios' => [
+        'version' => '0.21.4',
+    ],
+    'qs' => [
+        'version' => '6.10.2',
+    ],
+    'deepmerge' => [
+        'version' => '4.2.2',
+    ],
+    '@vue/runtime-core' => [
+        'version' => '3.2.26',
+    ],
+    '@vue/shared' => [
+        'version' => '3.2.26',
+    ],
+    'side-channel' => [
+        'version' => '1.0.4',
+    ],
+    '@vue/reactivity' => [
+        'version' => '3.2.26',
+    ],
+    'get-intrinsic' => [
+        'version' => '1.0.2',
+    ],
+    'call-bind/callBound' => [
+        'version' => '1.0.0',
+    ],
+    'object-inspect' => [
+        'version' => '1.9.0',
+    ],
+    'has-symbols' => [
+        'version' => '1.0.1',
+    ],
+    'function-bind' => [
+        'version' => '1.1.1',
+    ],
+    'has' => [
+        'version' => '1.0.3',
+    ],
+    '@tailwindcss/postcss' => [
+        'version' => '4.1.11',
+    ],
 ];
