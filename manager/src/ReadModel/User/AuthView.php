@@ -12,4 +12,5 @@ class AuthView
     public string $name;
     public string $role;
     public string $status;
+    public string $date;
 }

@@ -17,6 +17,7 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
     private string $display;
     private string $role;
     private string $status;
+    private string $date;
 
     public function __construct(
         string $id,
@@ -25,6 +26,7 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
         string $display,
         string $role,
         string $status,
+        string $date
     ) {
         $this->id = $id;
         $this->username = $username;
@@ -32,6 +34,7 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
         $this->display = $display;
         $this->role = $role;
         $this->status = $status;
+        $this->date = $date;
     }
 
     public function getId(): string
@@ -42,6 +45,11 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
     public function isActive(): bool
     {
         return $this->status === User::STATUS_ACTIVE;
+    }
+
+    public function getDate(): string
+    {
+      return $this->date;
     }
 
     public function getDisplay(): string

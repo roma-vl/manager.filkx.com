@@ -10,4 +10,5 @@ class ShortView
     public string $email;
     public string $role;
     public string $status;
+    public string $date;
 }

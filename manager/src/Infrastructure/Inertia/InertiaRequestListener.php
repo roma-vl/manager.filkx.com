@@ -35,6 +35,7 @@ class InertiaRequestListener
                 'name' => method_exists($user, 'getDisplay') ? $user->getDisplay() : null,
                 'roles' => $user->getRoles(),
                 'status' => method_exists($user, 'getStatus') ? $user->getStatus() : null,
+                'created_at' => method_exists($user, 'getDate') ? $user->getDate() : null,
             ];
 
             $this->inertia->share('auth', [

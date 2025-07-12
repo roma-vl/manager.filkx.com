@@ -306,18 +306,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        return ['ROLE_USER']; // або витягуй з бази, якщо є рольова модель
+        return ['ROLE_USER'];
     }
 
-    public function eraseCredentials(): void
-    {
-        // очистити тимчасові дані, якщо є (наприклад plainPassword)
-    }
+    public function eraseCredentials(): void{}
 
-    // Symfony 5.3+ (а особливо 6+)
     public function getUserIdentifier(): string
     {
-        return $this->email->getValue(); // або id, або login
+        return $this->email->getValue();
     }
 
     public function updatePasswordHash(string $hash): void

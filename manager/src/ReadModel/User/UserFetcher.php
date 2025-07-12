@@ -44,7 +44,7 @@ class UserFetcher
     public function findForAuthByEmail(string $email): ?AuthView
     {
         $stmt = $this->connection->createQueryBuilder()
-            ->select('id', 'email', 'password_hash', "TRIM(CONCAT(name_first, ' ', name_last)) AS name", 'role', 'status')
+            ->select('id', 'email', 'password_hash', "TRIM(CONCAT(name_first, ' ', name_last)) AS name", 'role', 'status', 'date')
             ->from('user_users')
             ->where('email = :email')
             ->setParameter('email', $email)
@@ -63,6 +63,7 @@ class UserFetcher
         $authView->name = $result['name'];
         $authView->role = $result['role'];
         $authView->status = $result['status'];
+        $authView->date = $result['date'];
 
         return $authView;
     }
