@@ -13,7 +13,7 @@ final class RequestResolver implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-//            OAuth2Events::AUTHORIZATION_REQUEST_RESOLVE => 'onRequestResolve',
+            //            OAuth2Events::AUTHORIZATION_REQUEST_RESOLVE => 'onRequestResolve',
         ];
     }
 

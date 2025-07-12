@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Controller\Auth\OAuth;
+declare(strict_types=1);
 
+namespace App\Controller\Auth\OAuth;
 
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

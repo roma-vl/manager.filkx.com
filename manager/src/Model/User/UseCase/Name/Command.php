@@ -11,16 +11,19 @@ class Command
 {
     /**
      * @var string
+     *
      * @Assert\NotBlank()
      */
     public $id;
     /**
      * @var string
+     *
      * @Assert\NotBlank()
      */
     public $first;
     /**
      * @var string
+     *
      * @Assert\NotBlank()
      */
     public $last;
@@ -35,6 +38,7 @@ class Command
         $command = new self($user->getId()->getValue());
         $command->first = $user->getName()->getFirst();
         $command->last = $user->getName()->getLast();
+
         return $command;
     }
 }

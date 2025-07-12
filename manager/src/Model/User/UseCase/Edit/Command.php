@@ -15,6 +15,7 @@ class Command
     public $id;
     /**
      * @Assert\NotBlank()
+     *
      * @Assert\Email()
      */
     public $email;
@@ -38,6 +39,7 @@ class Command
         $command->email = $user->getEmail() ? $user->getEmail()->getValue() : null;
         $command->firstName = $user->getName()->getFirst();
         $command->lastName = $user->getName()->getLast();
+
         return $command;
     }
 }

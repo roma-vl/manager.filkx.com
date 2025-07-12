@@ -9,9 +9,23 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-      "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix resources/js",
-      "format": "prettier --write resources/js/**/*.{js,vue}"
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix resources/js",
+    "format": "prettier --write resources/js/**/*.{js,vue}"
   },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "lint-staged": {
+        "*.{js,vue}": [
+            "eslint --fix",
+            "prettier --write"
+        ],
+        "*.php": [
+            "php-cs-fixer fix --allow-risky=yes"
+        ]
+    },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -32,6 +46,8 @@
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
     "eslint-plugin-vue": "^10.3.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "tailwindcss": "^3.3.2",

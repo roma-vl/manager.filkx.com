@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Model\User\UseCase\SignUp\Confirm;
+declare(strict_types=1);
 
+namespace App\Model\User\UseCase\SignUp\Confirm;
 
 use App\Model\Flusher;
 use App\Model\User\Entity\UserRepository;

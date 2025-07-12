@@ -36,7 +36,6 @@ class SidebarMenu
             ->setAttribute('class', 'nav-title mt-3 px-3 text-uppercase text-muted small fw-bold')
             ->setAttribute('disabled', true);
 
-
         return $menu;
     }
 }

@@ -15,8 +15,9 @@ use Symfony\Component\Routing\Attribute\Route;
 class ResetController extends AbstractController
 {
     public function __construct(
-        private readonly ErrorHandler $errors
-    ) {}
+        private readonly ErrorHandler $errors,
+    ) {
+    }
 
     #[Route('/reset', name: 'auth.reset')]
     public function request(Request $request, Reset\Request\Handler $handler): Response
@@ -29,6 +30,7 @@ class ResetController extends AbstractController
             try {
                 $handler->handle($command);
                 $this->addFlash('success', 'Check your email.');
+
                 return $this->redirectToRoute('home');
             } catch (\DomainException $e) {
                 $this->errors->handle($e);
@@ -46,6 +48,7 @@ class ResetController extends AbstractController
     {
         if (!$users->existsByResetToken($token)) {
             $this->addFlash('error', 'Incorrect or already confirmed token.');
+
             return $this->redirectToRoute('home');
         }
 
@@ -57,6 +60,7 @@ class ResetController extends AbstractController
             try {
                 $handler->handle($command);
                 $this->addFlash('success', 'Password is successfully changed.');
+
                 return $this->redirectToRoute('home');
             } catch (\DomainException $e) {
                 $this->errors->handle($e);

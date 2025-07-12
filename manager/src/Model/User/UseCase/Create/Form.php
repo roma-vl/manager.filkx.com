@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Model\User\UseCase\Create;
 
 use Symfony\Component\Form\AbstractType;
@@ -19,8 +21,8 @@ class Form extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => Command::class,
-        ));
+        ]);
     }
 }

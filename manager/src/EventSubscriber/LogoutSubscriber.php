@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -12,7 +14,7 @@ class LogoutSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            LogoutEvent::class => 'onLogout'
+            LogoutEvent::class => 'onLogout',
         ];
     }
 
@@ -22,7 +24,7 @@ class LogoutSubscriber implements EventSubscriberInterface
 
         if ($request->headers->get('X-Inertia')) {
             $event->setResponse(new JsonResponse([], 409, [
-                'X-Inertia-Location' => $request->getSchemeAndHttpHost().'/login'
+                'X-Inertia-Location' => $request->getSchemeAndHttpHost() . '/login',
             ]));
         } else {
             $event->setResponse(new RedirectResponse('/login'));

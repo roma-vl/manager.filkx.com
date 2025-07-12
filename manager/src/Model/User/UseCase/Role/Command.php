@@ -11,11 +11,13 @@ class Command
 {
     /**
      * @var string
+     *
      * @Assert\NotBlank()
      */
     public $id;
     /**
      * @var string
+     *
      * @Assert\NotBlank()
      */
     public $role;
@@ -29,6 +31,7 @@ class Command
     {
         $command = new self($user->getId()->getValue());
         $command->role = $user->getRole()->getName();
+
         return $command;
     }
 }

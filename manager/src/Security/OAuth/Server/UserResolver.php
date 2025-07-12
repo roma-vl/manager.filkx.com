@@ -24,7 +24,7 @@ final class UserResolver implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-//            OAuth2Events::USER_RESOLVE => 'onUserResolve',
+            //            OAuth2Events::USER_RESOLVE => 'onUserResolve',
         ];
     }
 

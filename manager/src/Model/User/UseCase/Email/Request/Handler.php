@@ -22,9 +22,8 @@ class Handler
         UserRepository $users,
         NewEmailConfirmTokenizer $tokenizer,
         NewEmailConfirmTokenSender $sender,
-        Flusher $flusher
-    )
-    {
+        Flusher $flusher,
+    ) {
         $this->users = $users;
         $this->tokenizer = $tokenizer;
         $this->sender = $sender;

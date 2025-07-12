@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Infrastructure\Inertia;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Twig\Environment as Twig;
 
@@ -17,7 +19,8 @@ class InertiaService
     public function __construct(
         private readonly Twig $twig,
         private readonly CsrfTokenManagerInterface $csrfTokenManager, // 🆕 додано
-    ) {}
+    ) {
+    }
 
     public function share(string $key, mixed $value): void
     {
@@ -27,6 +30,7 @@ class InertiaService
     public function withErrors(array $errors): self
     {
         $this->errors = $errors;
+
         return $this;
     }
 

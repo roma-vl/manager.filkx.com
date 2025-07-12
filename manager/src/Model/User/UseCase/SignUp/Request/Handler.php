@@ -10,9 +10,9 @@ use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\Name;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Entity\User\UserRepository;
+use App\Model\User\Service\PasswordHasher;
 use App\Model\User\Service\SignUpConfirmTokenizer;
 use App\Model\User\Service\SignUpConfirmTokenSender;
-use App\Model\User\Service\PasswordHasher;
 
 class Handler
 {
@@ -27,9 +27,8 @@ class Handler
         PasswordHasher $hasher,
         SignUpConfirmTokenizer $tokenizer,
         SignUpConfirmTokenSender $sender,
-        Flusher $flusher
-    )
-    {
+        Flusher $flusher,
+    ) {
         $this->users = $users;
         $this->hasher = $hasher;
         $this->tokenizer = $tokenizer;
@@ -64,5 +63,4 @@ class Handler
         $this->sender->send($email, $token);
         $this->flusher->flush();
     }
-
 }

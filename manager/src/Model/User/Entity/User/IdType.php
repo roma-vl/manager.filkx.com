@@ -11,7 +11,7 @@ class IdType extends GuidType
 {
     public const NAME = 'user_user_id';
 
-    public function convertToDatabaseValue($value, AbstractPlatform $platform) : mixed
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): mixed
     {
         return $value instanceof Id ? $value->getValue() : $value;
     }
@@ -26,7 +26,7 @@ class IdType extends GuidType
         return self::NAME;
     }
 
-    public function requiresSQLCommentHint(AbstractPlatform $platform) : bool
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
     }

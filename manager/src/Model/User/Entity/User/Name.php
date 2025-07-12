@@ -40,4 +40,3 @@ class Name
         return $this->first . ' ' . $this->last;
     }
 }
-

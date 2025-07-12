@@ -24,9 +24,8 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
         string $password,
         string $display,
         string $role,
-        string $status
-    )
-    {
+        string $status,
+    ) {
         $this->id = $id;
         $this->username = $username;
         $this->password = $password;
@@ -77,7 +76,6 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
 
     public function eraseCredentials(): void
     {
-
     }
 
     public function isEqualTo(UserInterface $user): bool
@@ -87,15 +85,14 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
         }
 
         return
-            $this->id === $user->id &&
-            $this->password === $user->password &&
-            $this->role === $user->role &&
-            $this->status === $user->status;
+            $this->id === $user->id
+            && $this->password === $user->password
+            && $this->role === $user->role
+            && $this->status === $user->status;
     }
 
     public function getUserIdentifier(): string
     {
         return $this->username;
     }
-
 }

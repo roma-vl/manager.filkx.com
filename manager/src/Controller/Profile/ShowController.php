@@ -17,6 +17,7 @@ class ShowController extends AbstractController
     {
         $this->users = $users;
     }
+
     #[Route('/profile', name: 'profile')]
     public function show(): Response
     {

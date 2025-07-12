@@ -22,7 +22,6 @@ class UserRepository
     }
 
     /**
-     * @param string $token
      * @return User|object|null
      */
     public function findByConfirmToken(string $token): ?User
@@ -31,7 +30,6 @@ class UserRepository
     }
 
     /**
-     * @param string $token
      * @return User|object|null
      */
     public function findByResetToken(string $token): ?User
@@ -45,6 +43,7 @@ class UserRepository
         if (!$user = $this->repo->find($id->getValue())) {
             throw new EntityNotFoundException('User is not found.');
         }
+
         return $user;
     }
 
@@ -54,6 +53,7 @@ class UserRepository
         if (!$user = $this->repo->findOneBy(['email' => $email->getValue()])) {
             throw new EntityNotFoundException('User is not found.');
         }
+
         return $user;
     }
 

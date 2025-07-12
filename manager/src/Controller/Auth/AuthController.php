@@ -17,14 +17,14 @@ class AuthController extends AbstractController
     public function login(
         Request $request,
         InertiaService $inertia,
-        AuthenticationUtils $authenticationUtils
-    ): Response
-    {
+        AuthenticationUtils $authenticationUtils,
+    ): Response {
         if ($request->isMethod('POST')) {
             $error = $authenticationUtils->getLastAuthenticationError();
 
             if ($error) {
                 $request->getSession()->getFlashBag()->add('error', $error->getMessageKey());
+
                 return $inertia->location($request->getUri()); // Використовуємо location для Inertia
             }
 
@@ -37,7 +37,6 @@ class AuthController extends AbstractController
             'lastUsername' => $authenticationUtils->getLastUsername(),
         ]);
     }
-
 
     #[Route('/logout', name: 'app_logout', methods: ['GET'])]
     public function logout(): never

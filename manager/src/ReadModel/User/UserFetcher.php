@@ -63,7 +63,6 @@ class UserFetcher
         return $authView;
     }
 
-
     public function findForAuthByNetwork(string $network, string $identity): ?AuthView
     {
         $stmt = $this->connection->createQueryBuilder()
@@ -118,13 +117,12 @@ class UserFetcher
         return $this->repository->findOneBy(['confirmToken' => $token]);
     }
 
-
-
     public function get(string $id): User
     {
         if (!$user = $this->repository->find($id)) {
             throw new NotFoundException('User is not found');
         }
+
         return $user;
     }
 

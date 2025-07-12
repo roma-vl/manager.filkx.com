@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Infrastructure\Inertia;
 
-use App\Model\User\Entity\User\User;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[AsEventListener(event: 'kernel.request')]
@@ -16,7 +17,8 @@ class InertiaRequestListener
         private readonly InertiaService $inertia,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly RequestStack $requestStack,
-    ) {}
+    ) {
+    }
 
     public function __invoke(RequestEvent $event): void
     {
@@ -35,13 +37,11 @@ class InertiaRequestListener
                 'status' => method_exists($user, 'getStatus') ? $user->getStatus() : null,
             ];
 
-
             $this->inertia->share('auth', [
                 'user' => $userData,
                 'permissions' => method_exists($user, 'getPermissions') ? $user->getPermissions() : [],
             ]);
-        }
-        else {
+        } else {
             $this->inertia->share('auth', ['user' => null, 'permissions' => []]);
         }
 

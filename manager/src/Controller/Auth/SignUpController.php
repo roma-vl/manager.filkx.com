@@ -21,7 +21,8 @@ class SignUpController extends AbstractController
         private readonly UserFetcher $users,
         private readonly ErrorHandler $errors,
         private readonly UserProvider $userProvider,
-    ) {}
+    ) {
+    }
 
     #[Route('/signup', name: 'auth.signup')]
     public function request(Request $request, SignUp\Request\Handler $handler): Response
@@ -34,6 +35,7 @@ class SignUpController extends AbstractController
             try {
                 $handler->handle($command);
                 $this->addFlash('success', 'Check your email.');
+
                 return $this->redirectToRoute('home');
             } catch (\DomainException $e) {
                 $this->errors->handle($e);
@@ -56,6 +58,7 @@ class SignUpController extends AbstractController
     ): Response {
         if (!$user = $this->users->findUserEntityBySignUpConfirmToken($token)) {
             $this->addFlash('error', 'Incorrect or already confirmed token.');
+
             return $this->redirectToRoute('auth.signup');
         }
 
@@ -64,6 +67,7 @@ class SignUpController extends AbstractController
         try {
             $handler->handle($command);
             $this->addFlash('success', 'Вдало. Можна логінитися');
+
             return $userAuthenticator->authenticateUser(
                 $userIdentity,
                 $authenticator,

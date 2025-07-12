@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 // src/Security/LogoutSuccessHandler.php
+
 namespace App\Security;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 
 class LogoutSuccessHandler implements LogoutSuccessHandlerInterface
@@ -15,7 +17,7 @@ class LogoutSuccessHandler implements LogoutSuccessHandlerInterface
     {
         if ($request->headers->get('X-Inertia')) {
             return new JsonResponse([], 409, [
-                'X-Inertia-Location' => $request->getSchemeAndHttpHost().'/login'
+                'X-Inertia-Location' => $request->getSchemeAndHttpHost() . '/login',
             ]);
         }
 

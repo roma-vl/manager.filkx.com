@@ -6,10 +6,9 @@ namespace App\Controller;
 
 use App\Infrastructure\Inertia\InertiaService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\Request;
-
 
 class HomeController extends AbstractController
 {
@@ -33,5 +32,4 @@ class HomeController extends AbstractController
             'message' => 'Слава Inertia без Laravel!',
         ]);
     }
-
 }

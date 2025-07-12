@@ -78,6 +78,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $user->email = $email;
         $user->passwordHash = $hash;
         $user->status = self::STATUS_ACTIVE;
+
         return $user;
     }
 
@@ -88,6 +89,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $user->passwordHash = $hash;
         $user->confirmToken = $token;
         $user->status = self::STATUS_WAIT;
+
         return $user;
     }
 
@@ -106,6 +108,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $user = new self($id, $date, $name);
         $user->attachNetwork($network, $identity);
         $user->status = self::STATUS_ACTIVE;
+
         return $user;
     }
 
@@ -127,6 +130,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                     throw new \DomainException('Unable to detach the last identity.');
                 }
                 $this->networks->removeElement($existing);
+
                 return;
             }
         }
@@ -323,7 +327,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->passwordHash = $hash;
     }
-
 
     public function getPassword(): ?string
     {

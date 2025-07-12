@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures;
 
 use App\Model\User\Entity\User\Email;
+use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\Name;
 use App\Model\User\Entity\User\Role;
 use App\Model\User\Entity\User\User;
-use App\Model\User\Entity\User\Id;
 use App\Model\User\Service\PasswordHasher;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -14,13 +16,14 @@ use Doctrine\Persistence\ObjectManager;
 class UserFixture extends Fixture
 {
     public function __construct(
-        private readonly PasswordHasher $hasher
-    ) {}
+        private readonly PasswordHasher $hasher,
+    ) {
+    }
 
     public function load(ObjectManager $manager): void
     {
         echo "Loading user fixture...\n";
-        echo "DB URL: " . $_ENV['DATABASE_URL'] . "\n";
+        echo 'DB URL: ' . $_ENV['DATABASE_URL'] . "\n";
 
         $user = User::signUpByEmail(
             Id::next(),

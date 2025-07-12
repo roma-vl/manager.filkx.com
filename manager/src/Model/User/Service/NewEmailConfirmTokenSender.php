@@ -23,7 +23,7 @@ class NewEmailConfirmTokenSender
         $message = (new \Swift_Message('Email Confirmation'))
             ->setTo($email->getValue())
             ->setBody($this->twig->render('mail/user/email.html.twig', [
-                'token' => $token
+                'token' => $token,
             ]), 'text/html');
 
         if (!$this->mailer->send($message)) {
