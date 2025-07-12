@@ -1,23 +1,20 @@
 <script setup>
+  import AppLayout from '../Layouts/AppLayout.vue'
 
-import AppLayout from "../Layouts/AppLayout.vue";
+  import { usePage } from '@inertiajs/inertia-vue3'
+  import { computed } from '../../../assets/vendor/@vue/reactivity/reactivity.index.js'
 
-import { usePage } from '@inertiajs/inertia-vue3'
-import {computed} from "../../../assets/vendor/@vue/reactivity/reactivity.index.js";
+  const page = usePage()
 
-const page = usePage()
+  const user = computed(() => page.props.value.auth?.user)
 
-const user = computed(() => page.props.value.auth?.user)
-
-console.log(user.value)
+  console.log(user.value)
 </script>
 
 <template>
-    <AppLayout>
-        <h1>Привіт з Inertia + Vue 3 + Symfony</h1>
-    </AppLayout>
+  <AppLayout>
+    <h1>Привіт з Inertia + Vue 3 + Symfony</h1>
+  </AppLayout>
 </template>
 
-<style >
-
-</style>
+<style></style>
