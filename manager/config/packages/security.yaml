@@ -29,9 +29,16 @@ security:
                 - App\Security\OAuth\GoogleAuthenticator
             entry_point: App\Security\LoginFormAuthenticator
 
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                enable_csrf: true
+                csrf_token_id: authenticate
+                csrf_parameter: _token
+#                csrf_token_manager: security.csrf.token_manager
             logout:
                 path: app_logout
-                target: home
+                target: app_login
 
             remember_me:
                 secret: '%kernel.secret%'

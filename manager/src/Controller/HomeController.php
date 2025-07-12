@@ -14,9 +14,11 @@ use Symfony\Component\HttpFoundation\Request;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'home')]
-    public function index(): Response
+    public function index(Request $request, InertiaService $inertia): Response
     {
-        return $this->render('app/home.html.twig');
+        return $inertia->render($request, 'Home', [
+            'message' => 'Слава Inertia без Laravel!',
+        ]);
     }
 
     #[Route('/dashboard', name: 'dashboard')]
@@ -30,27 +32,6 @@ class HomeController extends AbstractController
         return $inertia->render($request, 'Dashboard', [
             'message' => 'Слава Inertia без Laravel!',
         ]);
-    }
-
-    #[Route('/submit', name: 'submit')]
-    public function submit(Request $request, InertiaService $inertia): Response
-    {
-        $data = $request->request->all();
-
-        if (empty($data['email'])) {
-            return $inertia
-                ->withErrors(['email' => 'Поле email є обовʼязковим.'])
-                ->render($request, 'FormPage');
-        }
-
-        // все ок — редірект
-        return $inertia->redirect('/dashboard');
-    }
-
-    #[Route('/submit-form', name: 'form.show')]
-    public function showForm(Request $request, InertiaService $inertia): Response
-    {
-        return $inertia->render($request, 'FormPage');
     }
 
 }

@@ -4,24 +4,40 @@ declare(strict_types=1);
 
 namespace App\Controller\Auth;
 
+use App\Infrastructure\Inertia\InertiaService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class AuthController extends AbstractController
 {
-    #[Route('/login', name: 'app_login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    #[Route('/login', name: 'app_login', methods: ['GET', 'POST'])]
+    public function login(
+        Request $request,
+        InertiaService $inertia,
+        AuthenticationUtils $authenticationUtils
+    ): Response
     {
-        $error = $authenticationUtils->getLastAuthenticationError();
-        $lastUsername = $authenticationUtils->getLastUsername();
+        if ($request->isMethod('POST')) {
+            $error = $authenticationUtils->getLastAuthenticationError();
 
-        return $this->render('app/auth/login.html.twig', [
-            'last_username' => $lastUsername,
-            'error' => $error,
+            if ($error) {
+                $request->getSession()->getFlashBag()->add('error', $error->getMessageKey());
+                return $inertia->location($request->getUri()); // Використовуємо location для Inertia
+            }
+
+            // Успішна автентифікація
+            return $inertia->redirect('/');
+        }
+
+        // GET-запит - показуємо форму
+        return $inertia->render($request, 'Auth/Login', [
+            'lastUsername' => $authenticationUtils->getLastUsername(),
         ]);
     }
+
 
     #[Route('/logout', name: 'app_logout', methods: ['GET'])]
     public function logout(): never

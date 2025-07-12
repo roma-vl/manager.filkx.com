@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Twig\Environment as Twig;
 
 class InertiaService
@@ -15,6 +16,7 @@ class InertiaService
 
     public function __construct(
         private readonly Twig $twig,
+        private readonly CsrfTokenManagerInterface $csrfTokenManager, // 🆕 додано
     ) {}
 
     public function share(string $key, mixed $value): void
@@ -30,6 +32,19 @@ class InertiaService
 
     public function render(Request $request, string $component, array $props = []): Response
     {
+        if (!$request->isMethod('POST')) {
+            $this->share('csrfToken', $this->csrfTokenManager->getToken('authenticate')->getValue());
+        }
+
+        if ($request->attributes->has('_csrf_token_error')) {
+            $this->withErrors(['_token' => $request->attributes->get('_csrf_token_error')]);
+        }
+
+        $session = $request->getSession();
+        if ($session && $session->get('_errors')) {
+            $this->withErrors($session->get('_errors')->all());
+        }
+
         $props = array_merge($this->shared, $props);
 
         if (!empty($this->errors)) {

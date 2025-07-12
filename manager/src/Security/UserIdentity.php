@@ -65,6 +65,11 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
         return [$this->role];
     }
 
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
     public function getSalt(): ?string
     {
         return null;

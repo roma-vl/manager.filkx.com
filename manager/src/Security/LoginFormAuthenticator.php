@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -43,8 +44,15 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         );
     }
 
-    public function onAuthenticationSuccess(Request $request, $token, string $firewallName): RedirectResponse
+    public function onAuthenticationSuccess(Request $request, $token, string $firewallName): JsonResponse|RedirectResponse
     {
+        if ($request->headers->get('X-Inertia')) {
+            return new JsonResponse([
+                'success' => true,
+                'redirect' => $this->urlGenerator->generate('home'),
+            ]);
+        }
+
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
@@ -52,21 +60,19 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         return new RedirectResponse($this->urlGenerator->generate('home'));
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): JsonResponse|RedirectResponse
     {
-        $errorMessage = 'Authentication failed.';
+        $request->getSession()->getFlashBag()->add('error', $exception->getMessageKey());
 
-        $previous = $exception->getPrevious();
-        if ($previous instanceof DisabledException) {
-            $errorMessage = $previous->getMessage();
-        } else {
-            $errorMessage = $exception->getMessage();
+        $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $request->request->get('email'));
+
+        if ($request->headers->get('X-Inertia')) {
+            return new RedirectResponse($this->getLoginUrl($request));
         }
-
-        $request->getSession()->getFlashBag()->add('error', $errorMessage);
 
         return new RedirectResponse($this->getLoginUrl($request));
     }
+
 
     protected function getLoginUrl(Request $request): string
     {

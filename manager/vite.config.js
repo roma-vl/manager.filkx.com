@@ -4,7 +4,7 @@ import path from 'path'
 
 export default defineConfig({
     plugins: [vue()],
-    root: 'resources', // resources — це твоя робоча папка з кодом
+    root: 'resources',
     base: '/build/',
     server: {
         host: '0.0.0.0',
@@ -24,6 +24,6 @@ export default defineConfig({
         },
     },
     css: {
-        postcss: path.resolve(__dirname, 'postcss.config.cjs'), // Обережно: тут шлях до postcss.config.cjs має бути *з кореня* проєкту, не з resources
+        postcss: path.resolve(__dirname, 'postcss.config.cjs'),
     },
 })
