@@ -41,6 +41,16 @@ class UserFetcher
         return (int) $result > 0;
     }
 
+    public function existsByEmail(string $email): bool
+    {
+        return (int) $this->repository->createQueryBuilder('u')
+                ->select('COUNT(u.id)')
+                ->andWhere('u.email = :email')
+                ->setParameter('email', $email)
+                ->getQuery()
+                ->getSingleScalarResult() > 0;
+    }
+
     public function findForAuthByEmail(string $email): ?AuthView
     {
         $stmt = $this->connection->createQueryBuilder()
