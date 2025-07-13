@@ -45,7 +45,8 @@ class InertiaService
     /**
      * @param array<string, mixed> $props
      */
-    public function render(Request $request, string $component, array $props = []): Response
+    public function render(Request $request, string $component, array $props = [], int $status = 200): Response
+
     {
         if (!$request->isMethod('POST')) {
             $this->share('csrfToken', $this->csrfTokenManager->getToken('authenticate')->getValue());
@@ -64,11 +65,12 @@ class InertiaService
         ];
 
         if ($request->headers->get('X-Inertia')) {
-            return new JsonResponse($page, 200, [
+            return new JsonResponse($page, $status, [
                 'Vary' => 'Accept',
                 'X-Inertia' => 'true',
             ]);
         }
+
 
         return new Response(
             $this->twig->render('base.html.twig', ['page' => $page])

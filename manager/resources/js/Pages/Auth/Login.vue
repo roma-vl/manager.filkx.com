@@ -65,7 +65,7 @@
 
 
       <form @submit.prevent="submit" novalidate>
-        <input type="hidden" name="_csrf_token" :value="form._csrf_token" />
+<!--        <input type="hidden" name="_csrf_token" :value="form._csrf_token" />-->
 
         <label class="block mb-2 font-semibold" for="email">Email</label>
         <input
@@ -102,7 +102,7 @@
       </form>
 
       <div class="mt-4 flex justify-between text-sm">
-        <a href="/reset-password" class="text-indigo-600 hover:underline">Forgot password?</a>
+        <a href="/reset" class="text-indigo-600 hover:underline">Forgot password?</a>
         <a href="/signup" class="text-indigo-600 hover:underline">Register Now!</a>
       </div>
 

@@ -26,7 +26,6 @@ const form = useForm({
     lastName: '',
     email: '',
     password: '',
-    _csrf_token: props.csrfToken,
 })
 
 
@@ -55,7 +54,7 @@ function submit() {
             </div>
 
             <form @submit.prevent="submit" novalidate>
-                <input type="hidden" name="_csrf_token" :value="form._csrf_token" />
+<!--                <input type="hidden" name="_csrf_token" :value="form._csrf_token" />-->
 
                 <label class="block mb-2 font-semibold" for="firstName">First Name</label>
                 <input
