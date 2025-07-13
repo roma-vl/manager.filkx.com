@@ -11,7 +11,6 @@ use App\Model\EntityNotFoundException;
 use App\Model\User\UseCase\Reset;
 use App\ReadModel\User\UserFetcher;
 use App\Service\CommandFactory;
-use DomainException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -20,17 +19,17 @@ class ResetController extends BaseController
 {
     public function __construct(
         private readonly ErrorHandler $errors,
-    ) {}
+    ) {
+    }
 
     #[Route('/reset', name: 'auth.reset', methods: ['GET', 'POST'])]
     public function request(
         Request $request,
         InertiaService $inertia,
         Reset\Request\Handler $handler,
-        CommandFactory $commandFactory
+        CommandFactory $commandFactory,
     ): Response {
         if ($request->isMethod('POST')) {
-
             $command = new Reset\Request\Command();
             $errors = $commandFactory->createFromRequest($request, $command);
 
@@ -41,8 +40,9 @@ class ResetController extends BaseController
             try {
                 $handler->handle($command);
                 $this->addFlash('success', 'Check your email.');
+
                 return $inertia->redirect('/');
-            } catch (EntityNotFoundException|DomainException $e) {
+            } catch (EntityNotFoundException|\DomainException $e) {
                 return $inertia->render($request, 'Auth/Reset/Request', [
                     'errors' => ['email' => $e->getMessage()],
                 ]);
@@ -59,10 +59,11 @@ class ResetController extends BaseController
         InertiaService $inertia,
         Reset\Reset\Handler $handler,
         UserFetcher $users,
-        CommandFactory $commandFactory
+        CommandFactory $commandFactory,
     ): Response {
         if (!$users->existsByResetToken($token)) {
             $this->addFlash('error', 'Incorrect or already confirmed token.');
+
             return $inertia->redirect('/');
         }
 
@@ -77,10 +78,12 @@ class ResetController extends BaseController
             try {
                 $handler->handle($command);
                 $this->addFlash('success', 'Password is successfully changed.');
+
                 return $inertia->redirect('/');
-            } catch (DomainException $e) {
+            } catch (\DomainException $e) {
                 $this->errors->handle($e);
                 $this->addFlash('error', $e->getMessage());
+
                 return $inertia->location($request->getUri());
             }
         }

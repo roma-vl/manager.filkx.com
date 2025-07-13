@@ -9,23 +9,25 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank(message: 'ID is required')]
     public string $id;
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     */
+
+    #[Assert\NotBlank(message: 'First name is required')]
+    #[Assert\Length(
+        min: 2,
+        max: 50,
+        minMessage: 'First name must be at least {{ limit }} characters',
+        maxMessage: 'First name cannot be longer than {{ limit }} characters'
+    )]
     public string $first;
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     */
+
+    #[Assert\NotBlank(message: 'Last name is required')]
+    #[Assert\Length(
+        min: 2,
+        max: 50,
+        minMessage: 'Last name must be at least {{ limit }} characters',
+        maxMessage: 'Last name cannot be longer than {{ limit }} characters'
+    )]
     public string $last;
 
     public function __construct(string $id)

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // src/Validator/Constraints/UniqueUserEmailValidator.php
 
 namespace App\Validator\Constraints;
@@ -13,7 +15,8 @@ class UniqueUserEmailValidator extends ConstraintValidator
 {
     public function __construct(
         private readonly UserFetcher $users,
-    ) {}
+    ) {
+    }
 
     public function validate(mixed $value, Constraint $constraint): void
     {
@@ -21,7 +24,7 @@ class UniqueUserEmailValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, UniqueUserEmail::class);
         }
 
-        if (!is_string($value) || empty($value)) {
+        if (!\is_string($value) || empty($value)) {
             return;
         }
 

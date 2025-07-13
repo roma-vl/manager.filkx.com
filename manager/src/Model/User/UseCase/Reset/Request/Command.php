@@ -8,12 +8,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     *
-     * @Assert\Email()
-     */
+    #[Assert\NotBlank(message: 'Email is required')]
+    #[Assert\Email(message: 'Invalid email format')]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'Email cannot be longer than {{ limit }} characters'
+    )]
     public string $email;
 }

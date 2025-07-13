@@ -24,6 +24,7 @@ class AuthController extends AbstractController
 
             if ($error) {
                 $request->getSession()->getFlashBag()->add('error', $error->getMessageKey());
+
                 return $inertia->location($request->getUri());
             }
 

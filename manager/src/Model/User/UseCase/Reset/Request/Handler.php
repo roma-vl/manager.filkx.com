@@ -33,10 +33,6 @@ class Handler
     {
         $user = $this->users->getByEmail(new Email($command->email));
 
-//        if ($this->users->hasByEmail($email)) {
-//            throw new \DomainException('User already exists.');
-//        }
-
         $user->requestPasswordReset(
             $this->tokenizer->generate(),
             new \DateTimeImmutable()

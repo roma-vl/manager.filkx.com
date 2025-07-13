@@ -1,6 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 // src/Middleware/VerifyCsrfToken.php
+
 namespace App\Middleware;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -11,8 +14,9 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 class VerifyCsrfToken
 {
     public function __construct(
-        private CsrfTokenManagerInterface $csrfTokenManager
-    ) {}
+        private CsrfTokenManagerInterface $csrfTokenManager,
+    ) {
+    }
 
     public function handle(Request $request, $next): Response
     {

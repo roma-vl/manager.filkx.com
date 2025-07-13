@@ -23,15 +23,15 @@ class SignUpController extends BaseController
         private readonly UserFetcher $users,
         private readonly ErrorHandler $errors,
         private readonly UserProvider $userProvider,
-    ) {}
-
+    ) {
+    }
 
     #[Route('/signup', name: 'auth.signup', methods: ['GET', 'POST'])]
     public function request(
         Request $request,
         InertiaService $inertia,
         SignUp\Request\Handler $handler,
-        CommandFactory $commandFactory
+        CommandFactory $commandFactory,
     ): Response {
         if ($request->isMethod('POST')) {
             $command = new SignUp\Request\Command();
@@ -44,18 +44,18 @@ class SignUpController extends BaseController
             try {
                 $handler->handle($command);
                 $this->addFlash('success', 'Check your email.');
+
                 return $inertia->redirect('/');
             } catch (\DomainException $e) {
                 $this->errors->handle($e);
                 $this->addFlash('error', $e->getMessage());
+
                 return $inertia->location($request->getUri());
             }
         }
 
         return $inertia->render($request, 'Auth/SignUp');
     }
-
-
 
     #[Route('/signup/{token}', name: 'auth.signup.confirm')]
     public function confirm(
@@ -64,10 +64,11 @@ class SignUpController extends BaseController
         SignUp\Confirm\ByToken\Handler $handler,
         LoginFormAuthenticator $authenticator,
         UserAuthenticatorInterface $userAuthenticator,
-        InertiaService $inertia
+        InertiaService $inertia,
     ): Response {
         if (!$user = $this->users->findUserEntityBySignUpConfirmToken($token)) {
             $this->addFlash('error', 'Incorrect or already confirmed token.');
+
             return $inertia->redirect('/signup');
         }
 

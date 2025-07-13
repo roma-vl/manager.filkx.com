@@ -26,7 +26,7 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
         string $display,
         string $role,
         string $status,
-        string $date
+        string $date,
     ) {
         $this->id = $id;
         $this->username = $username;
@@ -49,7 +49,7 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
 
     public function getDate(): string
     {
-      return $this->date;
+        return $this->date;
     }
 
     public function getDisplay(): string
@@ -104,6 +104,7 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
         if ($this->username === '') {
             throw new \RuntimeException('Username cannot be empty');
         }
+
         return $this->username;
     }
 }

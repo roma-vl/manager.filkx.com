@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Twig\Environment as Twig;
 
@@ -39,14 +38,14 @@ class InertiaService
     public function withErrors(array $errors): self
     {
         $this->errors = $errors;
+
         return $this;
     }
 
     /**
      * @param array<string, mixed> $props
      */
-    public function render(Request $request, string $component, array $props = [], int $status = 200): Response
-
+    public function render(Request $request, string $component, array $props = [], int $status = 200, ?string $overrideUrl = null): Response
     {
         if (!$request->isMethod('POST')) {
             $this->share('csrfToken', $this->csrfTokenManager->getToken('authenticate')->getValue());
@@ -60,7 +59,7 @@ class InertiaService
         $page = [
             'component' => $component,
             'props' => array_merge($this->shared, $props),
-            'url' => $request->getRequestUri(),
+            'url' => $overrideUrl ?? $request->getRequestUri(),
             'version' => null,
         ];
 
@@ -70,7 +69,6 @@ class InertiaService
                 'X-Inertia' => 'true',
             ]);
         }
-
 
         return new Response(
             $this->twig->render('base.html.twig', ['page' => $page])

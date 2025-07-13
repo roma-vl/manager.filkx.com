@@ -39,15 +39,15 @@
     password: '',
     _remember_me: false,
   })
-      function submit() {
-          form.post('/login', {
-              preserveScroll: true,
-              onError: () => {
-                  // Очищаємо пароль при помилці
-                  form._password = ''
-              }
-          })
-      }
+  function submit() {
+    form.post('/login', {
+      preserveScroll: true,
+      onError: () => {
+        // Очищаємо пароль при помилці
+        form._password = ''
+      },
+    })
+  }
 </script>
 
 <template>
@@ -63,9 +63,8 @@
         {{ flash.success }}
       </div>
 
-
       <form @submit.prevent="submit" novalidate>
-<!--        <input type="hidden" name="_csrf_token" :value="form._csrf_token" />-->
+        <!--        <input type="hidden" name="_csrf_token" :value="form._csrf_token" />-->
 
         <label class="block mb-2 font-semibold" for="email">Email</label>
         <input
