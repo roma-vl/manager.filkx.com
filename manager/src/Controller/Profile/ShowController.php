@@ -25,8 +25,8 @@ class ShowController extends AbstractController
         return $inertia->render($request, 'Profile/Show', [
             'user' => [
                 'id' => $user->getId()->getValue(),
-                'first_name' => $user->getName()->getFirst(), // або ->getFirst().' '.$user->getLast()
-                'last_name' => $user->getName()->getLast(), // або ->getFirst().' '.$user->getLast()
+                'first_name' => $user->getName()->getFirst(),
+                'last_name' => $user->getName()->getLast(),
                 'email' => $user->getEmail()->getValue(),
                 'created_at' => $user->getDate()->format('Y-m-d H:i:s'),
                 'roles' => $user->getRoles(),

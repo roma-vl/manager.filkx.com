@@ -19,10 +19,23 @@ abstract class BaseController extends AbstractController
         return $errors;
     }
 
-    protected function renderWithErrors(Request $request, InertiaService $inertia, string $view, array $errors, array $props = []): Response
-    {
-        return $inertia->render($request, $view, array_merge($props, ['errors' => $errors]));
+    protected function renderWithErrors(
+        Request $request,
+        InertiaService $inertia,
+        string $component,
+        array $errors,
+        array $additionalProps = [],
+        string $url = null
+    ): Response {
+        $props = array_merge(
+            ['errors' => $errors],
+            $additionalProps
+        );
+
+        return $inertia->withErrors($errors)->render($request, $component, $props);
     }
+
+
 
     protected function addFlashSuccessAndRedirect(InertiaService $inertia, string $route, string $message): Response
     {

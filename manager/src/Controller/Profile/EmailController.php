@@ -9,6 +9,7 @@ use App\Controller\ErrorHandler;
 use App\Infrastructure\Inertia\InertiaService;
 use App\Model\EntityNotFoundException;
 use App\Model\User\UseCase\Email;
+use App\ReadModel\User\UserFetcher;
 use App\Service\CommandFactory;
 use DomainException;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +22,7 @@ final class EmailController extends BaseController
 {
     public function __construct(
         private readonly ErrorHandler $errors,
+        private readonly UserFetcher $users,
     ) {
     }
 
@@ -39,8 +41,26 @@ final class EmailController extends BaseController
         $errors = $commandFactory->createFromRequest($request, $command);
 
         if ($errors) {
-            return $this->renderWithErrors($request, $inertia, 'Profile/Show', $errors);
+            $user = $this->users->get($this->getUser()->getId());
+            $userProps = [
+                'user' => [
+                    'id' => $user->getId()->getValue(),
+                    'first_name' => $user->getName()->getFirst(),
+                    'last_name' => $user->getName()->getLast(),
+                    'email' => $user->getEmail()->getValue(),
+                    'created_at' => $user->getDate()->format('Y-m-d H:i:s'),
+                    'roles' => $user->getRoles(),
+                    'status' => $user->getStatus(),
+                    'networks' => array_map(fn($n) => [
+                        'network' => $n->getNetwork(),
+                        'identity' => $n->getIdentity(),
+                    ], $user->getNetworks()),
+                ],
+            ];
+
+            return $this->renderWithErrors($request, $inertia, 'Profile/Show', $errors, $userProps);
         }
+
 
         try {
             $handler->handle($command);
@@ -48,12 +68,8 @@ final class EmailController extends BaseController
             return $inertia->redirect('/profile');
         } catch (EntityNotFoundException|DomainException $e) {
             $this->errors->handle($e);
-//            $this->addFlash('error', $e->getMessage());
-//            return $inertia->redirect('/profile');
-//            return $inertia->location($request->getUri());
-            return $inertia->render($request, 'Profile/Show', [
-                'errors' => ['email' => $e->getMessage()],
-            ]);
+            $this->addFlash('error', $e->getMessage());
+            return $inertia->redirect('/profile');
         }
     }
 

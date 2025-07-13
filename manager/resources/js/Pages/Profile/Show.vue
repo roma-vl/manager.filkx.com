@@ -1,5 +1,5 @@
 <script setup>
-import { computed, reactive, ref } from 'vue'
+import {computed, reactive, ref, watchEffect} from 'vue'
 import {useForm, usePage} from '@inertiajs/inertia-vue3'
 import AppLayout from "../../Layouts/AppLayout.vue"
 
@@ -18,9 +18,17 @@ const editing = reactive({
 })
 
 const form = useForm({
-    first: props.user.first_name,
-    last: props.user.last_name,
-    email: props.user.email,
+    first: '',
+    last: '',
+    email: '',
+})
+
+watchEffect(() => {
+    if (props.user) {
+        form.first = props.user.first_name
+        form.last = props.user.last_name
+        form.email = props.user.email
+    }
 })
 
 
@@ -63,7 +71,7 @@ function saveField(field) {
 <template>
 <AppLayout>
     <div class="space-y-6">
-        <div class="bg-white p-6 rounded shadow">
+        <div class="bg-white p-6 rounded shadow" v-if="props.user">
             <h2 class="text-xl font-bold mb-4">Profile</h2>
             <table class="table-auto w-full border">
                 <tbody>
@@ -86,7 +94,6 @@ function saveField(field) {
                             <span class="flex-1">{{ props.user.first_name }} {{ props.user.last_name }}</span>
                             <button @click="startEdit('name')" class="text-blue-600 hover:text-blue-800">✏️</button>
                         </template>
-
                     </td>
                 </tr>
                 <tr>
@@ -123,7 +130,7 @@ function saveField(field) {
 
         <div class="bg-white p-6 rounded shadow">
             <h2 class="text-xl font-bold mb-4">Networks</h2>
-            <div v-if="props.user.networks?.length">
+            <div v-if="props.user?.networks?.length">
                 <table class="table-auto w-full border mb-4">
                     <thead>
                     <tr>
