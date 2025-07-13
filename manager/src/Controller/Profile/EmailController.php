@@ -4,45 +4,57 @@ declare(strict_types=1);
 
 namespace App\Controller\Profile;
 
+use App\Controller\BaseController;
 use App\Controller\ErrorHandler;
+use App\Infrastructure\Inertia\InertiaService;
+use App\Model\EntityNotFoundException;
 use App\Model\User\UseCase\Email;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\CommandFactory;
+use DomainException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
-final class EmailController extends AbstractController
+final class EmailController extends BaseController
 {
     public function __construct(
         private readonly ErrorHandler $errors,
     ) {
     }
 
-    #[Route('/profile/email', name: 'profile.email', methods: ['GET', 'POST'])]
-    public function request(Request $request, Email\Request\Handler $handler): Response
-    {
-        $command = new Email\Request\Command($this->getUser()->getId());
+    #[Route('/profile/email', name: 'profile.email.update', methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
 
-        $form = $this->createForm(Email\Request\Form::class, $command);
-        $form->handleRequest($request);
+    public function request(
+        Request $request,
+        InertiaService $inertia,
+        Email\Request\Handler $handler,
+        CommandFactory $commandFactory
+    ): Response {
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $handler->handle($command);
-                $this->addFlash('success', 'Check your email.');
+        $userId = $this->getUser()->getId();
+        $command = new Email\Request\Command((string) $userId);
+        $errors = $commandFactory->createFromRequest($request, $command);
 
-                return $this->redirectToRoute('profile');
-            } catch (\DomainException $e) {
-                $this->errors->handle($e);
-                $this->addFlash('error', $e->getMessage());
-            }
+        if ($errors) {
+            return $this->renderWithErrors($request, $inertia, 'Profile/Show', $errors);
         }
 
-        return $this->render('app/profile/email.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        try {
+            $handler->handle($command);
+            $this->addFlash('success', 'Check your email.');
+            return $inertia->redirect('/profile');
+        } catch (EntityNotFoundException|DomainException $e) {
+            $this->errors->handle($e);
+//            $this->addFlash('error', $e->getMessage());
+//            return $inertia->redirect('/profile');
+//            return $inertia->location($request->getUri());
+            return $inertia->render($request, 'Profile/Show', [
+                'errors' => ['email' => $e->getMessage()],
+            ]);
+        }
     }
 
     #[Route('/profile/email/{token}', name: 'profile.email.confirm', methods: ['GET'])]

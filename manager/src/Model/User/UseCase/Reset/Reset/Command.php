@@ -8,19 +8,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank(message: 'Reset token is required')]
     public string $token;
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     *
-     * @Assert\Length(min=6)
-     */
+
+    #[Assert\NotBlank(message: 'Password is required')]
+    #[Assert\Length(
+        min: 6,
+        max: 100,
+        minMessage: 'Password must be at least {{ limit }} characters long',
+        maxMessage: 'Password cannot exceed {{ limit }} characters'
+    )]
+    #[Assert\Regex(
+        pattern: '/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/',
+        message: 'Password must include at least one uppercase letter, one lowercase letter, and one number'
+    )]
     public string $password;
 
     public function __construct(string $token)
@@ -28,3 +29,4 @@ class Command
         $this->token = $token;
     }
 }
+

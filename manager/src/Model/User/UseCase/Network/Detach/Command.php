@@ -4,19 +4,26 @@ declare(strict_types=1);
 
 namespace App\Model\User\UseCase\Network\Detach;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 class Command
 {
-    /**
-     * @var string
-     */
+    #[Assert\NotBlank(message: 'User ID is required')]
+    #[Assert\Uuid(message: 'Invalid user ID format')]
     public string $user;
-    /**
-     * @var string
-     */
+
+    #[Assert\NotBlank(message: 'Network is required')]
+    #[Assert\Length(
+        max: 16,
+        maxMessage: 'Network name cannot exceed {{ limit }} characters'
+    )]
     public string $network;
-    /**
-     * @var string
-     */
+
+    #[Assert\NotBlank(message: 'Identity is required')]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'Identity cannot exceed {{ limit }} characters'
+    )]
     public string $identity;
 
     public function __construct(string $user, string $network, string $identity)

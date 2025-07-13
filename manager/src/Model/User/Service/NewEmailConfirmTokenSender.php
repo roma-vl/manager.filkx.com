@@ -23,7 +23,7 @@ class NewEmailConfirmTokenSender
     public function send(Email $email, string $token): void
     {
 
-        $body = $this->twig->render('mail/user/signup.html.twig', [
+        $body = $this->twig->render('mail/user/email.html.twig', [
             'token' => $token,
         ]);
 

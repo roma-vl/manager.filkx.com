@@ -1,11 +1,63 @@
 <script setup>
-import { computed } from 'vue'
-import { usePage } from '@inertiajs/inertia-vue3'
-import AppLayout from "../../Layouts/AppLayout.vue";
+import { computed, reactive, ref } from 'vue'
+import {useForm, usePage} from '@inertiajs/inertia-vue3'
+import AppLayout from "../../Layouts/AppLayout.vue"
 
 const page = usePage()
 const user = computed(() => page.props.value.auth?.user)
-console.log( usePage())
+
+const props = defineProps({
+    user: Object,
+})
+
+console.log(props.user)
+
+const editing = reactive({
+    name: false,
+    email: false,
+})
+
+const form = useForm({
+    first: props.user.first_name,
+    last: props.user.last_name,
+    email: props.user.email,
+})
+
+
+function startEdit(field) {
+    editing[field] = true
+}
+
+function cancelEdit(field) {
+    if (field === 'name') {
+        form.first = props.user.first_name
+        form.last = props.user.last_name
+    } else {
+        form[field] = props.user[field]
+    }
+    editing[field] = false
+}
+
+
+function saveField(field) {
+    if (field === 'name') {
+        console.log(form, 'form')
+        form.post('/profile/name', {
+            preserveScroll: true,
+            onSuccess: () => {
+                editing.name = false
+            },
+        })
+    } else if (field === 'email') {
+        form.post('/profile/email', {
+            preserveScroll: true,
+            onSuccess: () => {
+                editing.email = false
+            },
+        })
+    }
+}
+
 </script>
 
 <template>
@@ -17,27 +69,53 @@ console.log( usePage())
                 <tbody>
                 <tr>
                     <th class="text-left p-2 border">ID</th>
-                    <td class="p-2 border">{{ user.id }}</td>
+                    <td class="p-2 border">{{ props.user.id }}</td>
                 </tr>
                 <tr>
                     <th class="text-left p-2 border">Name</th>
-                    <td class="p-2 border">{{ user.name }}</td>
+                    <td class="p-2 border flex items-center gap-2">
+                        <template v-if="editing.name">
+                            <input v-model="form.first" class="border p-1 rounded w-full" placeholder="First Name" />
+                            <p v-if="form.errors.first" class="text-red-600 text-sm">{{ form.errors.first }}</p>
+                            <input v-model="form.last" class="border p-1 rounded w-full" placeholder="Last Name" />
+                            <p v-if="form.errors.last" class="text-red-600 text-sm">{{ form.errors.last }}</p>
+                            <button @click="saveField('name')" class="text-green-600 hover:text-green-800">💾</button>
+                            <button @click="cancelEdit('name')" class="text-gray-600 hover:text-gray-800">✖</button>
+                        </template>
+                        <template v-else>
+                            <span class="flex-1">{{ props.user.first_name }} {{ props.user.last_name }}</span>
+                            <button @click="startEdit('name')" class="text-blue-600 hover:text-blue-800">✏️</button>
+                        </template>
+
+                    </td>
                 </tr>
                 <tr>
                     <th class="text-left p-2 border">Email</th>
-                    <td class="p-2 border">{{ user.email || '' }}</td>
+                    <td class="p-2 border flex items-center gap-2">
+                        <template v-if="editing.email">
+                            <input v-model="props.user.email" class="border p-1 rounded w-full" />
+                            <p v-if="form.errors.email" class="text-red-600 text-sm">{{ form.errors.email }}</p>
+                            <button @click="saveField('email')" class="text-green-600 hover:text-green-800">💾</button>
+                            <button @click="cancelEdit('email')" class="text-gray-600 hover:text-gray-800">✖</button>
+                        </template>
+                        <template v-else>
+                            <span class="flex-1">{{ user.email }}</span>
+                            <button @click="startEdit('email')" class="text-blue-600 hover:text-blue-800">✏️</button>
+                        </template>
+                    </td>
                 </tr>
+
                 <tr>
                     <th class="text-left p-2 border">Created</th>
-                    <td class="p-2 border">{{ user.created_at }}</td>
+                    <td class="p-2 border">{{ props.user.created_at }}</td>
                 </tr>
                 <tr>
                     <th class="text-left p-2 border">Role</th>
-                    <td class="p-2 border">{{ user.roles[0] }}</td>
+                    <td class="p-2 border">{{ props.user.roles[0] }}</td>
                 </tr>
                 <tr>
                     <th class="text-left p-2 border">Status</th>
-                    <td class="p-2 border">{{ user.status }}</td>
+                    <td class="p-2 border">{{ props.user.status }}</td>
                 </tr>
                 </tbody>
             </table>
@@ -45,7 +123,7 @@ console.log( usePage())
 
         <div class="bg-white p-6 rounded shadow">
             <h2 class="text-xl font-bold mb-4">Networks</h2>
-            <div v-if="user.networks?.length">
+            <div v-if="props.user.networks?.length">
                 <table class="table-auto w-full border mb-4">
                     <thead>
                     <tr>

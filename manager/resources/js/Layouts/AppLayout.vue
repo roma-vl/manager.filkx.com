@@ -96,6 +96,13 @@
     <main class="col-start-2 row-start-2 overflow-y-auto p-6 bg-gray-50">
       <Transition name="fade" mode="out-in">
         <div class="max-w-7xl mx-auto">
+            <div v-if="showFlash && flash.error" class="mb-4 p-3 bg-red-100 text-red-700 rounded">
+                {{ flash.error }}
+            </div>
+
+            <div v-if="showFlash && flash.success" class="mb-4 p-3 bg-green-100 text-green-700 rounded">
+                {{ flash.success }}
+            </div>
           <slot />
         </div>
       </Transition>
@@ -119,15 +126,30 @@
   import UserDropdown from '../Components/UserDropdown.vue'
   import NavItem from '../Components/NavItem.vue'
   import UserDropdown2 from '../Components/UserDropdown2.vue'
-
+  const page = usePage()
   const sidebarOpen = ref(window.innerWidth >= 1024)
+  const flash = computed(() => page.props.value.flash || {})
+  const showFlash = ref(false)
+  // Показуємо flash-повідомлення на 5 секунд
+  watch(
+      flash,
+      newVal => {
+          if (newVal.error || newVal.success) {
+              showFlash.value = true
+              setTimeout(() => {
+                  showFlash.value = false
+              }, 5000)
+          }
+      },
+      {
 
+      })
   const toggleSidebar = () => {
     sidebarOpen.value = !sidebarOpen.value
   }
 
   // Close sidebar on mobile when route changes
-  const page = usePage()
+
   watch(
     () => page.url,
     () => {
