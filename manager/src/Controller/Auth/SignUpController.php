@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Controller\Auth;
 
+use App\Controller\BaseController;
 use App\Controller\ErrorHandler;
 use App\Infrastructure\Inertia\InertiaService;
 use App\Model\User\UseCase\SignUp;
 use App\ReadModel\User\UserFetcher;
 use App\Security\LoginFormAuthenticator;
 use App\Security\UserProvider;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\CommandFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class SignUpController extends AbstractController
+class SignUpController extends BaseController
 {
     public function __construct(
         private readonly UserFetcher $users,
@@ -26,35 +26,19 @@ class SignUpController extends AbstractController
     ) {}
 
 
-
     #[Route('/signup', name: 'auth.signup', methods: ['GET', 'POST'])]
     public function request(
         Request $request,
         InertiaService $inertia,
         SignUp\Request\Handler $handler,
-        ValidatorInterface $validator
+        CommandFactory $commandFactory
     ): Response {
         if ($request->isMethod('POST')) {
-            $data = json_decode($request->getContent(), true); // ✅ правильно
-
             $command = new SignUp\Request\Command();
-            $command->firstName = $data['firstName'] ?? '';
-            $command->lastName = $data['lastName'] ?? '';
-            $command->email = $data['email'] ?? '';
-            $command->password = $data['password'] ?? '';
+            $errors = $commandFactory->createFromRequest($request, $command);
 
-            // 🔍 Валідація через Symfony Validator
-            $violations = $validator->validate($command);
-            if (count($violations) > 0) {
-                $errors = [];
-                foreach ($violations as $violation) {
-                    $property = $violation->getPropertyPath();
-                    $errors[$property] = $violation->getMessage();
-                }
-
-                return $inertia->render($request, 'Auth/SignUp', [
-                    'errors' => $errors,
-                ]);
+            if ($errors) {
+                return $this->renderWithErrors($request, $inertia, 'Auth/SignUp', $errors);
             }
 
             try {
@@ -70,6 +54,7 @@ class SignUpController extends AbstractController
 
         return $inertia->render($request, 'Auth/SignUp');
     }
+
 
 
     #[Route('/signup/{token}', name: 'auth.signup.confirm')]

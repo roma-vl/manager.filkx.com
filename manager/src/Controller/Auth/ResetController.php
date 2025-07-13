@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\Controller\Auth;
 
+use App\Controller\BaseController;
 use App\Controller\ErrorHandler;
 use App\Infrastructure\Inertia\InertiaService;
 use App\Model\EntityNotFoundException;
 use App\Model\User\UseCase\Reset;
 use App\ReadModel\User\UserFetcher;
+use App\Service\CommandFactory;
 use DomainException;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class ResetController extends AbstractController
+class ResetController extends BaseController
 {
     public function __construct(
         private readonly ErrorHandler $errors,
@@ -27,23 +27,15 @@ class ResetController extends AbstractController
         Request $request,
         InertiaService $inertia,
         Reset\Request\Handler $handler,
-        ValidatorInterface $validator
+        CommandFactory $commandFactory
     ): Response {
         if ($request->isMethod('POST')) {
-            $data = json_decode($request->getContent(), true);
 
             $command = new Reset\Request\Command();
-            $command->email = $data['email'] ?? '';
+            $errors = $commandFactory->createFromRequest($request, $command);
 
-            $violations = $validator->validate($command);
-            if (count($violations) > 0) {
-                $errors = [];
-                foreach ($violations as $violation) {
-                    $errors[$violation->getPropertyPath()] = $violation->getMessage();
-                }
-                return $inertia->render($request, 'Auth/Reset/Request', [
-                    'errors' => $errors,
-                ]);
+            if ($errors) {
+                return $this->renderWithErrors($request, $inertia, 'Auth/SignUp', $errors);
             }
 
             try {
@@ -67,7 +59,7 @@ class ResetController extends AbstractController
         InertiaService $inertia,
         Reset\Reset\Handler $handler,
         UserFetcher $users,
-        ValidatorInterface $validator
+        CommandFactory $commandFactory
     ): Response {
         if (!$users->existsByResetToken($token)) {
             $this->addFlash('error', 'Incorrect or already confirmed token.');
@@ -75,21 +67,11 @@ class ResetController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            $data = json_decode($request->getContent(), true);
-
             $command = new Reset\Reset\Command($token);
-            $command->password = $data['password'] ?? '';
+            $errors = $commandFactory->createFromRequest($request, $command);
 
-            $violations = $validator->validate($command);
-            if (count($violations) > 0) {
-                $errors = [];
-                foreach ($violations as $violation) {
-                    $errors[$violation->getPropertyPath()] = $violation->getMessage();
-                }
-                return $inertia->render($request, 'Auth/Reset/Reset', [
-                    'errors' => $errors,
-                    'token' => $token,
-                ]);
+            if ($errors) {
+                return $this->renderWithErrors($request, $inertia, 'Auth/SignUp', $errors);
             }
 
             try {
