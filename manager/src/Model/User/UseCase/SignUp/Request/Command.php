@@ -43,4 +43,3 @@ class Command
     )]
     public string $password = '';
 }
-

@@ -59,7 +59,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Network::class, orphanRemoval: true, cascade: ['persist'])]
     private Collection $networks;
 
-
     public function __construct(Id $id, \DateTimeImmutable $date, Name $name)
     {
         $this->id = $id;
@@ -309,7 +308,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return ['ROLE_USER'];
     }
 
-    public function eraseCredentials(): void{}
+    public function eraseCredentials(): void
+    {
+    }
 
     public function getUserIdentifier(): string
     {

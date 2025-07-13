@@ -24,6 +24,7 @@ class UserRepository
     {
         /** @var User|null $user */
         $user = $this->repo->findOneBy(['confirmToken' => $token]);
+
         return $user;
     }
 
@@ -31,6 +32,7 @@ class UserRepository
     {
         /** @var User|null $user */
         $user = $this->repo->findOneBy(['resetToken.token' => $token]);
+
         return $user;
     }
 
@@ -41,6 +43,7 @@ class UserRepository
         if (!$user) {
             throw new EntityNotFoundException('User is not found.');
         }
+
         return $user;
     }
 
@@ -51,6 +54,7 @@ class UserRepository
         if (!$user) {
             throw new EntityNotFoundException('User is not found.');
         }
+
         return $user;
     }
 

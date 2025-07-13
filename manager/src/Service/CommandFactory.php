@@ -11,16 +11,18 @@ readonly class CommandFactory
 {
     public function __construct(
         private ValidatorInterface $validator,
-    ) {}
+    ) {
+    }
 
     /**
      * @param object $command - інстанс класу команди (DTO)
+     *
      * @return array{command: object, errors: array<string, string>}
      */
     public function createFromRequest(Request $request, object $command): array
     {
         $data = json_decode($request->getContent(), true);
-        if (!is_array($data)) {
+        if (!\is_array($data)) {
             $data = [];
         }
 

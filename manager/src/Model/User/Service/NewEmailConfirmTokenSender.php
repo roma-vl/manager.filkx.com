@@ -6,8 +6,8 @@ namespace App\Model\User\Service;
 
 use App\Model\User\Entity\User\Email;
 use Symfony\Component\Mailer\MailerInterface;
-use Twig\Environment;
 use Symfony\Component\Mime\Email as SymfonyEmail;
+use Twig\Environment;
 
 class NewEmailConfirmTokenSender
 {
@@ -22,7 +22,6 @@ class NewEmailConfirmTokenSender
 
     public function send(Email $email, string $token): void
     {
-
         $body = $this->twig->render('mail/user/email.html.twig', [
             'token' => $token,
         ]);

@@ -12,8 +12,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use UnexpectedValueException;
-use function in_array;
 
 class UserFetcher
 {
@@ -151,6 +149,7 @@ class UserFetcher
     {
         /** @var User|null $user */
         $user = $this->repository->findOneBy(['confirmToken' => $token]);
+
         return $user;
     }
 
@@ -161,6 +160,7 @@ class UserFetcher
         if (!$user) {
             throw new NotFoundException('User is not found');
         }
+
         return $user;
     }
 
@@ -200,8 +200,8 @@ class UserFetcher
             $qb->setParameter('role', $filter->role);
         }
 
-        if (!in_array($sort, ['date', 'name', 'email', 'role', 'status'], true)) {
-            throw new UnexpectedValueException('Cannot sort by ' . $sort);
+        if (!\in_array($sort, ['date', 'name', 'email', 'role', 'status'], true)) {
+            throw new \UnexpectedValueException('Cannot sort by ' . $sort);
         }
 
         $qb->orderBy($sort, $direction === 'desc' ? 'desc' : 'asc');

@@ -60,7 +60,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     public function onAuthenticationSuccess(
         Request $request,
         TokenInterface $token,
-        string $firewallName
+        string $firewallName,
     ): JsonResponse|RedirectResponse {
         if ($request->headers->get('X-Inertia')) {
             return new RedirectResponse($this->urlGenerator->generate('home'));
@@ -75,7 +75,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationFailure(
         Request $request,
-        AuthenticationException $exception
+        AuthenticationException $exception,
     ): JsonResponse|RedirectResponse {
         $session = $request->getSession();
         if ($session instanceof Session) {

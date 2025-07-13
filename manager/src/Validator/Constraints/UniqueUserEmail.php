@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
@@ -10,7 +13,7 @@ class UniqueUserEmail extends Constraint
 
     public function validatedBy(): string
     {
-        return static::class.'Validator';
+        return static::class . 'Validator';
     }
 
     public function getTargets(): string

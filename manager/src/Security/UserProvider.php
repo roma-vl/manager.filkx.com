@@ -27,6 +27,7 @@ class UserProvider implements UserProviderInterface
     public function loadUserByUsername(string $username): UserInterface
     {
         $user = $this->loadUser($username);
+
         return self::identityByUser($user, $username);
     }
 
@@ -37,6 +38,7 @@ class UserProvider implements UserProviderInterface
         }
 
         $user = $this->loadUser($identity->getUsername());
+
         return self::identityByUser($user, $identity->getUsername());
     }
 
@@ -79,6 +81,7 @@ class UserProvider implements UserProviderInterface
     public function loadUserByIdentifier(string $identifier): UserIdentity
     {
         $user = $this->loadUser($identifier);
+
         return self::identityByUser($user, $identifier);
     }
 }

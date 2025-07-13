@@ -51,6 +51,7 @@ class GoogleAuthenticator extends OAuth2Authenticator
 
                 /** @var UserIdentity $user */
                 $user = $this->userProvider->loadUserByIdentifier($email);
+
                 return $user;
             })
         );
