@@ -10,8 +10,9 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 readonly class PasswordHasher
 {
     public function __construct(
-        private UserPasswordHasherInterface $hasher
-    ) {}
+        private UserPasswordHasherInterface $hasher,
+    ) {
+    }
 
     public function hash(PasswordAuthenticatedUserInterface $user, string $password): string
     {

@@ -13,18 +13,17 @@ use App\Model\User\Service\NewEmailConfirmTokenSender;
 
 class Handler
 {
-    private $users;
-    private $tokenizer;
-    private $sender;
-    private $flusher;
+    private UserRepository $users;
+    private NewEmailConfirmTokenizer $tokenizer;
+    private NewEmailConfirmTokenSender $sender;
+    private Flusher $flusher;
 
     public function __construct(
         UserRepository $users,
         NewEmailConfirmTokenizer $tokenizer,
         NewEmailConfirmTokenSender $sender,
-        Flusher $flusher
-    )
-    {
+        Flusher $flusher,
+    ) {
         $this->users = $users;
         $this->tokenizer = $tokenizer;
         $this->sender = $sender;

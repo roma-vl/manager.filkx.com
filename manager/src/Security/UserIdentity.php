@@ -11,12 +11,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface
 {
-    private $id;
-    private $username;
-    private $password;
-    private $display;
-    private $role;
-    private $status;
+    private string $id;
+    private string $username;
+    private string $password;
+    private string $display;
+    private string $role;
+    private string $status;
+    private string $date;
 
     public function __construct(
         string $id,
@@ -24,15 +25,16 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
         string $password,
         string $display,
         string $role,
-        string $status
-    )
-    {
+        string $status,
+        string $date
+    ) {
         $this->id = $id;
         $this->username = $username;
         $this->password = $password;
         $this->display = $display;
         $this->role = $role;
         $this->status = $status;
+        $this->date = $date;
     }
 
     public function getId(): string
@@ -43,6 +45,11 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
     public function isActive(): bool
     {
         return $this->status === User::STATUS_ACTIVE;
+    }
+
+    public function getDate(): string
+    {
+      return $this->date;
     }
 
     public function getDisplay(): string
@@ -65,6 +72,11 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
         return [$this->role];
     }
 
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
     public function getSalt(): ?string
     {
         return null;
@@ -72,7 +84,6 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
 
     public function eraseCredentials(): void
     {
-
     }
 
     public function isEqualTo(UserInterface $user): bool
@@ -82,15 +93,17 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
         }
 
         return
-            $this->id === $user->id &&
-            $this->password === $user->password &&
-            $this->role === $user->role &&
-            $this->status === $user->status;
+            $this->id === $user->id
+            && $this->password === $user->password
+            && $this->role === $user->role
+            && $this->status === $user->status;
     }
 
     public function getUserIdentifier(): string
     {
+        if ($this->username === '') {
+            throw new \RuntimeException('Username cannot be empty');
+        }
         return $this->username;
     }
-
 }

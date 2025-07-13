@@ -10,8 +10,10 @@ class Command
 {
     /**
      * @var string
+     *
      * @Assert\NotBlank()
+     *
      * @Assert\Email()
      */
-    public $email;
+    public string $email;
 }

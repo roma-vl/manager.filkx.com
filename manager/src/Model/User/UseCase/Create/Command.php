@@ -10,15 +10,16 @@ class Command
 {
     /**
      * @Assert\NotBlank()
+     *
      * @Assert\Email()
      */
-    public $email;
+    public string $email;
     /**
      * @Assert\NotBlank()
      */
-    public $firstName;
+    public string $firstName;
     /**
      * @Assert\NotBlank()
      */
-    public $lastName;
+    public string $lastName;
 }

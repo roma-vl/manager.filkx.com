@@ -12,20 +12,21 @@ class Command
     /**
      * @Assert\NotBlank()
      */
-    public $id;
+    public string $id;
     /**
      * @Assert\NotBlank()
+     *
      * @Assert\Email()
      */
-    public $email;
+    public string $email;
     /**
      * @Assert\NotBlank()
      */
-    public $firstName;
+    public string $firstName;
     /**
      * @Assert\NotBlank()
      */
-    public $lastName;
+    public string $lastName;
 
     public function __construct(string $id)
     {
@@ -35,9 +36,10 @@ class Command
     public static function fromUser(User $user): self
     {
         $command = new self($user->getId()->getValue());
-        $command->email = $user->getEmail() ? $user->getEmail()->getValue() : null;
+        $command->email = $user->getEmail()?->getValue();
         $command->firstName = $user->getName()->getFirst();
         $command->lastName = $user->getName()->getLast();
+
         return $command;
     }
 }

@@ -9,7 +9,7 @@ use Ramsey\Uuid\Uuid;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'user_user_networks', uniqueConstraints: [
-    new ORM\UniqueConstraint(columns: ['network', 'identity'])
+    new ORM\UniqueConstraint(columns: ['network', 'identity']),
 ])]
 class Network
 {

@@ -6,10 +6,11 @@ namespace App\ReadModel\User;
 
 class AuthView
 {
-    public $id;
-    public $email;
-    public $password_hash;
-    public $name;
-    public $role;
-    public $status;
+    public string $id;
+    public string $email;
+    public string $password_hash;
+    public string $name;
+    public string $role;
+    public string $status;
+    public string $date;
 }

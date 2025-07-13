@@ -6,9 +6,9 @@ namespace App\Tests\Builder\User;
 
 use App\Model\User\Entity\User\Email;
 use App\Model\User\Entity\User\Id;
+use App\Model\User\Entity\User\Name;
 use App\Model\User\Entity\User\Role;
 use App\Model\User\Entity\User\User;
-use App\Model\User\Entity\User\Name;
 
 class UserBuilder
 {
@@ -33,12 +33,13 @@ class UserBuilder
         $this->name = new Name('First', 'Last');
     }
 
-    public function viaEmail(Email $email = null, string $hash = null, string $token = null): self
+    public function viaEmail(?Email $email = null, ?string $hash = null, ?string $token = null): self
     {
         $clone = clone $this;
         $clone->email = $email ?? new Email('mail@app.test');
         $clone->hash = $hash ?? 'hash';
         $clone->token = $token ?? 'token';
+
         return $clone;
     }
 
@@ -46,14 +47,16 @@ class UserBuilder
     {
         $clone = clone $this;
         $clone->confirmed = true;
+
         return $clone;
     }
 
-    public function viaNetwork(string $network = null, string $identity = null): self
+    public function viaNetwork(?string $network = null, ?string $identity = null): self
     {
         $clone = clone $this;
         $clone->network = $network ?? 'vk';
         $clone->identity = $identity ?? '0001';
+
         return $clone;
     }
 
@@ -61,6 +64,7 @@ class UserBuilder
     {
         $clone = clone $this;
         $clone->id = $id;
+
         return $clone;
     }
 
@@ -68,6 +72,7 @@ class UserBuilder
     {
         $clone = clone $this;
         $clone->name = $name;
+
         return $clone;
     }
 
@@ -75,6 +80,7 @@ class UserBuilder
     {
         $clone = clone $this;
         $clone->role = $role;
+
         return $clone;
     }
 

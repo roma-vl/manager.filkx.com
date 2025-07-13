@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Controller\Auth\OAuth;
+declare(strict_types=1);
 
+namespace App\Controller\Auth\OAuth;
 
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
 class GoogleController extends AbstractController
 {
     #[Route('/oauth/google', name: 'oauth.google')]
-    public function connect(ClientRegistry $clientRegistry): Response
+    public function connect(ClientRegistry $clientRegistry): RedirectResponse
     {
         return $clientRegistry
             ->getClient('google_main')
@@ -19,9 +20,8 @@ class GoogleController extends AbstractController
     }
 
     #[Route('/oauth/google/check', name: 'oauth.google_check')]
-    public function check(): Response
+    public function check(): RedirectResponse
     {
-        // після успішного логіну Security listener автоматично обробить користувача
         return $this->redirectToRoute('home');
     }
 }

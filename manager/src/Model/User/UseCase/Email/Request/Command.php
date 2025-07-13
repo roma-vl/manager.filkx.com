@@ -10,15 +10,18 @@ class Command
 {
     /**
      * @var string
+     *
      * @Assert\NotBlank()
      */
-    public $id;
+    public string $id;
     /**
      * @var string
+     *
      * @Assert\NotBlank()
+     *
      * @Assert\Email()
      */
-    public $email;
+    public string $email;
 
     public function __construct(string $id)
     {

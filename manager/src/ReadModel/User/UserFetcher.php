@@ -9,14 +9,18 @@ use App\ReadModel\NotFoundException;
 use App\ReadModel\User\Filter\Filter;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use UnexpectedValueException;
+use function in_array;
 
 class UserFetcher
 {
     private Connection $connection;
     private PaginatorInterface $paginator;
-    private $repository;
+    /** @var EntityRepository<User> */
+    private EntityRepository $repository;
 
     public function __construct(Connection $connection, EntityManagerInterface $em, PaginatorInterface $paginator)
     {
@@ -37,10 +41,20 @@ class UserFetcher
         return (int) $result > 0;
     }
 
+    public function existsByEmail(string $email): bool
+    {
+        return (int) $this->repository->createQueryBuilder('u')
+                ->select('COUNT(u.id)')
+                ->andWhere('u.email = :email')
+                ->setParameter('email', $email)
+                ->getQuery()
+                ->getSingleScalarResult() > 0;
+    }
+
     public function findForAuthByEmail(string $email): ?AuthView
     {
         $stmt = $this->connection->createQueryBuilder()
-            ->select('id', 'email', 'password_hash', "TRIM(CONCAT(name_first, ' ', name_last)) AS name", 'role', 'status')
+            ->select('id', 'email', 'password_hash', "TRIM(CONCAT(name_first, ' ', name_last)) AS name", 'role', 'status', 'date')
             ->from('user_users')
             ->where('email = :email')
             ->setParameter('email', $email)
@@ -59,10 +73,10 @@ class UserFetcher
         $authView->name = $result['name'];
         $authView->role = $result['role'];
         $authView->status = $result['status'];
+        $authView->date = $result['date'];
 
         return $authView;
     }
-
 
     public function findForAuthByNetwork(string $network, string $identity): ?AuthView
     {
@@ -77,7 +91,19 @@ class UserFetcher
 
         $result = $stmt->fetchAssociative();
 
-        return $result ?: null;
+        if (!$result) {
+            return null;
+        }
+
+        $authView = new AuthView();
+        $authView->id = $result['u.id'];
+        $authView->email = $result['u.email'];
+        $authView->password_hash = $result['u.password_hash'];
+        $authView->name = $result['name'];
+        $authView->role = $result['u.role'];
+        $authView->status = $result['u.status'];
+
+        return $authView;
     }
 
     public function findByEmail(string $email): ?ShortView
@@ -91,18 +117,26 @@ class UserFetcher
 
         $result = $stmt->fetchAssociative();
 
-        return $result ?: null;
+        if (!$result) {
+            return null;
+        }
+
+        $shortView = new ShortView();
+        $shortView->id = $result['id'];
+        $shortView->email = $result['email'];
+        $shortView->role = $result['role'];
+        $shortView->status = $result['status'];
+
+        return $shortView;
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     public function findBySignUpConfirmToken(string $token): ?array
     {
         $stmt = $this->connection->createQueryBuilder()
-            ->select(
-                'id',
-                'email',
-                'role',
-                'status'
-            )
+            ->select('id', 'email', 'role', 'status')
             ->from('user_users')
             ->where('confirm_token = :token')
             ->setParameter('token', $token)
@@ -115,19 +149,31 @@ class UserFetcher
 
     public function findUserEntityBySignUpConfirmToken(string $token): ?User
     {
-        return $this->repository->findOneBy(['confirmToken' => $token]);
+        /** @var User|null $user */
+        $user = $this->repository->findOneBy(['confirmToken' => $token]);
+        return $user;
     }
-
-
 
     public function get(string $id): User
     {
-        if (!$user = $this->repository->find($id)) {
+        /** @var User|null $user */
+        $user = $this->repository->find($id);
+        if (!$user) {
             throw new NotFoundException('User is not found');
         }
         return $user;
     }
 
+    /**
+     * @return PaginationInterface<array-key, array{
+     *     id: string,
+     *     date: string,
+     *     name: string,
+     *     email: string,
+     *     role: string,
+     *     status: string
+     * }>
+     */
     public function all(Filter $filter, int $page, int $size, string $sort, string $direction): PaginationInterface
     {
         $qb = $this->connection->createQueryBuilder()
@@ -135,7 +181,7 @@ class UserFetcher
             ->from('user_users');
 
         if ($filter->name) {
-            $qb->andWhere($qb->expr()->like('LOWER(CONCAT(name_first, \" \", name_last))', ':name'));
+            $qb->andWhere($qb->expr()->like('LOWER(CONCAT(name_first, " ", name_last))', ':name'));
             $qb->setParameter('name', '%' . mb_strtolower($filter->name) . '%');
         }
 
@@ -154,8 +200,8 @@ class UserFetcher
             $qb->setParameter('role', $filter->role);
         }
 
-        if (!\in_array($sort, ['date', 'name', 'email', 'role', 'status'], true)) {
-            throw new \UnexpectedValueException('Cannot sort by ' . $sort);
+        if (!in_array($sort, ['date', 'name', 'email', 'role', 'status'], true)) {
+            throw new UnexpectedValueException('Cannot sort by ' . $sort);
         }
 
         $qb->orderBy($sort, $direction === 'desc' ? 'desc' : 'asc');

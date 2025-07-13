@@ -12,18 +12,17 @@ use App\Model\User\Service\ResetTokenSender;
 
 class Handler
 {
-    private $users;
-    private $tokenizer;
-    private $flusher;
-    private $sender;
+    private UserRepository $users;
+    private ResetTokenizer $tokenizer;
+    private Flusher $flusher;
+    private ResetTokenSender $sender;
 
     public function __construct(
         UserRepository $users,
         ResetTokenizer $tokenizer,
         Flusher $flusher,
-        ResetTokenSender $sender
-    )
-    {
+        ResetTokenSender $sender,
+    ) {
         $this->users = $users;
         $this->tokenizer = $tokenizer;
         $this->flusher = $flusher;
@@ -33,6 +32,10 @@ class Handler
     public function handle(Command $command): void
     {
         $user = $this->users->getByEmail(new Email($command->email));
+
+//        if ($this->users->hasByEmail($email)) {
+//            throw new \DomainException('User already exists.');
+//        }
 
         $user->requestPasswordReset(
             $this->tokenizer->generate(),

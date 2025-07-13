@@ -6,8 +6,8 @@ namespace App\ReadModel\User\Filter;
 
 class Filter
 {
-    public $name;
-    public $email;
-    public $role;
-    public $status;
+    public string $name;
+    public string $email;
+    public string $role;
+    public string $status;
 }

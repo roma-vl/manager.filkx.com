@@ -26,6 +26,9 @@ services:
     App\Model\User\Service\ResetTokenSender:
         arguments:
             $appUrl: '%app.url%'
+    App\EventSubscriber\LogoutSubscriber:
+        tags:
+            - { name: kernel.event_subscriber }
 framework:
     router:
         default_uri: '%env(resolve:APP_URL)%'

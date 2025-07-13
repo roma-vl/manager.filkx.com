@@ -4,24 +4,26 @@ declare(strict_types=1);
 
 namespace App\Controller\Profile;
 
+use App\Infrastructure\Inertia\InertiaService;
 use App\ReadModel\User\UserFetcher;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class ShowController extends AbstractController
 {
-    private $users;
+    public function __construct(
+        private readonly UserFetcher $users,
+    ) {}
 
-    public function __construct(UserFetcher $users)
-    {
-        $this->users = $users;
-    }
     #[Route('/profile', name: 'profile')]
-    public function show(): Response
+    public function show(Request $request, InertiaService $inertia): Response
     {
         $user = $this->users->get($this->getUser()->getId());
 
-        return $this->render('app/profile/show.html.twig', compact('user'));
+        return $inertia->render($request, 'Profile/Show', [
+            'user' => $user,
+        ]);
     }
 }

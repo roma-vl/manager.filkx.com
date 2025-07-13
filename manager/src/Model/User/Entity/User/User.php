@@ -59,9 +59,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Network::class, orphanRemoval: true, cascade: ['persist'])]
     private Collection $networks;
 
-    #[ORM\Version]
-    #[ORM\Column(type: 'integer')]
-    private int $version;
 
     public function __construct(Id $id, \DateTimeImmutable $date, Name $name)
     {
@@ -78,6 +75,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $user->email = $email;
         $user->passwordHash = $hash;
         $user->status = self::STATUS_ACTIVE;
+
         return $user;
     }
 
@@ -88,6 +86,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $user->passwordHash = $hash;
         $user->confirmToken = $token;
         $user->status = self::STATUS_WAIT;
+
         return $user;
     }
 
@@ -106,6 +105,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $user = new self($id, $date, $name);
         $user->attachNetwork($network, $identity);
         $user->status = self::STATUS_ACTIVE;
+
         return $user;
     }
 
@@ -127,6 +127,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                     throw new \DomainException('Unable to detach the last identity.');
                 }
                 $this->networks->removeElement($existing);
+
                 return;
             }
         }
@@ -305,25 +306,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        return ['ROLE_USER']; // або витягуй з бази, якщо є рольова модель
+        return ['ROLE_USER'];
     }
 
-    public function eraseCredentials(): void
-    {
-        // очистити тимчасові дані, якщо є (наприклад plainPassword)
-    }
+    public function eraseCredentials(): void{}
 
-    // Symfony 5.3+ (а особливо 6+)
     public function getUserIdentifier(): string
     {
-        return $this->email->getValue(); // або id, або login
+        return $this->email->getValue();
     }
 
     public function updatePasswordHash(string $hash): void
     {
         $this->passwordHash = $hash;
     }
-
 
     public function getPassword(): ?string
     {
