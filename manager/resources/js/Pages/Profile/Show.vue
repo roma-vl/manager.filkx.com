@@ -2,7 +2,7 @@
   import { computed, reactive, ref, watchEffect } from 'vue'
   import { useForm, usePage } from '@inertiajs/inertia-vue3'
   import AppLayout from '../../Layouts/AppLayout.vue'
-  import {roleBadgeClass, statusBadgeClass} from "../../helpers.js";
+  import { roleBadgeClass, statusBadgeClass } from '../../helpers.js'
 
   const page = usePage()
   const user = computed(() => page.props.value.auth?.user)
@@ -62,7 +62,6 @@
       })
     }
   }
-
 </script>
 
 <template>

@@ -1,30 +1,30 @@
 <script setup>
-import { ref } from 'vue';
+  import { ref } from 'vue'
 
-const props = defineProps({
-  modelValue: {
-    type: Array,
-    default: () => [],
-  },
-});
+  const props = defineProps({
+    modelValue: {
+      type: Array,
+      default: () => [],
+    },
+  })
 
-const emit = defineEmits(['update:modelValue']);
+  const emit = defineEmits(['update:modelValue'])
 
-const input = ref('');
+  const input = ref('')
 
-const addTag = () => {
-  const trimmed = input.value.trim();
-  if (trimmed && !props.modelValue.includes(trimmed)) {
-    emit('update:modelValue', [...props.modelValue, trimmed]);
-    input.value = '';
+  const addTag = () => {
+    const trimmed = input.value.trim()
+    if (trimmed && !props.modelValue.includes(trimmed)) {
+      emit('update:modelValue', [...props.modelValue, trimmed])
+      input.value = ''
+    }
   }
-};
 
-const removeTag = (index) => {
-  const updated = [...props.modelValue];
-  updated.splice(index, 1);
-  emit('update:modelValue', updated);
-};
+  const removeTag = index => {
+    const updated = [...props.modelValue]
+    updated.splice(index, 1)
+    emit('update:modelValue', updated)
+  }
 </script>
 
 <template>
@@ -38,10 +38,7 @@ const removeTag = (index) => {
       class="bg-blue-200 text-blue-800 dark:text-blue-900 dark:bg-blue-400 px-2 py-1 rounded flex items-center mr-2 mb-1"
     >
       {{ tag }}
-      <button
-        class="ml-1 text-red-600 font-bold"
-        @click.stop="removeTag(index)"
-      >×</button>
+      <button class="ml-1 text-red-600 font-bold" @click.stop="removeTag(index)">×</button>
     </span>
 
     <input
@@ -51,12 +48,8 @@ const removeTag = (index) => {
       class="flex-grow min-w-[150px] border-none outline-none dark:bg-gray-900"
       @keydown.enter.prevent="addTag"
       @keydown.delete="input === '' && modelValue.length && removeTag(modelValue.length - 1)"
-    >
+    />
 
-    <input
-      type="hidden"
-      name="variants"
-      :value="JSON.stringify(modelValue)"
-    >
+    <input type="hidden" name="variants" :value="JSON.stringify(modelValue)" />
   </div>
 </template>
