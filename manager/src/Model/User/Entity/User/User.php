@@ -284,6 +284,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->role;
     }
 
+    public function getRolesList(): array
+    {
+        return [
+            'ROLE_USER' => 'User',
+            'ROLE_MODERATOR' => 'Moderator',
+            'ROLE_ADMIN' => 'Administrator',
+        ];
+    }
+
     public function getStatus(): string
     {
         return $this->status;

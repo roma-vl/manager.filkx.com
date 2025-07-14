@@ -1,3 +1,56 @@
+
+<script setup>
+import {ref, computed, watch, onMounted} from 'vue'
+import { usePage } from '@inertiajs/inertia-vue3'
+import SearchBar from '../Components/SearchBar.vue'
+import NavItem from '../Components/NavItem.vue'
+import UserDropdown2 from '../Components/UserDropdown2.vue'
+import DarkModeToggle from "../Components/DarkModeToggle.vue";
+
+const page = usePage()
+const sidebarOpen = ref(window.innerWidth >= 1024)
+const flash = computed(() => page.props.value.flash || {})
+console.log(flash.value, 'flash')
+const roles = page.props.value.auth.roles
+const canManageUsers = roles?.includes('ROLE_MANAGE_USERS')
+const showFlash = ref(false)
+
+watch(
+    flash,
+    newVal => {
+        if (newVal.error || newVal.success) {
+            showFlash.value = true
+            setTimeout(() => {
+                showFlash.value = false
+            }, 5000)
+        }
+    },
+    {}
+)
+onMounted(() => {
+    if (flash.value.success || flash.value.error) {
+        showFlash.value = true
+        setTimeout(() => {
+            showFlash.value = false
+        }, 5000)
+    }
+})
+
+
+
+const toggleSidebar = () => {
+    sidebarOpen.value = !sidebarOpen.value
+}
+
+watch(
+    () => page.url,
+    () => {
+        if (window.innerWidth < 1024) {
+            sidebarOpen.value = false
+        }
+    }
+)
+</script>
 <template>
     <div class="grid grid-rows-[auto_1fr] grid-cols-[auto_1fr] h-screen font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
         <!-- Sidebar -->
@@ -124,48 +177,6 @@
     </div>
 </template>
 
-<script setup>
-import { ref, computed, watch } from 'vue'
-import { usePage } from '@inertiajs/inertia-vue3'
-import SearchBar from '../Components/SearchBar.vue'
-import NavItem from '../Components/NavItem.vue'
-import UserDropdown2 from '../Components/UserDropdown2.vue'
-import DarkModeToggle from "../Components/DarkModeToggle.vue";
-
-const page = usePage()
-const sidebarOpen = ref(window.innerWidth >= 1024)
-const flash = computed(() => page.props.value.flash || {})
-const roles = page.props.value.auth.roles
-const canManageUsers = roles?.includes('ROLE_MANAGE_USERS')
-const showFlash = ref(false)
-
-watch(
-    flash,
-    newVal => {
-        if (newVal.error || newVal.success) {
-            showFlash.value = true
-            setTimeout(() => {
-                showFlash.value = false
-            }, 5000)
-        }
-    },
-    {}
-)
-
-const toggleSidebar = () => {
-    sidebarOpen.value = !sidebarOpen.value
-}
-
-watch(
-    () => page.url,
-    () => {
-        if (window.innerWidth < 1024) {
-            sidebarOpen.value = false
-        }
-    }
-)
-</script>
-
 <style>
 .fade-enter-active,
 .fade-leave-active {
@@ -198,9 +209,7 @@ html {
 ::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
 }
-</style>
 
-<style>
 .grid-areas-layout {
     grid-template-areas:
       'header header'

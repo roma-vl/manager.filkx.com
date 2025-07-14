@@ -2,6 +2,10 @@
 import { reactive, ref } from 'vue';
 import {useForm} from '@inertiajs/inertia-vue3'
 import AppLayout from "../../Layouts/AppLayout.vue";
+import InputLabel from "../../Components/InputLabel.vue";
+import InputError from "../../Components/InputError.vue";
+import TextInput from "../../Components/TextInput.vue";
+import SecondaryButton from "../../Components/SecondaryButton.vue";
 const props = defineProps({
     flash: {
         type: Object,
@@ -28,44 +32,91 @@ function submit() {
     flashError.value = '';
 
     form.post('/users/create', form, {
+        preserveScroll: true,
         onError: (errs) => {
-            // Очікуємо, що backend поверне масив помилок (422)
+            console.log(errs, 'error');
+
             if (errs.errors) {
-                // Тут можна розпарсити і розподілити по полях, якщо API так робить
-                // Інакше просто покажемо всі помилки загалом
                 flashError.value = errs.errors.join('; ');
             }
         },
     });
 }
+
 </script>
 
 
 <template>
-<AppLayout>     <div class="card">
+<AppLayout>
+    <div class="card">
     <div class="card-body">
         <form @submit.prevent="submit">
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input v-model="form.email" type="email" id="email" class="form-control" />
-                <div v-if="errors.email" class="text-danger">{{ errors.email }}</div>
+            <div>
+                <InputLabel
+                    for="email"
+                    :value="'Email'"
+                    class="block text-sm font-medium text-gray-700 "
+                />
+                <TextInput
+                    id="email"
+                    v-model="form.email"
+                    type="text"
+                    class="w-full mt-1 p-2 border-0 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200"
+                    required
+                    autocomplete="current-email"
+                    autofocus
+                />
+                <InputError
+                    class="mt-2"
+                    :message="form.errors.email"
+                />
             </div>
 
-            <div class="mb-3">
-                <label for="firstName" class="form-label">First Name</label>
-                <input v-model="form.firstName" type="text" id="firstName" class="form-control" />
-                <div v-if="errors.firstName" class="text-danger">{{ errors.firstName }}</div>
+            <div>
+                <InputLabel
+                    for="firstName"
+                    :value="'First Name'"
+                    class="block text-sm font-medium text-gray-700"
+                />
+                <TextInput
+                    id="firstName"
+                    v-model="form.firstName"
+                    type="text"
+                    class="w-full mt-1 p-2 border-0 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200"
+                    required
+                    autocomplete="current-firstName"
+                    autofocus
+                />
+                <InputError
+                    class="mt-2"
+                    :message="form.errors.firstName"
+                />
             </div>
 
-            <div class="mb-3">
-                <label for="lastName" class="form-label">Last Name</label>
-                <input v-model="form.lastName" type="text" id="lastName" class="form-control" />
-                <div v-if="errors.lastName" class="text-danger">{{ errors.lastName }}</div>
+            <div>
+                <InputLabel
+                    for="lastName"
+                    :value="'Last Name'"
+                    class="block text-sm font-medium text-gray-700"
+                />
+                <TextInput
+                    id="lastName"
+                    v-model="form.lastName"
+                    type="text"
+                    class="w-full mt-1 p-2 border-0 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200"
+                    required
+                    autocomplete="current-lastName"
+                    autofocus
+                />
+                <InputError
+                    class="mt-2"
+                    :message="form.errors.lastName"
+                />
             </div>
+            <SecondaryButton type="submit" class="mt-4 float-right">
+                Create
+            </SecondaryButton>
 
-            <button type="submit" class="btn btn-primary">Create</button>
-
-            <div v-if="flashError" class="alert alert-danger mt-3">{{ flashError }}</div>
         </form>
     </div>
 </div>

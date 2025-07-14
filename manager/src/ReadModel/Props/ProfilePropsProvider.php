@@ -6,10 +6,10 @@ namespace App\ReadModel\Props;
 
 use App\ReadModel\User\UserFetcher;
 
-final class UserPropsProvider implements PropsProviderInterface
+final readonly class ProfilePropsProvider implements PropsProviderInterface
 {
     public function __construct(
-        private readonly UserFetcher $userFetcher,
+        private UserFetcher $userFetcher,
     ) {
     }
 
