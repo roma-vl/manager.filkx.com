@@ -28,8 +28,6 @@ class HomeController extends AbstractController
             'user' => ['id' => 1, 'name' => 'Рома'],
         ]);
 
-        return $inertia->render($request, 'Dashboard', [
-            'message' => 'Слава Inertia без Laravel!',
-        ]);
+        return $inertia->render($request, 'Dashboard');
     }
 }

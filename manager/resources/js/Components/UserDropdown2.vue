@@ -1,16 +1,16 @@
 <template>
   <div class="relative ml-4">
     <button @click="open = !open" class="flex items-center space-x-2 focus:outline-none group">
-      <div class="relative">
-        <img
-          class="h-8 w-8 rounded-full object-cover"
-          :src="$page.props.auth.user.avatar || '/images/default-avatar.png'"
-          alt="User avatar"
-        />
-        <span
-          class="absolute bottom-0 right-0 block h-2 w-2 rounded-full bg-green-400 ring-2 ring-white"
-        ></span>
-      </div>
+<!--      <div class="relative">-->
+<!--        <img-->
+<!--          class="h-8 w-8 rounded-full object-cover"-->
+<!--          :src="$page.props.auth.user.avatar || '/images/default-avatar.png'"-->
+<!--          alt="User avatar"-->
+<!--        />-->
+<!--        <span-->
+<!--          class="absolute bottom-0 right-0 block h-2 w-2 rounded-full bg-green-400 ring-2 ring-white"-->
+<!--        ></span>-->
+<!--      </div>-->
       <span class="hidden md:inline-flex items-center">
         <span class="text-sm font-medium text-gray-700 group-hover:text-indigo-600">
           {{ $page.props.auth.user.name }}

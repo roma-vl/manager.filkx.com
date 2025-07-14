@@ -17,6 +17,7 @@ class InertiaRequestListener
         private readonly InertiaService $inertia,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly RequestStack $requestStack,
+        private readonly ResolvedRolesProvider $rolesProvider,
     ) {
     }
 
@@ -40,7 +41,7 @@ class InertiaRequestListener
 
             $this->inertia->share('auth', [
                 'user' => $userData,
-                'permissions' => method_exists($user, 'getPermissions') ? $user->getPermissions() : [],
+                'roles' => $this->rolesProvider->getResolvedRoles(),
             ]);
         } else {
             $this->inertia->share('auth', ['user' => null, 'permissions' => []]);

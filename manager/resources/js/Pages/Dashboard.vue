@@ -11,9 +11,6 @@
     <div class="bg-white shadow-lg rounded-xl p-6 border border-gray-200">
       <h1 class="text-2xl font-bold text-gray-800 mb-4">📊 Dashboard</h1>
       <div class="bg-green-500 text-white text-2xl p-4">Tailwind is Alive!</div>
-      <p class="text-gray-600 text-sm">
-        {{ props.message }}
-      </p>
 
       <div class="mt-6 grid grid-cols-2 gap-4">
         <div class="bg-green-100 text-green-800 p-4 rounded-lg text-center">✅ Task Completed</div>
