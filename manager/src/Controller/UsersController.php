@@ -18,8 +18,6 @@ use App\ReadModel\Props\Users\UserShowPropsProvider;
 use App\ReadModel\User\Filter;
 use App\ReadModel\User\UserFetcher;
 use App\Service\CommandFactory;
-use DateTimeImmutable;
-use DomainException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -34,7 +32,8 @@ class UsersController extends BaseController
     public function __construct(
         private readonly UserPropsProvider $userPropsProvider,
         private readonly UserShowPropsProvider $userShowPropsProvider,
-    ) {}
+    ) {
+    }
 
     #[Route('', name: 'users', methods: ['GET'])]
     public function index(Request $request, UserFetcher $fetcher, InertiaService $inertia): Response
@@ -54,13 +53,13 @@ class UsersController extends BaseController
         );
 
         return $inertia->render($request, 'Users/Index', [
-            'users' => array_map(fn($user) => [
+            'users' => array_map(fn ($user) => [
                 'id' => $user['id'],
                 'name' => $user['name'],
                 'email' => $user['email'],
                 'role' => $user['role'],
                 'status' => $user['status'],
-                'date' => (new DateTimeImmutable($user['date']))->format('Y-m-d'),
+                'date' => (new \DateTimeImmutable($user['date']))->format('Y-m-d'),
             ], $pagination->getItems()),
             'pagination' => [
                 'currentPage' => $pagination->getCurrentPageNumber(),
@@ -70,7 +69,6 @@ class UsersController extends BaseController
             'filters' => $request->query->all(),
             'sort' => $request->query->get('sort', 'date'),
             'direction' => $request->query->get('direction', 'desc'),
-
         ]);
     }
 
@@ -80,8 +78,7 @@ class UsersController extends BaseController
         Create\Handler $handler,
         InertiaService $inertia,
         CommandFactory $commandFactory,
-    ): Response
-    {
+    ): Response {
         if ($request->isMethod('GET')) {
             return $inertia->render($request, 'Users/Create');
         }
@@ -96,9 +93,11 @@ class UsersController extends BaseController
         try {
             $handler->handle($command);
             $this->addFlash('success', 'User created successfully.');
+
             return $inertia->redirect('/users');
-        } catch (EntityNotFoundException|DomainException $e) {
+        } catch (EntityNotFoundException|\DomainException $e) {
             $this->addFlash('error', $e->getMessage());
+
             return $inertia->redirect('/users/create');
         }
     }
@@ -113,6 +112,7 @@ class UsersController extends BaseController
     ): Response {
         if ($user->getId()->getValue() === $this->getUser()->getId()) {
             $this->addFlash('error', 'Не можна редагувати себе');
+
             return $inertia->redirect('/users/' . $user->getId()->getValue() . '/edit');
         }
 
@@ -122,10 +122,10 @@ class UsersController extends BaseController
             );
         }
 
-        $command = new Edit\Command($user->getId()->getValue());;
+        $command = new Edit\Command($user->getId()->getValue());
         $errors = $commandFactory->createFromRequest($request, $command);
 
-        //@TODO "Костиль" — прибираємо помилку, якщо email не змінився
+        // @TODO "Костиль" — прибираємо помилку, якщо email не змінився
         if ($errors && isset($errors['email']) && $user->getEmail()->getValue() === $command->email) {
             unset($errors['email']);
         }
@@ -142,9 +142,11 @@ class UsersController extends BaseController
         try {
             $handler->handle($command);
             $this->addFlash('success', 'User created successfully.');
-            return $inertia->redirect('/users/' . $user->getId()->getValue() );
-        } catch (EntityNotFoundException|DomainException $e) {
+
+            return $inertia->redirect('/users/' . $user->getId()->getValue());
+        } catch (EntityNotFoundException|\DomainException $e) {
             $this->addFlash('error', $e->getMessage());
+
             return $inertia->redirect('/users/' . $user->getId()->getValue() . '/edit');
         }
     }
@@ -159,6 +161,7 @@ class UsersController extends BaseController
     ): Response {
         if ($user->getId()->getValue() === $this->getUser()->getId()) {
             $this->addFlash('error', 'Не можна редагувати собі роль');
+
             return $inertia->redirect('/users/' . $user->getId()->getValue() . '/role');
         }
 
@@ -169,7 +172,7 @@ class UsersController extends BaseController
             ));
         }
 
-        $command = new Role\Command($user->getId()->getValue());;
+        $command = new Role\Command($user->getId()->getValue());
         $errors = $commandFactory->createFromRequest($request, $command);
 
         if ($errors) {
@@ -183,8 +186,9 @@ class UsersController extends BaseController
         try {
             $handler->handle($command);
             $this->addFlash('success', 'User role changed successfully.');
-            return $inertia->redirect('/users/' . $user->getId()->getValue() );
-        } catch (EntityNotFoundException|DomainException $e) {
+
+            return $inertia->redirect('/users/' . $user->getId()->getValue());
+        } catch (EntityNotFoundException|\DomainException $e) {
             return $inertia->render($request, 'Users/Role', array_merge(
                 $this->userPropsProvider->getProps(['userId' => $user->getId()->getValue()]),
                 ['availableRoles' => $user->getRolesList()],
@@ -194,39 +198,44 @@ class UsersController extends BaseController
     }
 
     #[Route('/{id}/confirm', name: 'users.confirm', methods: ['POST'])]
-    public function confirm(User $user, Request $request, Confirm\Manual\Handler $handler, InertiaService $inertia,): Response
+    public function confirm(User $user, Request $request, Confirm\Manual\Handler $handler, InertiaService $inertia): Response
     {
         $command = new Confirm\Manual\Command($user->getId()->getValue());
         try {
             $handler->handle($command);
             $this->addFlash('success', 'Підтверджено.');
-            return $inertia->redirect('/users/' . $user->getId()->getValue() );
-        } catch (EntityNotFoundException|DomainException $e) {
+
+            return $inertia->redirect('/users/' . $user->getId()->getValue());
+        } catch (EntityNotFoundException|\DomainException $e) {
             $this->addFlash('error', $e->getMessage());
+
             return $inertia->redirect('/users/' . $user->getId()->getValue());
         }
     }
 
     #[Route('/{id}/activate', name: 'users.activate', methods: ['POST'])]
-    public function activate(User $user, Request $request, Activate\Handler $handler, InertiaService $inertia,): Response
+    public function activate(User $user, Request $request, Activate\Handler $handler, InertiaService $inertia): Response
     {
         $command = new Activate\Command($user->getId()->getValue());
 
         try {
             $handler->handle($command);
             $this->addFlash('success', 'Активовано.');
-            return $inertia->redirect('/users/' . $user->getId()->getValue() );
-        } catch (EntityNotFoundException|DomainException $e) {
+
+            return $inertia->redirect('/users/' . $user->getId()->getValue());
+        } catch (EntityNotFoundException|\DomainException $e) {
             $this->addFlash('error', $e->getMessage());
+
             return $inertia->redirect('/users/' . $user->getId()->getValue());
         }
     }
 
     #[Route('/{id}/block', name: 'users.block', methods: ['POST'])]
-    public function block(User $user, Request $request, Block\Handler $handler, InertiaService $inertia,): Response
+    public function block(User $user, Request $request, Block\Handler $handler, InertiaService $inertia): Response
     {
         if ($user->getId()->getValue() === $this->getUser()->getId()) {
             $this->addFlash('error', 'Unable to block yourself.');
+
             return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
         }
 
@@ -235,9 +244,11 @@ class UsersController extends BaseController
         try {
             $handler->handle($command);
             $this->addFlash('success', 'Заблоковано.');
-            return $inertia->redirect('/users/' . $user->getId()->getValue() );
-        } catch (EntityNotFoundException|DomainException $e) {
+
+            return $inertia->redirect('/users/' . $user->getId()->getValue());
+        } catch (EntityNotFoundException|\DomainException $e) {
             $this->addFlash('error', $e->getMessage());
+
             return $inertia->redirect('/users/' . $user->getId()->getValue());
         }
     }

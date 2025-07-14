@@ -26,8 +26,8 @@ class Command
     #[Assert\Length(
         min: 2,
         max: 50,
-        minMessage: "First name must be at least {{ limit }} characters long",
-        maxMessage: "First name cannot be longer than {{ limit }} characters"
+        minMessage: 'First name must be at least {{ limit }} characters long',
+        maxMessage: 'First name cannot be longer than {{ limit }} characters'
     )]
     public string $firstName;
 
@@ -35,8 +35,8 @@ class Command
     #[Assert\Length(
         min: 2,
         max: 50,
-        minMessage: "Last name must be at least {{ limit }} characters long",
-        maxMessage: "Last name cannot be longer than {{ limit }} characters"
+        minMessage: 'Last name must be at least {{ limit }} characters long',
+        maxMessage: 'Last name cannot be longer than {{ limit }} characters'
     )]
     public string $lastName;
 

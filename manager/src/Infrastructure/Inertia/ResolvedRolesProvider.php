@@ -11,8 +11,9 @@ class ResolvedRolesProvider
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
-        private readonly RoleHierarchyInterface $roleHierarchy
-    ) {}
+        private readonly RoleHierarchyInterface $roleHierarchy,
+    ) {
+    }
 
     public function getResolvedRoles(): array
     {
@@ -22,6 +23,5 @@ class ResolvedRolesProvider
         }
 
         return $this->roleHierarchy->getReachableRoleNames($token->getRoleNames());
-
     }
 }

@@ -7,23 +7,19 @@ namespace App\Infrastructure\Inertia;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[AsEventListener(event: 'kernel.controller_arguments')]
-
 readonly class InertiaRequestListener
 {
     public function __construct(
-        private InertiaService        $inertia,
+        private InertiaService $inertia,
         private TokenStorageInterface $tokenStorage,
-        private RequestStack          $requestStack,
+        private RequestStack $requestStack,
         private ResolvedRolesProvider $rolesProvider,
     ) {
     }
-
 
     public function __invoke(ControllerArgumentsEvent $event): void
     {

@@ -1,6 +1,6 @@
 <script setup>
   import { ref, computed, watch, onMounted } from 'vue'
-  import { usePage } from '@inertiajs/inertia-vue3'
+  import { Link, usePage } from '@inertiajs/inertia-vue3'
   import SearchBar from '../Components/SearchBar.vue'
   import NavItem from '../Components/NavItem.vue'
   import UserDropdown2 from '../Components/UserDropdown2.vue'
@@ -58,7 +58,7 @@
       :class="{ '-ml-64': !sidebarOpen, 'shadow-xl': sidebarOpen }"
     >
       <div class="p-4 flex items-center justify-between border-b border-indigo-700 h-16">
-        <h1 class="text-xl font-bold truncate">TaskFlow Pro</h1>
+        <Link icon="dashboard" :href="'/'">TaskFlow Pro</Link>
         <button @click="toggleSidebar" class="text-indigo-200 hover:text-white focus:outline-none">
           <svg
             xmlns="http://www.w3.org/2000/svg"

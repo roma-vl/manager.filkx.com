@@ -1,6 +1,14 @@
 <script setup>
   import AppLayout from '../Layouts/AppLayout.vue'
 
+  import { usePage } from '@inertiajs/inertia-vue3'
+  import { computed } from '../../../assets/vendor/@vue/reactivity/reactivity.index.js'
+
+  const page = usePage()
+
+  const user = computed(() => page.props.value.auth?.user)
+
+  console.log(user.value)
   const props = defineProps({
     message: String,
   })
@@ -9,7 +17,7 @@
 <template>
   <AppLayout>
     <div class="bg-white shadow-lg rounded-xl p-6 border border-gray-200">
-      <h1 class="text-2xl font-bold text-gray-800 mb-4">📊 Dashboard</h1>
+      <h1 class="text-2xl font-bold text-gray-800 mb-4">📊 Dashboards</h1>
       <div class="bg-green-500 text-white text-2xl p-4">Tailwind is Alive!</div>
 
       <div class="mt-6 grid grid-cols-2 gap-4">

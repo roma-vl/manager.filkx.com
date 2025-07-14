@@ -20,7 +20,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class EmailController extends BaseController
 {
     public function __construct(
-        private readonly ErrorHandler         $errors,
+        private readonly ErrorHandler $errors,
         private readonly ProfilePropsProvider $userPropsProvider,
     ) {
     }

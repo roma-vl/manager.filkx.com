@@ -35,7 +35,7 @@ final readonly class UserShowPropsProvider implements PropsProviderInterface
                 'date' => $user->getDate()->format('Y-m-d H:i:s'),
                 'role' => $user->getRole()->getName(),
                 'status' => $user->getStatus(),
-                'networks' => array_map(fn($n) => [
+                'networks' => array_map(fn ($n) => [
                     'network' => $n->getNetwork(),
                     'identity' => $n->getIdentity(),
                 ], $user->getNetworks()),

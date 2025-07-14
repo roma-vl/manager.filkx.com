@@ -56,5 +56,4 @@ class Handler
 
         $this->flusher->flush();
     }
-
 }
