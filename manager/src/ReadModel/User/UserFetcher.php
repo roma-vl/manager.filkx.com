@@ -181,7 +181,7 @@ class UserFetcher
             ->from('user_users');
 
         if ($filter->name) {
-            $qb->andWhere($qb->expr()->like('LOWER(CONCAT(name_first, " ", name_last))', ':name'));
+            $qb->andWhere($qb->expr()->like('LOWER(CONCAT(name_first, \' \', name_last))', ':name'));
             $qb->setParameter('name', '%' . mb_strtolower($filter->name) . '%');
         }
 

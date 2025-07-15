@@ -8,7 +8,7 @@ use App\Controller\BaseController;
 use App\Infrastructure\Inertia\InertiaService;
 use App\Model\EntityNotFoundException;
 use App\Model\User\UseCase\Name;
-use App\ReadModel\Props\UserPropsProvider;
+use App\ReadModel\Props\ProfilePropsProvider;
 use App\Service\CommandFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +19,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class NameController extends BaseController
 {
     public function __construct(
-        private readonly UserPropsProvider $userPropsProvider,
+        private readonly ProfilePropsProvider $userPropsProvider,
     ) {
     }
 

@@ -48,9 +48,10 @@ class Handler
                 $command->lastName
             ),
             $email,
-            $this->hasher->hash($this->generator->generate())
+            'placeholder',
         );
-
+        $hashedPassword = $this->hasher->hash($user, $this->generator->generate());
+        $user->updatePasswordHash($hashedPassword);
         $this->users->add($user);
 
         $this->flusher->flush();

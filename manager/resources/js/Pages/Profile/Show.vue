@@ -2,6 +2,7 @@
   import { computed, reactive, ref, watchEffect } from 'vue'
   import { useForm, usePage } from '@inertiajs/inertia-vue3'
   import AppLayout from '../../Layouts/AppLayout.vue'
+  import { roleBadgeClass, statusBadgeClass } from '../../helpers.js'
 
   const page = usePage()
   const user = computed(() => page.props.value.auth?.user)
@@ -59,32 +60,6 @@
           editing.email = false
         },
       })
-    }
-  }
-
-  const roleBadgeClass = role => {
-    switch (role.toLowerCase()) {
-      case 'admin':
-        return 'bg-red-600 text-white'
-      case 'moderator':
-        return 'bg-yellow-500 text-black'
-      case 'user':
-        return 'bg-green-600 text-white'
-      default:
-        return 'bg-gray-400 text-white'
-    }
-  }
-
-  const statusBadgeClass = status => {
-    switch (status.toLowerCase()) {
-      case 'active':
-        return 'bg-green-500 text-white'
-      case 'inactive':
-        return 'bg-gray-400 text-white'
-      case 'banned':
-        return 'bg-red-700 text-white'
-      default:
-        return 'bg-blue-500 text-white'
     }
   }
 </script>

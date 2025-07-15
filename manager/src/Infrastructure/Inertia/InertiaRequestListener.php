@@ -6,21 +6,22 @@ namespace App\Infrastructure\Inertia;
 
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-#[AsEventListener(event: 'kernel.request')]
-class InertiaRequestListener
+#[AsEventListener(event: 'kernel.controller_arguments')]
+readonly class InertiaRequestListener
 {
     public function __construct(
-        private readonly InertiaService $inertia,
-        private readonly TokenStorageInterface $tokenStorage,
-        private readonly RequestStack $requestStack,
+        private InertiaService $inertia,
+        private TokenStorageInterface $tokenStorage,
+        private RequestStack $requestStack,
+        private ResolvedRolesProvider $rolesProvider,
     ) {
     }
 
-    public function __invoke(RequestEvent $event): void
+    public function __invoke(ControllerArgumentsEvent $event): void
     {
         $request = $event->getRequest();
 
@@ -40,7 +41,7 @@ class InertiaRequestListener
 
             $this->inertia->share('auth', [
                 'user' => $userData,
-                'permissions' => method_exists($user, 'getPermissions') ? $user->getPermissions() : [],
+                'roles' => $this->rolesProvider->getResolvedRoles(),
             ]);
         } else {
             $this->inertia->share('auth', ['user' => null, 'permissions' => []]);

@@ -9,7 +9,7 @@ use App\Controller\ErrorHandler;
 use App\Infrastructure\Inertia\InertiaService;
 use App\Model\EntityNotFoundException;
 use App\Model\User\UseCase\Email;
-use App\ReadModel\Props\UserPropsProvider;
+use App\ReadModel\Props\ProfilePropsProvider;
 use App\Service\CommandFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +21,7 @@ final class EmailController extends BaseController
 {
     public function __construct(
         private readonly ErrorHandler $errors,
-        private readonly UserPropsProvider $userPropsProvider,
+        private readonly ProfilePropsProvider $userPropsProvider,
     ) {
     }
 
