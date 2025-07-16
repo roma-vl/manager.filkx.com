@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Work\Members;
 
+use App\Controller\BaseController;
 use App\Controller\ErrorHandler;
 use App\Infrastructure\Inertia\InertiaService;
 use App\Model\Work\Entity\Members\Group\Group;
@@ -13,7 +14,6 @@ use App\Model\Work\UseCase\Members\Group\Remove;
 use App\ReadModel\Work\Members\GroupFetcher;
 use App\Service\CommandFactory;
 use DomainException;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -21,7 +21,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/work/members/groups', name: 'work.members.groups')]
 #[IsGranted('ROLE_WORK_MANAGE_MEMBERS')]
-class GroupsController extends AbstractController
+class GroupsController extends BaseController
 {
     public function __construct(
         private readonly ErrorHandler $errors,

@@ -91,11 +91,18 @@ async function confirmDelete(id) {
                     class="hover:bg-gray-50 transition"
                 >
                     <td class="px-6 py-4 whitespace-nowrap text-blue-600 font-medium">
-                        <Link v-if="group.members > 0" href="/work/members">
+                        <Link
+                            v-if="group.members > 0"
+                            :href="`/work/members?group=${group.id}`"
+                            class="hover:underline"
+                        >
                             {{ group.name }}
                         </Link>
-                        <span v-else class="text-gray-900">{{ group.name }}</span>
+                        <span v-else class="text-gray-900">
+                            {{ group.name }}
+                        </span>
                     </td>
+
                     <td class="px-6 py-4 text-center text-gray-700 font-semibold">
                         {{ group.members }}
                     </td>

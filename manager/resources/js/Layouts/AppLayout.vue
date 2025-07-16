@@ -110,7 +110,7 @@ watch(
                     <NavItem
                         icon="users"
                         to="/work/members/groups"
-                        :active="$page.url.startsWith('/work/members/groups')"
+                        :active="$page.url.startsWith('/work/members')"
                     >Team</NavItem
                     >
                 </div>
