@@ -17,6 +17,7 @@ use App\ReadModel\Props\Users\UserPropsProvider;
 use App\ReadModel\Props\Users\UserShowPropsProvider;
 use App\ReadModel\User\Filter;
 use App\ReadModel\User\UserFetcher;
+use App\ReadModel\Work\Members\Member\MemberFetcher;
 use App\Service\CommandFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -60,7 +61,8 @@ class UsersController extends BaseController
                 'role' => $user['role'],
                 'status' => $user['status'],
                 'date' => (new \DateTimeImmutable($user['date']))->format('Y-m-d'),
-            ], $pagination->getItems()),
+            ],
+                $pagination->getItems()),
             'pagination' => [
                 'currentPage' => $pagination->getCurrentPageNumber(),
                 'lastPage' => ceil($pagination->getTotalItemCount() / self::PER_PAGE),
@@ -254,10 +256,14 @@ class UsersController extends BaseController
     }
 
     #[Route('/{id}', name: 'users.show', requirements: ['id' => '[0-9a-fA-F\-]{36}'], methods: ['GET'])]
-    public function show(Request $request, User $user, InertiaService $inertia): Response
+    public function show(Request $request, User $user, MemberFetcher $members,  InertiaService $inertia): Response
     {
+        $member = $members->find($user->getId()->getValue());
         return $inertia->render($request, 'Users/Show',
-            $this->userShowPropsProvider->getProps(['userId' => $user->getId()->getValue()]),
+            array_merge(
+                $this->userShowPropsProvider->getProps(['userId' => $user->getId()->getValue()]),
+                ['member' => $member]
+            )
         );
     }
 }
