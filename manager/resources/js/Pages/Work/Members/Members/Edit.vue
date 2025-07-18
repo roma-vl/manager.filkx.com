@@ -3,7 +3,6 @@ import { useForm } from '@inertiajs/inertia-vue3'
 import InputLabel from "../../../../Components/InputLabel.vue";
 import InputError from "../../../../Components/InputError.vue";
 import TextInput from "../../../../Components/TextInput.vue";
-import SelectInput from "../../../../Components/SelectInput.vue";
 import AppLayout from "../../../../Layouts/AppLayout.vue";
 const props = defineProps({
     member: Object,
@@ -13,15 +12,14 @@ const props = defineProps({
 console.log(props.member, 'sas');
 
 const form = useForm({
-    id: props.user.id,
-    group: '',
-    firstName: '',
-    lastName: '',
-    email: props.user.email || '',
+    id: props.member.id,
+    firstName: props.member.firstName || '',
+    lastName: props.member.lastName || '',
+    email: props.member.email || '',
 });
 
 function submit() {
-    form.post(`/work/members/create/${props.user.id}`);
+    form.post(`/work/members/${props.member.id}/edit`);
 }
 </script>
 
@@ -31,18 +29,6 @@ function submit() {
             <h1 class="text-2xl font-bold mb-4">Додати учасника</h1>
 
             <form @submit.prevent="submit" class="space-y-6 max-w-xl">
-                <div>
-                    <InputLabel for="group" value="Група" />
-                    <SelectInput
-                        v-model="form.group"
-                        name="group"
-                        label="Група"
-                        :options="groups"
-                        :error="form.errors?.group"
-                    />
-
-                    <InputError :message="form.errors.group" class="mt-2" />
-                </div>
 
                 <div>
                     <InputLabel for="firstName" value="Ім’я" />

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Work\Members;
 
+use App\Annotation\Guid;
 use App\Controller\BaseController;
 use App\Controller\ErrorHandler;
 use App\Infrastructure\Inertia\InertiaService;
@@ -257,7 +258,7 @@ class MembersController extends BaseController
         return $inertia->redirect('/work/members/' . $member->getId()->getValue());
     }
 
-    #[Route('/{id}', name: '.show', methods: ['GET'])]
+    #[Route('/{id}', name: '.show', requirements: ['id' => Guid::UUID_REGEX], methods: ['GET'])]
     public function show(Request $request, Member $member, InertiaService $inertia): Response
     {
         return $inertia->render($request, 'Work/Members/Members/Show', [
