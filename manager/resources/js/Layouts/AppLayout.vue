@@ -97,14 +97,14 @@ watch(
                     </h3>
                     <NavItem
                         icon="folder"
-                        to="/projects"
-                        :active="$page.url.startsWith('/projects')"
+                        to="/work/projects"
+                        :active="$page.url.startsWith('/work/projects')"
                     >Projects</NavItem
                     >
                     <NavItem
                         icon="check-circle"
-                        to="/tasks"
-                        :active="$page.url.startsWith('/tasks')"
+                        to="/work/projects/tasks"
+                        :active="$page.url.startsWith('/work/projects/tasks')"
                     >Tasks</NavItem
                     >
                     <NavItem
