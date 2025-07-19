@@ -46,25 +46,23 @@ watch(
 
 <template>
     <div
-        class="grid grid-rows-[auto_1fr] grid-cols-[auto_1fr] h-screen font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+        class="grid grid-rows-[auto_1fr] grid-cols-[auto_1fr] h-screen font-sans bg-[#f4f6f8] dark:bg-[#0e0f11] text-gray-900 dark:text-gray-100"
     >
         <!-- Sidebar -->
         <aside
-            class="bg-indigo-800 text-white w-64 transition-all duration-300 ease-in-out col-start-1 row-span-2 dark:bg-gray-800"
-            :class="{ '-ml-64': !sidebarOpen, 'shadow-xl': sidebarOpen }"
+            class="bg-gradient-to-br from-indigo-900 to-indigo-700 text-white w-72 transition-all duration-500 ease-in-out col-start-1 row-span-2 dark:from-gray-900 dark:to-gray-800"
+            :class="{ '-ml-72': !sidebarOpen, 'shadow-2xl': sidebarOpen }"
         >
             <div
-                class="p-4 flex items-center justify-between border-b border-indigo-700 h-16 select-none"
+                class="p-5 flex items-center justify-between border-b border-indigo-600 h-16 select-none"
             >
                 <Link
-                    icon="dashboard"
                     :href="'/'"
-                    class="font-bold text-lg tracking-wide hover:text-indigo-300"
-                >TaskFlow Pro</Link
-                >
+                    class="font-extrabold text-xl tracking-widest text-white hover:text-indigo-300"
+                >Filkx Task</Link>
                 <button
                     @click="toggleSidebar"
-                    class="text-indigo-200 hover:text-white focus:outline-none lg:hidden"
+                    class="text-indigo-300 hover:text-white focus:outline-none lg:hidden"
                     aria-label="Toggle sidebar"
                 >
                     <svg
@@ -74,83 +72,34 @@ watch(
                         viewBox="0 0 24 24"
                         stroke="currentColor"
                     >
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M4 6h16M4 12h16M4 18h16" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
             </div>
 
-            <nav class="p-4 space-y-6 overflow-y-auto h-[calc(100vh-64px)]">
-                <!-- Work Section -->
+            <nav class="p-4 space-y-6 overflow-y-auto h-[calc(100vh-64px)] custom-scroll">
                 <div>
-                    <NavItem icon="dashboard" to="/dashboard" :active="$page.url.startsWith('/dashboard')"
-                    >Dashboard</NavItem
-                    >
+                    <NavItem icon="dashboard" to="/dashboard" :active="$page.url.startsWith('/dashboard')">Dashboard</NavItem>
                 </div>
-
-                <!-- Projects & Tasks Section -->
                 <div>
-                    <h3
-                        class="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-indigo-300 select-none"
-                    >
-                        Projects & Tasks
-                    </h3>
-                    <NavItem
-                        icon="folder"
-                        to="/work/projects"
-                        :active="$page.url.startsWith('/work/projects')"
-                    >Projects</NavItem
-                    >
-                    <NavItem
-                        icon="check-circle"
-                        to="/work/projects/tasks"
-                        :active="$page.url.startsWith('/work/projects/tasks')"
-                    >Tasks</NavItem
-                    >
-                    <NavItem
-                        icon="users"
-                        to="/work/members/groups"
-                        :active="$page.url.startsWith('/work/members')"
-                    >Team</NavItem
-                    >
+                    <h3 class="px-3 mb-2 text-xs font-semibold uppercase tracking-wide text-indigo-200">Projects & Tasks</h3>
+                    <NavItem icon="folder" to="/work/projects" :active="$page.url.startsWith('/work/projects')">Projects</NavItem>
+                    <NavItem icon="check-circle" to="/work/projects/tasks" :active="$page.url.startsWith('/work/projects/tasks')">Tasks</NavItem>
+                    <NavItem icon="users" to="/work/members/groups" :active="$page.url.startsWith('/work/members')">Team</NavItem>
                 </div>
-
-                <!-- Control Users Section -->
                 <div v-if="canManageUsers">
-                    <h3
-                        class="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-indigo-300 select-none"
-                    >
-                        Control Users
-                    </h3>
-                    <NavItem
-                        icon="folder"
-                        to="/users"
-                        :active="$page.url.startsWith('/users')"
-                    >Users</NavItem
-                    >
+                    <h3 class="px-3 mb-2 text-xs font-semibold uppercase tracking-wide text-indigo-200">Control Users</h3>
+                    <NavItem icon="folder" to="/users" :active="$page.url.startsWith('/users')">Users</NavItem>
                 </div>
-
-                <!-- Settings Section -->
                 <div>
-                    <h3
-                        class="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-indigo-300 select-none"
-                    >
-                        Settings
-                    </h3>
-                    <NavItem
-                        icon="cog"
-                        to="/settings"
-                        :active="$page.url.startsWith('/settings')"
-                    >Settings</NavItem
-                    >
+                    <h3 class="px-3 mb-2 text-xs font-semibold uppercase tracking-wide text-indigo-200">Settings</h3>
+                    <NavItem icon="cog" to="/settings" :active="$page.url.startsWith('/settings')">Settings</NavItem>
                 </div>
             </nav>
         </aside>
 
         <!-- Header -->
-        <header
-            class="bg-white dark:bg-gray-800 shadow-sm z-10 col-start-2 row-start-1"
-        >
+        <header class="bg-white dark:bg-gray-900 shadow-md z-10 col-start-2 row-start-1">
             <div class="flex items-center justify-between h-16 px-6">
                 <div class="flex items-center">
                     <button
@@ -158,44 +107,16 @@ watch(
                         class="text-gray-500 dark:text-gray-300 mr-4 focus:outline-none lg:hidden"
                         aria-label="Toggle sidebar"
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-6 w-6"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16"
-                            />
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
-                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                        {{ $page.props.title || 'Dashboard' }}
-                    </h2>
+                    <h2 class="text-lg font-semibold">{{ $page.props.title || 'Dashboard' }}</h2>
                 </div>
-
                 <div class="flex items-center space-x-4">
-                    <button
-                        class="p-1 text-gray-400 hover:text-gray-500 dark:hover:text-white focus:outline-none"
-                        aria-label="Notifications"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-6 w-6"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                            />
+                    <button class="text-gray-400 hover:text-gray-600 dark:hover:text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                         </svg>
                     </button>
                     <SearchBar />
@@ -205,23 +126,14 @@ watch(
             </div>
         </header>
 
-        <!-- Main Content -->
-        <main
-            class="col-start-2 row-start-2 overflow-y-auto p-6 bg-gray-50 dark:bg-gray-900"
-        >
+        <!-- Main -->
+        <main class="col-start-2 row-start-2 overflow-y-auto p-6">
             <Transition name="fade" mode="out-in">
                 <div class="max-w-7xl mx-auto">
-                    <div
-                        v-if="showFlash && flash.error"
-                        class="mb-4 p-3 bg-red-100 dark:bg-red-800 text-red-700 dark:text-red-200 rounded"
-                    >
+                    <div v-if="showFlash && flash.error" class="mb-4 p-3 rounded bg-red-500/10 text-red-700 dark:text-red-300">
                         {{ flash.error }}
                     </div>
-
-                    <div
-                        v-if="showFlash && flash.success"
-                        class="mb-4 p-3 bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-200 rounded"
-                    >
+                    <div v-if="showFlash && flash.success" class="mb-4 p-3 rounded bg-green-500/10 text-green-700 dark:text-green-300">
                         {{ flash.success }}
                     </div>
                     <slot />
@@ -229,41 +141,31 @@ watch(
             </Transition>
         </main>
 
-        <!-- Mobile sidebar backdrop -->
+        <!-- Overlay -->
         <Transition name="fade">
-            <div
-                v-if="sidebarOpen"
-                @click="sidebarOpen = false"
-                class="fixed inset-0 z-20 bg-black bg-opacity-50 lg:hidden"
-            ></div>
+            <div v-if="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 z-20 bg-black/50 lg:hidden"></div>
         </Transition>
     </div>
 </template>
 
 <style>
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.15s ease;
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.2s ease;
 }
-.fade-enter-from,
-.fade-leave-to {
+.fade-enter-from, .fade-leave-to {
     opacity: 0;
 }
-html {
-    scroll-behavior: smooth;
-}
-::-webkit-scrollbar {
+.custom-scroll::-webkit-scrollbar {
     width: 8px;
-    height: 8px;
 }
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
+.custom-scroll::-webkit-scrollbar-track {
+    background: transparent;
 }
-::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
+.custom-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.2);
     border-radius: 4px;
 }
-::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.3);
 }
 </style>

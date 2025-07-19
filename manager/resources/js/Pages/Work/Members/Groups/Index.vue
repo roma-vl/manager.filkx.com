@@ -1,7 +1,7 @@
 <script setup>
 import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
 import { Head, Link } from '@inertiajs/inertia-vue3'
-import AppLayout from '../../../../Layouts/AppLayout.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
 import axios from 'axios'
 import { ref } from 'vue'
 
@@ -14,12 +14,10 @@ const deleting = ref(null)
 
 async function confirmDelete(id) {
     if (!confirm('Are you sure?')) return
-
     deleting.value = id
 
     try {
         await axios.post(`/work/members/groups/${id}/delete`)
-        // Можеш тут емісувати подію або оновлювати список груп, або перезавантажувати сторінку
         location.reload()
     } catch (error) {
         console.error('Delete error:', error)
@@ -34,21 +32,15 @@ async function confirmDelete(id) {
     <AppLayout>
         <Head title="Groups" />
 
-        <nav class="text-sm text-gray-500 mb-6" aria-label="Breadcrumb">
-            <ol class="list-reset flex space-x-2">
-                <li>
-                    <Link href="/" class="hover:text-blue-600">Home</Link>
-                    <span class="mx-2">/</span>
-                </li>
-                <li>
-                    <Link href="/work" class="hover:text-blue-600">Work</Link>
-                    <span class="mx-2">/</span>
-                </li>
-                <li>
-                    <Link href="/work/members" class="hover:text-blue-600">Members</Link>
-                    <span class="mx-2">/</span>
-                </li>
-                <li class="text-gray-700 font-semibold">Groups</li>
+        <nav
+            class="text-sm text-indigo-200 mb-6"
+            aria-label="Breadcrumb"
+        >
+            <ol class="flex space-x-2">
+                <li><Link href="/" class="hover:text-indigo-400">Home</Link><span>/</span></li>
+                <li><Link href="/work" class="hover:text-indigo-400">Work</Link><span>/</span></li>
+                <li><Link href="/work/members" class="hover:text-indigo-400">Members</Link><span>/</span></li>
+                <li class="text-white/80 font-semibold">Groups</li>
             </ol>
         </nav>
 
@@ -57,75 +49,52 @@ async function confirmDelete(id) {
         <div class="flex justify-end mb-6">
             <Link
                 href="/work/members/groups/create"
-                class="inline-block px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow transition"
+                class="inline-block px-5 py-2 bg-indigo-800 hover:bg-indigo-700 text-white rounded-lg shadow-md transition"
             >
-                Add Group
+                ➕ Add Group
             </Link>
         </div>
 
-        <div class="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+        <div class="overflow-x-auto rounded-xl bg-gradient-to-br from-gray-900 to-indigo-900 shadow-md border border-indigo-800">
+            <table class="min-w-full divide-y divide-gray-700 text-sm text-white">
+                <thead class="bg-indigo-950/50">
                 <tr>
-                    <th
-                        scope="col"
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                        Name
-                    </th>
-                    <th
-                        scope="col"
-                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                        Members
-                    </th>
-                    <th scope="col" class="relative px-6 py-3">
-                        <span class="sr-only">Actions</span>
-                    </th>
+                    <th class="px-6 py-3 text-left tracking-wider text-white/80">Name</th>
+                    <th class="px-6 py-3 text-center tracking-wider text-white/80">Members</th>
+                    <th class="px-6 py-3 text-right sr-only">Actions</th>
                 </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody class="divide-y divide-gray-800">
                 <tr
                     v-for="group in groups"
                     :key="group.id"
-                    class="hover:bg-gray-50 transition"
+                    class="hover:bg-indigo-800/30 transition-all"
                 >
-                    <td class="px-6 py-4 whitespace-nowrap text-blue-600 font-medium">
+                    <td class="px-6 py-4 font-medium text-indigo-300">
                         <Link
                             v-if="group.members > 0"
                             :href="`/work/members?group=${group.id}`"
-                            class="hover:underline"
+                            class="hover:underline hover:text-indigo-400 transition"
                         >
                             {{ group.name }}
                         </Link>
-                        <span v-else class="text-gray-900">
-                            {{ group.name }}
-                        </span>
+                        <span v-else class="text-white/70">{{ group.name }}</span>
                     </td>
-
-                    <td class="px-6 py-4 text-center text-gray-700 font-semibold">
-                        {{ group.members }}
-                    </td>
-                    <td
-                        class="px-6 py-4 whitespace-nowrap text-right flex space-x-2 justify-end"
-                    >
+                    <td class="px-6 py-4 text-center text-white/80">{{ group.members }}</td>
+                    <td class="px-6 py-4 text-right space-x-2 flex justify-end">
                         <Link
                             :href="`/work/members/groups/${group.id}/edit`"
-                            class="inline-flex items-center px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded shadow transition"
-                            title="Edit Group"
+                            class="px-3 py-1.5 bg-indigo-700 hover:bg-indigo-600 text-white text-sm rounded-md shadow transition"
                         >
-                            <i class="fa fa-pencil mr-1"></i> Edit
+                            ✏️ Edit
                         </Link>
-
                         <button
                             @click.prevent="confirmDelete(group.id)"
                             :disabled="deleting === group.id"
-                            class="inline-flex items-center px-3 py-1.5 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded shadow transition"
-                            title="Delete Group"
+                            class="px-3 py-1.5 bg-red-700 hover:bg-red-600 text-white text-sm rounded-md shadow transition disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            <i class="fa fa-trash mr-1"></i>
-                            <span v-if="deleting === group.id">Deleting...</span>
-                            <span v-else>Delete</span>
+                            <span v-if="deleting === group.id">⏳ Deleting...</span>
+                            <span v-else>🗑️ Delete</span>
                         </button>
                     </td>
                 </tr>
@@ -134,3 +103,18 @@ async function confirmDelete(id) {
         </div>
     </AppLayout>
 </template>
+
+<style scoped>
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #4f46e5; /* indigo-600 */
+    border-radius: 9999px;
+}
+::-webkit-scrollbar-track {
+    background-color: #1f2937; /* gray-800 */
+}
+</style>

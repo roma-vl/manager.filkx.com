@@ -5,31 +5,25 @@ declare(strict_types=1);
 namespace App\ReadModel\Work\Projects\Project;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
 
-class DepartmentFetcher
+readonly class DepartmentFetcher
 {
-    private $connection;
-
-    public function __construct(Connection $connection)
-    {
-        $this->connection = $connection;
-    }
+    public function __construct(
+        private Connection $connection
+    ) {}
 
     public function listOfProject(string $project): array
     {
         $stmt = $this->connection->createQueryBuilder()
-            ->select(
-                'id',
-                'name'
-            )
+            ->select('id', 'name')
             ->from('work_projects_project_departments')
             ->andWhere('project_id = :project')
             ->setParameter('project', $project)
             ->orderBy('name')
-            ->execute();
+            ->executeQuery();
 
-        return $stmt->fetchAll(\PDO::FETCH_KEY_PAIR);
+        /** @var array<string, string> */
+        return $stmt->fetchAllKeyValue();
     }
 
     public function allOfProject(string $project): array
@@ -48,10 +42,10 @@ class DepartmentFetcher
             ->from('work_projects_project_departments', 'd')
             ->andWhere('project_id = :project')
             ->setParameter('project', $project)
-            ->orderBy('name')
-            ->execute();
+            ->orderBy('d.name')
+            ->executeQuery();
 
-        return $stmt->fetchAll(FetchMode::ASSOCIATIVE);
+        return $stmt->fetchAllAssociative();
     }
 
     public function allOfMember(string $member): array
@@ -68,10 +62,11 @@ class DepartmentFetcher
             ->innerJoin('msd', 'work_projects_project_departments', 'd', 'msd.department_id = d.id')
             ->innerJoin('d', 'work_projects_projects', 'p', 'd.project_id = p.id')
             ->andWhere('ms.member_id = :member')
-            ->setParameter(':member', $member)
-            ->orderBy('p.sort')->addOrderBy('d.name')
-            ->execute();
+            ->setParameter('member', $member)
+            ->orderBy('p.sort')
+            ->addOrderBy('d.name')
+            ->executeQuery();
 
-        return $stmt->fetchAll(FetchMode::ASSOCIATIVE);
+        return $stmt->fetchAllAssociative();
     }
 }

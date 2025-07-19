@@ -54,8 +54,8 @@ class MemberFetcher
                 'TRIM(CONCAT(m.name_first, \' \', m.name_last)) AS name',
                 'm.email',
                 'g.name as group',
-                'm.status'
-//                '(SELECT COUNT(*) FROM work_projects_project_memberships ms WHERE ms.member_id = m.id) as memberships_count'
+                'm.status',
+                '(SELECT COUNT(*) FROM work_projects_project_memberships ms WHERE ms.member_id = m.id) as memberships_count'
             )
             ->from('work_members_members', 'm')
             ->innerJoin('m', 'work_members_groups', 'g', 'm.group_id = g.id');
@@ -112,7 +112,7 @@ class MemberFetcher
             ->from('work_members_members', 'm')
             ->leftJoin('m', 'work_members_groups', 'g', 'g.id = m.group_id')
             ->andWhere('m.status = :status')
-            ->setParameter(':status', Status::ACTIVE)
+            ->setParameter('status', Status::ACTIVE)
             ->orderBy('g.name')->addOrderBy('name')
             ->executeQuery();
         return $stmt->fetchAll(FetchMode::ASSOCIATIVE);
