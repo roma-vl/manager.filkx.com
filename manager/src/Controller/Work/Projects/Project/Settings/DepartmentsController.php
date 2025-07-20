@@ -13,6 +13,7 @@ use App\Model\Work\UseCase\Projects\Project\Department\Edit;
 use App\Model\Work\UseCase\Projects\Project\Department\Remove;
 use App\ReadModel\Work\Projects\Project\DepartmentFetcher;
 use App\Controller\ErrorHandler;
+use App\Security\Voter\Work\Projects\ProjectAccess;
 use App\Service\CommandFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,7 +35,7 @@ class DepartmentsController extends AbstractController
         Request $request,
         InertiaService $inertia
     ): Response {
-        // $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
+         $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
 
         return $inertia->render($request,'Work/Projects/Project/Settings/Departments/Index', [
             'project' => [
@@ -53,7 +54,7 @@ class DepartmentsController extends AbstractController
         InertiaService $inertia,
         CommandFactory $commandFactory
     ): Response {
-        // $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
+         $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
 
         if ($request->isMethod('GET')) {
             return $inertia->render($request, 'Work/Projects/Project/Settings/Departments/Create', [
@@ -99,7 +100,7 @@ class DepartmentsController extends AbstractController
         InertiaService $inertia,
         CommandFactory $commandFactory
     ): Response {
-        // $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
+         $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
 
         $department = $project->getDepartment(new Id($department_id));
 
@@ -118,9 +119,6 @@ class DepartmentsController extends AbstractController
         }
 
         $command = Edit\Command::fromDepartment($project, $department);
-
-        // Аналогічно — заповнити $command із $request
-
         $errors = $commandFactory->createFromRequest($request, $command);
 
         if ($errors) {

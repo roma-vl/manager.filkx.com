@@ -50,7 +50,7 @@ watch(
     >
         <!-- Sidebar -->
         <aside
-            class="bg-gradient-to-br from-indigo-900 to-indigo-700 text-white w-72 transition-all duration-500 ease-in-out col-start-1 row-span-2 dark:from-gray-900 dark:to-gray-800"
+            class="bg-gradient-to-br from-indigo-900 to-indigo-700 text-white w-72 transition-all duration-500 ease-in-out col-start-1 row-span-2 dark:from-gray-900 dark:to-gray-800 z-20"
             :class="{ '-ml-72': !sidebarOpen, 'shadow-2xl': sidebarOpen }"
         >
             <div
@@ -143,7 +143,7 @@ watch(
 
         <!-- Overlay -->
         <Transition name="fade">
-            <div v-if="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 z-20 bg-black/50 lg:hidden"></div>
+            <div v-if="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 z-10 bg-black/50 lg:hidden"></div>
         </Transition>
     </div>
 </template>

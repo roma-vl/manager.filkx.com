@@ -12,6 +12,7 @@ use App\Model\Work\UseCase\Projects\Project\Edit;
 use App\Model\Work\UseCase\Projects\Project\Reinstate;
 use App\Model\Work\UseCase\Projects\Project\Remove;
 use App\Controller\ErrorHandler;
+use App\Security\Voter\Work\Projects\ProjectAccess;
 use App\Service\CommandFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +29,7 @@ class SettingsController extends AbstractController
     #[Route('', name: '')]
     public function show(Project $project, Request $request, InertiaService $inertia): Response
     {
-        // $this->denyAccessUnlessGranted(ProjectAccess::EDIT, $project);
+         $this->denyAccessUnlessGranted(ProjectAccess::EDIT, $project);
 
         return $inertia->render($request, 'Work/Projects/Project/Settings/Show', [
             'project' => [
@@ -44,7 +45,7 @@ class SettingsController extends AbstractController
     #[Route('/edit', name: '.edit', methods: ['GET', 'POST'])]
     public function edit(Project $project, Request $request, Edit\Handler $handler, InertiaService $inertia, CommandFactory $commandFactory,): Response
     {
-        // $this->denyAccessUnlessGranted(ProjectAccess::EDIT, $project);
+         $this->denyAccessUnlessGranted(ProjectAccess::EDIT, $project);
 
         $command = Edit\Command::fromProject($project);
 
@@ -92,7 +93,7 @@ class SettingsController extends AbstractController
     #[Route('/archive', name: '.archive', methods: ['POST'])]
     public function archive(Project $project, Request $request, Archive\Handler $handler): Response
     {
-        // $this->denyAccessUnlessGranted(ProjectAccess::EDIT, $project);
+         $this->denyAccessUnlessGranted(ProjectAccess::EDIT, $project);
 
         $command = new Archive\Command($project->getId()->getValue());
 
@@ -110,7 +111,7 @@ class SettingsController extends AbstractController
     #[Route('/reinstate', name: '.reinstate', methods: ['POST'])]
     public function reinstate(Project $project, Request $request, Reinstate\Handler $handler): Response
     {
-        // $this->denyAccessUnlessGranted(ProjectAccess::EDIT, $project);
+         $this->denyAccessUnlessGranted(ProjectAccess::EDIT, $project);
 
         $command = new Reinstate\Command($project->getId()->getValue());
 
@@ -128,7 +129,7 @@ class SettingsController extends AbstractController
     #[Route('/delete', name: '.delete', methods: ['POST'])]
     public function delete(Project $project, Request $request, Remove\Handler $handler): Response
     {
-        // $this->denyAccessUnlessGranted(ProjectAccess::EDIT, $project);
+         $this->denyAccessUnlessGranted(ProjectAccess::EDIT, $project);
 
         $command = new Remove\Command($project->getId()->getValue());
 

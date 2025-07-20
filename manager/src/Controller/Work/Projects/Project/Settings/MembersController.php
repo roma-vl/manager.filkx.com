@@ -8,11 +8,13 @@ use App\Annotation\Guid;
 use App\Controller\ErrorHandler;
 use App\Infrastructure\Inertia\InertiaService;
 use App\Model\Work\Entity\Members\Member\Id;
+use App\Model\Work\Entity\Projects\Project\Membership as MembershipModel;
 use App\Model\Work\Entity\Projects\Project\Project;
 use App\Model\Work\UseCase\Projects\Project\Membership;
 use App\ReadModel\Work\Members\Member\MemberFetcher;
 use App\ReadModel\Work\Projects\Project\DepartmentFetcher;
 use App\ReadModel\Work\Projects\RoleFetcher;
+use App\Security\Voter\Work\Projects\ProjectAccess;
 use App\Service\CommandFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +25,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class MembersController extends AbstractController
 {
     public function __construct(
-        private ErrorHandler $errors,
+        private readonly ErrorHandler $errors,
     ) {}
 
     #[Route('', name: '')]
@@ -32,13 +34,36 @@ class MembersController extends AbstractController
         InertiaService $inertia,
         Request $request
     ): Response {
+        $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
         $ff = $project->getMemberships();
         return $inertia->render($request, 'Work/Projects/Project/Settings/Members/Index', [
             'project' => [
                 'id' => $project->getId()->getValue(),
                 'name' => $project->getName(),
             ],
-            'memberships' => $project->getMemberships(),
+            'memberships' => array_map(static function (MembershipModel $membership) {
+                return [
+                    'member' => [
+                        'id' => $membership->getMember()->getId()->getValue(),
+                        'name' => [
+                            'full' => $membership->getMember()->getName()->getFull(),
+                        ],
+                    ],
+                    'departments' => array_map(static function ($department) {
+                        return [
+                            'id' => $department->getId()->getValue(),
+                            'name' => $department->getName(),
+                        ];
+                    }, $membership->getDepartments()),
+                    'roles' => array_map(static function ($role) {
+                        return [
+                            'id' => $role->getId()->getValue(),
+                            'name' => $role->getName(),
+                        ];
+                    }, $membership->getRoles()),
+                ];
+            }, $project->getMemberships()),
+
         ]);
     }
 
@@ -53,6 +78,8 @@ class MembersController extends AbstractController
         DepartmentFetcher  $departmentFetcher,
         MemberFetcher  $memberFetcher
     ): Response {
+        $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
+
         if ($request->isMethod('GET')) {
             return $inertia->render($request, 'Work/Projects/Project/Settings/Members/Assign', [
                 'project' => [
@@ -116,8 +143,14 @@ class MembersController extends AbstractController
         Request $request,
         Membership\Edit\Handler $handler,
         InertiaService $inertia,
-        CommandFactory $commandFactory
+        CommandFactory $commandFactory,
+        RoleFetcher $roleFetcher,
+        DepartmentFetcher  $departmentFetcher,
+        MemberFetcher  $memberFetcher
     ): Response {
+
+        $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
+
         $membership = $project->getMembership(new Id($member_id));
 
         if ($request->isMethod('GET')) {
@@ -126,13 +159,22 @@ class MembersController extends AbstractController
                     'id' => $project->getId()->getValue(),
                     'name' => $project->getName(),
                 ],
+                'roles' => $roleFetcher->allList(),
+                'departments' => $departmentFetcher->listOfProject($project->getId()->getValue()),
                 'membership' => [
                     'id' => $membership->getMember()->getId()->getValue(),
-                    'role' => $membership->getRole()->getName(),
-                    // Інші поля, які потрібні у формі
+                    'departments' => array_map(
+                        fn($d) => $d->getId()->getValue(),
+                        $membership->getDepartments()
+                    ),
+                    'roles' => array_map(
+                        fn($r) => $r->getId()->getValue(),
+                        $membership->getRoles()
+                    ),
                 ],
             ]);
         }
+
 
         $command = Membership\Edit\Command::fromMembership($project, $membership);
         $errors = $commandFactory->createFromRequest($request, $command);
@@ -143,9 +185,18 @@ class MembersController extends AbstractController
                     'id' => $project->getId()->getValue(),
                     'name' => $project->getName(),
                 ],
+                'roles' => $roleFetcher->allList(),
+                'departments' => $departmentFetcher->listOfProject($project->getId()->getValue()),
                 'membership' => [
                     'id' => $membership->getMember()->getId()->getValue(),
-                    'role' => $membership->getRole()->getName(),
+                    'departments' => array_map(
+                        fn($d) => $d->getId()->getValue(),
+                        $membership->getDepartments()
+                    ),
+                    'roles' => array_map(
+                        fn($r) => $r->getId()->getValue(),
+                        $membership->getRoles()
+                    ),
                 ],
                 'errors' => $errors,
             ]);
@@ -161,9 +212,18 @@ class MembersController extends AbstractController
                     'id' => $project->getId()->getValue(),
                     'name' => $project->getName(),
                 ],
+                'roles' => $roleFetcher->allList(),
+                'departments' => $departmentFetcher->listOfProject($project->getId()->getValue()),
                 'membership' => [
                     'id' => $membership->getMember()->getId()->getValue(),
-                    'role' => $membership->getRole()->getName(),
+                    'departments' => array_map(
+                        fn($d) => $d->getId()->getValue(),
+                        $membership->getDepartments()
+                    ),
+                    'roles' => array_map(
+                        fn($r) => $r->getId()->getValue(),
+                        $membership->getRoles()
+                    ),
                 ],
                 'errors' => ['message' => $e->getMessage()],
             ]);
@@ -177,9 +237,11 @@ class MembersController extends AbstractController
         Request $request,
         Membership\Remove\Handler $handler
     ): Response {
-        if (!$this->isCsrfTokenValid('revoke', $request->request->get('token'))) {
-            return $this->redirectToRoute('work.projects.project.settings.members', ['id' => $project->getId()]);
-        }
+        $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
+
+//        if (!$this->isCsrfTokenValid('revoke', $request->request->get('token'))) {
+//            return $this->redirectToRoute('work.projects.project.settings.members', ['id' => $project->getId()]);
+//        }
 
         $command = new Membership\Remove\Command($project->getId()->getValue(), $member_id);
 

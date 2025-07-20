@@ -84,6 +84,8 @@ class ProjectsController extends BaseController
         InertiaService $inertia,
         CommandFactory $commandFactory
     ): Response {
+
+        $this->denyAccessUnlessGranted('ROLE_WORK_MANAGE_PROJECTS');
         if ($request->isMethod('GET')) {
             return $inertia->render($request, 'Work/Projects/Create',
                 ['project' => [
