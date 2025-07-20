@@ -15,9 +15,9 @@ use Doctrine\Persistence\ObjectManager;
 
 class UserFixture extends Fixture
 {
-
     public const REFERENCE_ADMIN = 'user_user_admin';
     public const REFERENCE_USER = 'user_user_user';
+
     public function __construct(
         private readonly PasswordHasher $hasher,
     ) {
@@ -90,6 +90,7 @@ class UserFixture extends Fixture
     {
         $user = $this->createSignUpConfirmedByEmail($name, $email, $hash);
         $user->changeRole(Role::admin());
+
         return $user;
     }
 
@@ -97,6 +98,7 @@ class UserFixture extends Fixture
     {
         $user = $this->createSignUpRequestedByEmail($name, $email, $hash);
         $user->confirmSignUp();
+
         return $user;
     }
 

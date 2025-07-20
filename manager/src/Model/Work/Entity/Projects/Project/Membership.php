@@ -51,7 +51,7 @@ class Membership
 
     /**
      * @param Department[] $departments
-     * @param Role[] $roles
+     * @param Role[]       $roles
      */
     public function __construct(Project $project, Member $member, array $departments, array $roles)
     {
@@ -75,8 +75,7 @@ class Membership
         $current = $this->departments->toArray();
         $new = $departments;
 
-        $compare = static fn(Department $a, Department $b): int
-            => $a->getId()->getValue() <=> $b->getId()->getValue();
+        $compare = static fn (Department $a, Department $b): int => $a->getId()->getValue() <=> $b->getId()->getValue();
 
         foreach (array_udiff($current, $new, $compare) as $item) {
             $this->departments->removeElement($item);
@@ -97,7 +96,7 @@ class Membership
         $current = $this->roles->toArray();
         $new = $roles;
 
-        $compare = static fn(Role $a, Role $b): int => $a->getId()->getValue() <=> $b->getId()->getValue();
+        $compare = static fn (Role $a, Role $b): int => $a->getId()->getValue() <=> $b->getId()->getValue();
 
         foreach (array_udiff($current, $new, $compare) as $item) {
             $this->roles->removeElement($item);
@@ -120,6 +119,7 @@ class Membership
                 return true;
             }
         }
+
         return false;
     }
 
@@ -130,6 +130,7 @@ class Membership
                 return true;
             }
         }
+
         return false;
     }
 
@@ -159,7 +160,7 @@ class Membership
      */
     private function guardDepartments(array $departments): void
     {
-        if (count($departments) === 0) {
+        if (\count($departments) === 0) {
             throw new \DomainException('Set at least one department.');
         }
     }
@@ -169,7 +170,7 @@ class Membership
      */
     private function guardRoles(array $roles): void
     {
-        if (count($roles) === 0) {
+        if (\count($roles) === 0) {
             throw new \DomainException('Set at least one role.');
         }
     }

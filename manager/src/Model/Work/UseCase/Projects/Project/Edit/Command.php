@@ -28,6 +28,7 @@ class Command
         $command = new self($project->getId()->getValue());
         $command->name = $project->getName();
         $command->sort = $project->getSort();
+
         return $command;
     }
 }

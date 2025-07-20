@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace App\Model\Work\Entity\Members\Group;
 
 use Ramsey\Uuid\Uuid;
@@ -8,6 +10,7 @@ use Webmozart\Assert\Assert;
 class Id
 {
     private string $value;
+
     public function __construct(string $value)
     {
         Assert::notEmpty($value);
@@ -28,5 +31,4 @@ class Id
     {
         return $this->getValue();
     }
-
 }

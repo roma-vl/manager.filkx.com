@@ -9,8 +9,9 @@ use Doctrine\DBAL\Connection;
 readonly class DepartmentFetcher
 {
     public function __construct(
-        private Connection $connection
-    ) {}
+        private Connection $connection,
+    ) {
+    }
 
     public function listOfProject(string $project): array
     {
@@ -22,7 +23,7 @@ readonly class DepartmentFetcher
             ->orderBy('name')
             ->executeQuery();
 
-        /** @var array<string, string> */
+        /* @var array<string, string> */
         return $stmt->fetchAllKeyValue();
     }
 

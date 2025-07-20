@@ -1,40 +1,46 @@
 <script setup>
-import { Link } from '@inertiajs/inertia-vue3';
+  import { Link } from '@inertiajs/inertia-vue3'
 
-defineProps({
+  defineProps({
     projectId: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
-});
+  })
 </script>
 
 <template>
-    <div class="border-b border-gray-200 mb-6">
-        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-            <Link
-                :href="`/work/projects/${projectId}`"
-                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
-                :class="{
-          'border-indigo-500 text-indigo-600': $page.url.startsWith(`/work/projects/${projectId}`) && !$page.url.startsWith(`/work/projects/${projectId}/settings`),
-          'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': !($page.url.startsWith(`/work/projects/${projectId}`) && !$page.url.startsWith(`/work/projects/${projectId}/settings`))
+  <div class="border-b border-gray-200 mb-6">
+    <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+      <Link
+        :href="`/work/projects/${projectId}`"
+        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+        :class="{
+          'border-indigo-500 text-indigo-600':
+            $page.url.startsWith(`/work/projects/${projectId}`) &&
+            !$page.url.startsWith(`/work/projects/${projectId}/settings`),
+          'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': !(
+            $page.url.startsWith(`/work/projects/${projectId}`) &&
+            !$page.url.startsWith(`/work/projects/${projectId}/settings`)
+          ),
         }"
-            >
-                Overview
-            </Link>
+      >
+        Overview
+      </Link>
 
-            <Link
-                :href="`/work/projects/${projectId}/settings`"
-                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
-                :class="{
-          'border-indigo-500 text-indigo-600': $page.url.startsWith(`/work/projects/${projectId}/settings`),
-          'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': !$page.url.startsWith(`/work/projects/${projectId}/settings`)
+      <Link
+        :href="`/work/projects/${projectId}/settings`"
+        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+        :class="{
+          'border-indigo-500 text-indigo-600': $page.url.startsWith(
+            `/work/projects/${projectId}/settings`
+          ),
+          'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300':
+            !$page.url.startsWith(`/work/projects/${projectId}/settings`),
         }"
-            >
-                Settings
-            </Link>
-        </nav>
-    </div>
+      >
+        Settings
+      </Link>
+    </nav>
+  </div>
 </template>
-
-

@@ -26,16 +26,18 @@ class MembersController extends AbstractController
 {
     public function __construct(
         private readonly ErrorHandler $errors,
-    ) {}
+    ) {
+    }
 
     #[Route('', name: '')]
     public function index(
         Project $project,
         InertiaService $inertia,
-        Request $request
+        Request $request,
     ): Response {
         $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
         $ff = $project->getMemberships();
+
         return $inertia->render($request, 'Work/Projects/Project/Settings/Members/Index', [
             'project' => [
                 'id' => $project->getId()->getValue(),
@@ -63,7 +65,6 @@ class MembersController extends AbstractController
                     }, $membership->getRoles()),
                 ];
             }, $project->getMemberships()),
-
         ]);
     }
 
@@ -75,8 +76,8 @@ class MembersController extends AbstractController
         InertiaService $inertia,
         CommandFactory $commandFactory,
         RoleFetcher $roleFetcher,
-        DepartmentFetcher  $departmentFetcher,
-        MemberFetcher  $memberFetcher
+        DepartmentFetcher $departmentFetcher,
+        MemberFetcher $memberFetcher,
     ): Response {
         $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
 
@@ -107,6 +108,7 @@ class MembersController extends AbstractController
 
         try {
             $handler->handle($command);
+
             return $this->redirectToRoute('work.projects.project.settings.members', ['id' => $project->getId()]);
         } catch (\DomainException $e) {
             $this->errors->handle($e);
@@ -120,6 +122,7 @@ class MembersController extends AbstractController
             ]);
         }
     }
+
     private function mapMembers(array $list): array
     {
         $result = [];
@@ -135,7 +138,6 @@ class MembersController extends AbstractController
         return $result;
     }
 
-
     #[Route('/{member_id}/edit', name: '.edit', methods: ['GET', 'POST'])]
     public function edit(
         Project $project,
@@ -145,10 +147,9 @@ class MembersController extends AbstractController
         InertiaService $inertia,
         CommandFactory $commandFactory,
         RoleFetcher $roleFetcher,
-        DepartmentFetcher  $departmentFetcher,
-        MemberFetcher  $memberFetcher
+        DepartmentFetcher $departmentFetcher,
+        MemberFetcher $memberFetcher,
     ): Response {
-
         $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
 
         $membership = $project->getMembership(new Id($member_id));
@@ -164,17 +165,16 @@ class MembersController extends AbstractController
                 'membership' => [
                     'id' => $membership->getMember()->getId()->getValue(),
                     'departments' => array_map(
-                        fn($d) => $d->getId()->getValue(),
+                        fn ($d) => $d->getId()->getValue(),
                         $membership->getDepartments()
                     ),
                     'roles' => array_map(
-                        fn($r) => $r->getId()->getValue(),
+                        fn ($r) => $r->getId()->getValue(),
                         $membership->getRoles()
                     ),
                 ],
             ]);
         }
-
 
         $command = Membership\Edit\Command::fromMembership($project, $membership);
         $errors = $commandFactory->createFromRequest($request, $command);
@@ -190,11 +190,11 @@ class MembersController extends AbstractController
                 'membership' => [
                     'id' => $membership->getMember()->getId()->getValue(),
                     'departments' => array_map(
-                        fn($d) => $d->getId()->getValue(),
+                        fn ($d) => $d->getId()->getValue(),
                         $membership->getDepartments()
                     ),
                     'roles' => array_map(
-                        fn($r) => $r->getId()->getValue(),
+                        fn ($r) => $r->getId()->getValue(),
                         $membership->getRoles()
                     ),
                 ],
@@ -204,9 +204,11 @@ class MembersController extends AbstractController
 
         try {
             $handler->handle($command);
+
             return $this->redirectToRoute('work.projects.project.settings.members', ['id' => $project->getId()]);
         } catch (\DomainException $e) {
             $this->errors->handle($e);
+
             return $inertia->render($request, 'Work/Projects/Project/Settings/Members/Edit', [
                 'project' => [
                     'id' => $project->getId()->getValue(),
@@ -217,11 +219,11 @@ class MembersController extends AbstractController
                 'membership' => [
                     'id' => $membership->getMember()->getId()->getValue(),
                     'departments' => array_map(
-                        fn($d) => $d->getId()->getValue(),
+                        fn ($d) => $d->getId()->getValue(),
                         $membership->getDepartments()
                     ),
                     'roles' => array_map(
-                        fn($r) => $r->getId()->getValue(),
+                        fn ($r) => $r->getId()->getValue(),
                         $membership->getRoles()
                     ),
                 ],
@@ -235,13 +237,13 @@ class MembersController extends AbstractController
         Project $project,
         string $member_id,
         Request $request,
-        Membership\Remove\Handler $handler
+        Membership\Remove\Handler $handler,
     ): Response {
         $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
 
-//        if (!$this->isCsrfTokenValid('revoke', $request->request->get('token'))) {
-//            return $this->redirectToRoute('work.projects.project.settings.members', ['id' => $project->getId()]);
-//        }
+        //        if (!$this->isCsrfTokenValid('revoke', $request->request->get('token'))) {
+        //            return $this->redirectToRoute('work.projects.project.settings.members', ['id' => $project->getId()]);
+        //        }
 
         $command = new Membership\Remove\Command($project->getId()->getValue(), $member_id);
 

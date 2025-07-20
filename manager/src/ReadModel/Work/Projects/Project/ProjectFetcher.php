@@ -9,14 +9,14 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use UnexpectedValueException;
 
 final class ProjectFetcher
 {
     public function __construct(
         private readonly Connection $connection,
         private readonly PaginatorInterface $paginator,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws Exception
@@ -33,8 +33,9 @@ final class ProjectFetcher
     }
 
     /**
-     * @return array<string, string>
      * @throws Exception
+     *
+     * @return array<string, string>
      */
     public function allList(): array
     {
@@ -76,8 +77,8 @@ final class ProjectFetcher
                 ->setParameter('status', $filter->status);
         }
 
-        if (!in_array($sort, ['sort', 'name', 'status'], true)) {
-            throw new UnexpectedValueException(sprintf('Cannot sort by "%s"', $sort));
+        if (!\in_array($sort, ['sort', 'name', 'status'], true)) {
+            throw new \UnexpectedValueException(\sprintf('Cannot sort by "%s"', $sort));
         }
 
         $qb->orderBy('p.' . $sort, $direction === 'desc' ? 'DESC' : 'ASC');

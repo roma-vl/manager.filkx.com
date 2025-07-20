@@ -34,6 +34,7 @@ class RoleRepository
         if (!$role = $this->repo->find($id->getValue())) {
             throw new EntityNotFoundException('Role is not found.');
         }
+
         return $role;
     }
 

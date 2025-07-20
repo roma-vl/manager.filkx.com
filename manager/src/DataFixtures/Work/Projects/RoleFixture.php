@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\DataFixtures\Work\Projects;
 
+use App\Model\Work\Entity\Projects\Role\Id;
 use App\Model\Work\Entity\Projects\Role\Permission;
 use App\Model\Work\Entity\Projects\Role\Role;
-use App\Model\Work\Entity\Projects\Role\Id;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Model\Work\UseCase\Projects\Project\Create;
 
 use App\Model\Flusher;
-use App\Model\Work\Entity\Projects\Project\Project;
 use App\Model\Work\Entity\Projects\Project\Id;
+use App\Model\Work\Entity\Projects\Project\Project;
 use App\Model\Work\Entity\Projects\Project\ProjectRepository;
 
 class Handler

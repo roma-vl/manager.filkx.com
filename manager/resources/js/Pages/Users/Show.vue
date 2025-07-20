@@ -7,7 +7,7 @@
 
   const props = defineProps({
     user: Object,
-      member: Object,
+    member: Object,
   })
   console.log(props.member, 'asdasdasd')
   const user = computed(() => usePage().props.value.auth?.user)
@@ -56,24 +56,24 @@
         </h1>
 
         <div class="flex flex-wrap gap-2">
-            <div v-if="props.member">
-                <Link
-                    :href="`/work/members/${props.user.id}`"
-                    v-if="!me"
-                    class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
-                >
-                    ✏View Member
-                </Link>
-            </div>
-            <div v-else>
-                <Link
-                    :href="`/work/members/create/${props.user.id}`"
-                    v-if="!me"
-                    class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
-                >
-                    ✏️ Create Member
-                </Link>
-            </div>
+          <div v-if="props.member">
+            <Link
+              :href="`/work/members/${props.user.id}`"
+              v-if="!me"
+              class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
+            >
+              ✏View Member
+            </Link>
+          </div>
+          <div v-else>
+            <Link
+              :href="`/work/members/create/${props.user.id}`"
+              v-if="!me"
+              class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
+            >
+              ✏️ Create Member
+            </Link>
+          </div>
           <Link
             :href="`/users/${props.user.id}/edit`"
             v-if="!me"

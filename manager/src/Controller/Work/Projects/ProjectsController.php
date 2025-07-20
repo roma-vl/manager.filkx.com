@@ -11,7 +11,6 @@ use App\Model\Work\UseCase\Projects\Project\Create;
 use App\ReadModel\Work\Projects\Project\Filter;
 use App\ReadModel\Work\Projects\Project\ProjectFetcher;
 use App\Service\CommandFactory;
-use DomainException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -24,13 +23,14 @@ class ProjectsController extends BaseController
 
     public function __construct(
         private readonly ErrorHandler $errors,
-    ) {}
+    ) {
+    }
 
     #[Route('', name: '', methods: ['GET'])]
     public function index(
         Request $request,
         ProjectFetcher $fetcher,
-        InertiaService $inertia
+        InertiaService $inertia,
     ): Response {
         $filter = $this->isGranted('ROLE_WORK_MANAGE_PROJECTS')
             ? Filter\Filter::all()
@@ -70,10 +70,9 @@ class ProjectsController extends BaseController
             'statuses' => [
                 ['id' => 'active', 'name' => 'Active'],
                 ['id' => 'archived', 'name' => 'Archived'],
-            ]
+            ],
         ]);
     }
-
 
     #[Route('/create', name: '.create', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_WORK_MANAGE_PROJECTS')]
@@ -82,9 +81,8 @@ class ProjectsController extends BaseController
         ProjectFetcher $projects,
         Create\Handler $handler,
         InertiaService $inertia,
-        CommandFactory $commandFactory
+        CommandFactory $commandFactory,
     ): Response {
-
         $this->denyAccessUnlessGranted('ROLE_WORK_MANAGE_PROJECTS');
         if ($request->isMethod('GET')) {
             return $inertia->render($request, 'Work/Projects/Create',
@@ -107,7 +105,7 @@ class ProjectsController extends BaseController
             $this->addFlash('success', 'Проєкт створено успішно.');
 
             return $inertia->redirect('/work/projects');
-        } catch (DomainException $e) {
+        } catch (\DomainException $e) {
             $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
 

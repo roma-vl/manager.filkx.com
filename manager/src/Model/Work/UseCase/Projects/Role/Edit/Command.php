@@ -28,6 +28,7 @@ class Command
         $command->permissions = array_map(static function (Permission $permission): string {
             return $permission->getName();
         }, $role->getPermissions());
+
         return $command;
     }
 }

@@ -11,7 +11,7 @@ class StatusType extends StringType
 {
     public const NAME = 'work_members_member_status';
 
-    public function convertToDatabaseValue($value, AbstractPlatform $platform) : mixed
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): mixed
     {
         return $value instanceof Status ? $value->getName() : $value;
     }
@@ -26,7 +26,7 @@ class StatusType extends StringType
         return self::NAME;
     }
 
-    public function requiresSQLCommentHint(AbstractPlatform $platform) : bool
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
     }

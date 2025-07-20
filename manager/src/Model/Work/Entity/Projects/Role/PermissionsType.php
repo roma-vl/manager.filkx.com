@@ -25,7 +25,7 @@ class PermissionsType extends JsonType
 
     public function convertToPHPValue($value, AbstractPlatform $platform): mixed
     {
-        if (!is_array($data = parent::convertToPHPValue($value, $platform))) {
+        if (!\is_array($data = parent::convertToPHPValue($value, $platform))) {
             return $data;
         }
 
@@ -44,10 +44,10 @@ class PermissionsType extends JsonType
 
     private static function serialize(string $name): ?Permission
     {
-        return in_array($name, Permission::names(), true) ? new Permission($name) : null;
+        return \in_array($name, Permission::names(), true) ? new Permission($name) : null;
     }
 
-    public function requiresSQLCommentHint(AbstractPlatform $platform) : bool
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
     }

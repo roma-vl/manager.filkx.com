@@ -35,7 +35,7 @@ class Form extends AbstractType
                 'choices' => array_flip($this->groups->assoc()),
                 'required' => false,
                 'placeholder' => 'All groups',
-                'attr' => ['onchange' => 'this.form.submit()']
+                'attr' => ['onchange' => 'this.form.submit()'],
             ])
             ->add('status', Type\ChoiceType::class, ['choices' => [
                 'Active' => Status::ACTIVE,

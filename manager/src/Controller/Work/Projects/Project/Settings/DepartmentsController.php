@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Work\Projects\Project\Settings;
 
 use App\Annotation\Guid;
+use App\Controller\ErrorHandler;
 use App\Infrastructure\Inertia\InertiaService;
 use App\Model\Work\Entity\Projects\Project\Department\Id;
 use App\Model\Work\Entity\Projects\Project\Project;
@@ -12,7 +13,6 @@ use App\Model\Work\UseCase\Projects\Project\Department\Create;
 use App\Model\Work\UseCase\Projects\Project\Department\Edit;
 use App\Model\Work\UseCase\Projects\Project\Department\Remove;
 use App\ReadModel\Work\Projects\Project\DepartmentFetcher;
-use App\Controller\ErrorHandler;
 use App\Security\Voter\Work\Projects\ProjectAccess;
 use App\Service\CommandFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,23 +21,23 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/work/projects/{id}/settings/departments', name: 'work.projects.project.settings.departments')]
-
 class DepartmentsController extends AbstractController
 {
     public function __construct(
         private ErrorHandler $errors,
-    ) {}
+    ) {
+    }
 
     #[Route('', name: '')]
     public function index(
         Project $project,
         DepartmentFetcher $departments,
         Request $request,
-        InertiaService $inertia
+        InertiaService $inertia,
     ): Response {
-         $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
+        $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
 
-        return $inertia->render($request,'Work/Projects/Project/Settings/Departments/Index', [
+        return $inertia->render($request, 'Work/Projects/Project/Settings/Departments/Index', [
             'project' => [
                 'id' => $project->getId()->getValue(),
                 'name' => $project->getName(),
@@ -52,9 +52,9 @@ class DepartmentsController extends AbstractController
         Request $request,
         Create\Handler $handler,
         InertiaService $inertia,
-        CommandFactory $commandFactory
+        CommandFactory $commandFactory,
     ): Response {
-         $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
+        $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
 
         if ($request->isMethod('GET')) {
             return $inertia->render($request, 'Work/Projects/Project/Settings/Departments/Create', [
@@ -98,9 +98,9 @@ class DepartmentsController extends AbstractController
         Request $request,
         Edit\Handler $handler,
         InertiaService $inertia,
-        CommandFactory $commandFactory
+        CommandFactory $commandFactory,
     ): Response {
-         $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
+        $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
 
         $department = $project->getDepartment(new Id($department_id));
 
@@ -133,7 +133,7 @@ class DepartmentsController extends AbstractController
             $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
 
-            return $inertia->render($request,'Work/Projects/Project/Settings/Departments/Edit', [
+            return $inertia->render($request, 'Work/Projects/Project/Settings/Departments/Edit', [
                 'project' => [
                     'id' => $project->getId()->getValue(),
                     'name' => $project->getName(),
@@ -152,7 +152,7 @@ class DepartmentsController extends AbstractController
         Project $project,
         string $department_id,
         Request $request,
-        Remove\Handler $handler
+        Remove\Handler $handler,
     ): Response {
         // $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
 

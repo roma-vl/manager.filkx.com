@@ -256,9 +256,10 @@ class UsersController extends BaseController
     }
 
     #[Route('/{id}', name: 'users.show', requirements: ['id' => '[0-9a-fA-F\-]{36}'], methods: ['GET'])]
-    public function show(Request $request, User $user, MemberFetcher $members,  InertiaService $inertia): Response
+    public function show(Request $request, User $user, MemberFetcher $members, InertiaService $inertia): Response
     {
         $member = $members->find($user->getId()->getValue());
+
         return $inertia->render($request, 'Users/Show',
             array_merge(
                 $this->userShowPropsProvider->getProps(['userId' => $user->getId()->getValue()]),

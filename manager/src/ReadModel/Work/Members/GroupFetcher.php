@@ -11,7 +11,8 @@ readonly class GroupFetcher
 {
     public function __construct(
         private Connection $connection,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws Exception

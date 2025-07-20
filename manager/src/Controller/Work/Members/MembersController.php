@@ -19,7 +19,6 @@ use App\ReadModel\Work\Members\GroupFetcher;
 use App\ReadModel\Work\Members\Member\Filter\Filter;
 use App\ReadModel\Work\Members\Member\MemberFetcher;
 use App\Service\CommandFactory;
-use DomainException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -31,14 +30,15 @@ class MembersController extends BaseController
 {
     public function __construct(
         private readonly ErrorHandler $errors,
-    ) {}
+    ) {
+    }
 
     #[Route('', name: 'work.members', methods: ['GET'])]
     public function index(
         Request $request,
         MemberFetcher $fetcher,
         GroupFetcher $groupFetcher,
-        InertiaService $inertia
+        InertiaService $inertia,
     ): Response {
         $filter = new Filter();
         $filter->name = $request->query->get('name');
@@ -75,10 +75,9 @@ class MembersController extends BaseController
             'statuses' => [
                 ['id' => 'active', 'name' => 'Active'],
                 ['id' => 'archived', 'name' => 'Archived'],
-            ]
+            ],
         ]);
     }
-
 
     #[Route('/create/{id}', name: '.create', methods: ['GET', 'POST'])]
     public function create(
@@ -92,6 +91,7 @@ class MembersController extends BaseController
     ): Response {
         if ($fetcher->exists($user->getId()->getValue())) {
             $this->addFlash('error', 'Учасник уже існує.');
+
             return $inertia->redirect('/users/' . $user->getId()->getValue());
         }
         $groups = $groupFetcher->assoc();
@@ -129,10 +129,12 @@ class MembersController extends BaseController
         try {
             $handler->handle($command);
             $this->addFlash('success', 'Учасника додано.');
+
             return $inertia->redirect('/work/members/' . $user->getId()->getValue());
-        } catch (DomainException $e) {
+        } catch (\DomainException $e) {
             $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
+
             return $inertia->redirect('/work/members/' . $user->getId()->getValue());
         }
     }
@@ -169,10 +171,12 @@ class MembersController extends BaseController
         try {
             $handler->handle($command);
             $this->addFlash('success', 'Учасника оновлено.');
+
             return $inertia->redirect('/work/members/' . $member->getId()->getValue());
-        } catch (DomainException $e) {
+        } catch (\DomainException $e) {
             $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
+
             return $inertia->redirect('/work/members/' . $member->getId()->getValue() . '/edit');
         }
     }
@@ -213,10 +217,12 @@ class MembersController extends BaseController
         try {
             $handler->handle($command);
             $this->addFlash('success', 'Учасника переміщено.');
+
             return $inertia->redirect('/work/members/' . $member->getId()->getValue());
-        } catch (DomainException $e) {
+        } catch (\DomainException $e) {
             $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
+
             return $inertia->redirect('/work/members/' . $member->getId()->getValue() . '/move');
         }
     }
@@ -229,7 +235,7 @@ class MembersController extends BaseController
         try {
             $handler->handle($command);
             $this->addFlash('success', 'Учасника архівовано.');
-        } catch (DomainException $e) {
+        } catch (\DomainException $e) {
             $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
         }
@@ -242,6 +248,7 @@ class MembersController extends BaseController
     {
         if ($member->getId()->getValue() === $this->getUser()->getId()) {
             $this->addFlash('error', 'Не можна активувати самого себе.');
+
             return $inertia->redirect('/work/members/' . $member->getId()->getValue());
         }
 
@@ -250,7 +257,7 @@ class MembersController extends BaseController
         try {
             $handler->handle($command);
             $this->addFlash('success', 'Учасника активовано.');
-        } catch (DomainException $e) {
+        } catch (\DomainException $e) {
             $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
         }
@@ -280,9 +287,7 @@ class MembersController extends BaseController
                 'active' => $member->getStatus()->isActive(),
                 'archived' => !$member->getStatus()->isActive(),
             ],
-//            'departments' => $departments,
+            //            'departments' => $departments,
         ]);
-
-
     }
 }

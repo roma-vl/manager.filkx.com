@@ -37,6 +37,7 @@ class ProjectRepository
         if (!$project = $this->repo->find($id->getValue())) {
             throw new EntityNotFoundException('Project is not found.');
         }
+
         return $project;
     }
 

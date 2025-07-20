@@ -8,8 +8,8 @@ use App\Model\Flusher;
 use App\Model\Work\Entity\Members\Group\GroupRepository;
 use App\Model\Work\Entity\Members\Group\Id as GroupId;
 use App\Model\Work\Entity\Members\Member\Email;
-use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Members\Member\Id;
+use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Members\Member\MemberRepository;
 use App\Model\Work\Entity\Members\Member\Name;
 
@@ -51,4 +51,3 @@ class Handler
         $this->flusher->flush();
     }
 }
-

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Model\Work\UseCase\Projects\Role\Create;
 
 use App\Model\Flusher;
-use App\Model\Work\Entity\Projects\Role\Role;
 use App\Model\Work\Entity\Projects\Role\Id;
+use App\Model\Work\Entity\Projects\Role\Role;
 use App\Model\Work\Entity\Projects\Role\RoleRepository;
 
 class Handler

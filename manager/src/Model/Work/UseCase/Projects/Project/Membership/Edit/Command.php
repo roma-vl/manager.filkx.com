@@ -36,6 +36,7 @@ class Command
         $command->roles = array_map(static function (Role $role): string {
             return $role->getId()->getValue();
         }, $membership->getRoles());
+
         return $command;
     }
 }

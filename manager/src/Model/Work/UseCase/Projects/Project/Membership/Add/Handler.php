@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Model\Work\UseCase\Projects\Project\Membership\Add;
 
 use App\Model\Flusher;
+use App\Model\Work\Entity\Members\Member\Id as MemberId;
+use App\Model\Work\Entity\Members\Member\MemberRepository;
 use App\Model\Work\Entity\Projects\Project\Department\Id as DepartmentId;
 use App\Model\Work\Entity\Projects\Project\Id;
 use App\Model\Work\Entity\Projects\Project\ProjectRepository;
-use App\Model\Work\Entity\Members\Member\MemberRepository;
-use App\Model\Work\Entity\Members\Member\Id as MemberId;
 use App\Model\Work\Entity\Projects\Role\Id as RoleId;
 use App\Model\Work\Entity\Projects\Role\Role;
 use App\Model\Work\Entity\Projects\Role\RoleRepository;
@@ -25,9 +25,8 @@ class Handler
         ProjectRepository $projects,
         MemberRepository $members,
         RoleRepository $roles,
-        Flusher $flusher
-    )
-    {
+        Flusher $flusher,
+    ) {
         $this->projects = $projects;
         $this->members = $members;
         $this->roles = $roles;
@@ -52,4 +51,3 @@ class Handler
         $this->flusher->flush();
     }
 }
-

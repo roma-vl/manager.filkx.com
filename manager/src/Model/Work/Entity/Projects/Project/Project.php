@@ -104,6 +104,7 @@ class Project
         foreach ($this->departments as $current) {
             if ($current->getId()->isEqual($id)) {
                 $current->edit($name);
+
                 return;
             }
         }
@@ -120,6 +121,7 @@ class Project
                     }
                 }
                 $this->departments->removeElement($department);
+
                 return;
             }
         }
@@ -133,13 +135,13 @@ class Project
                 return true;
             }
         }
+
         return false;
     }
 
     /**
-     * @param Member $member
      * @param DepartmentId[] $departmentIds
-     * @param Role[] $roles
+     * @param Role[]         $roles
      */
     public function addMember(Member $member, array $departmentIds, array $roles): void
     {
@@ -153,9 +155,8 @@ class Project
     }
 
     /**
-     * @param MemberId $member
      * @param DepartmentId[] $departmentIds
-     * @param Role[] $roles
+     * @param Role[]         $roles
      */
     public function editMember(MemberId $member, array $departmentIds, array $roles): void
     {
@@ -163,6 +164,7 @@ class Project
             if ($membership->isForMember($member)) {
                 $membership->changeDepartments(array_map([$this, 'getDepartment'], $departmentIds));
                 $membership->changeRoles($roles);
+
                 return;
             }
         }
@@ -174,6 +176,7 @@ class Project
         foreach ($this->memberships as $membership) {
             if ($membership->isForMember($member)) {
                 $this->memberships->removeElement($membership);
+
                 return;
             }
         }
@@ -187,6 +190,7 @@ class Project
                 return $membership->isGranted($permission);
             }
         }
+
         return false;
     }
 

@@ -8,8 +8,8 @@ use App\DataFixtures\Work\Members\MemberFixture;
 use App\Model\User\Entity\User\Role;
 use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Projects\Project\Department\Id as DepartmentId;
-use App\Model\Work\Entity\Projects\Project\Project;
 use App\Model\Work\Entity\Projects\Project\Id;
+use App\Model\Work\Entity\Projects\Project\Project;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -55,6 +55,7 @@ class ProjectFixture extends Fixture implements DependentFixtureInterface
     {
         $project = $this->createProject($name, $sort);
         $project->archive();
+
         return $project;
     }
 

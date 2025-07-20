@@ -29,6 +29,7 @@ class Command
     {
         $command = new self($project->getId()->getValue(), $department->getId()->getValue());
         $command->name = $department->getName();
+
         return $command;
     }
 }

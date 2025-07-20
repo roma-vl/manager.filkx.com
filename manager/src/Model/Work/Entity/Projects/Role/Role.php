@@ -30,8 +30,6 @@ class Role
     private int $version;
 
     /**
-     * @param Id $id
-     * @param string $name
      * @param string[] $permissions
      */
     public function __construct(Id $id, string $name, array $permissions)
@@ -42,7 +40,6 @@ class Role
     }
 
     /**
-     * @param string $name
      * @param string[] $permissions
      */
     public function edit(string $name, array $permissions): void
@@ -63,7 +60,7 @@ class Role
         return new self(
             $id,
             $name,
-            array_map(static fn(Permission $permission): string => $permission->getName(), $this->permissions->toArray())
+            array_map(static fn (Permission $permission): string => $permission->getName(), $this->permissions->toArray())
         );
     }
 
@@ -92,7 +89,7 @@ class Role
     {
         $uniqueNames = array_unique($names);
         $this->permissions = new ArrayCollection(
-            array_map(static fn(string $name): Permission => new Permission($name), $uniqueNames)
+            array_map(static fn (string $name): Permission => new Permission($name), $uniqueNames)
         );
     }
 }

@@ -53,4 +53,3 @@ class Status
         return $this->name === self::ARCHIVED;
     }
 }
-

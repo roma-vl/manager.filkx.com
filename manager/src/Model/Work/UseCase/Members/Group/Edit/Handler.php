@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Model\Work\UseCase\Members\Group\Edit;
 
 use App\Model\Flusher;
-use App\Model\Work\Entity\Members\Group\Id;
 use App\Model\Work\Entity\Members\Group\GroupRepository;
+use App\Model\Work\Entity\Members\Group\Id;
 
 class Handler
 {

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Model\Work\UseCase\Projects\Project\Membership\Remove;
 
 use App\Model\Flusher;
+use App\Model\Work\Entity\Members\Member\Id as MemberId;
+use App\Model\Work\Entity\Members\Member\MemberRepository;
 use App\Model\Work\Entity\Projects\Project\Id;
 use App\Model\Work\Entity\Projects\Project\ProjectRepository;
-use App\Model\Work\Entity\Members\Member\MemberRepository;
-use App\Model\Work\Entity\Members\Member\Id as MemberId;
 
 class Handler
 {
@@ -19,9 +19,8 @@ class Handler
     public function __construct(
         ProjectRepository $projects,
         MemberRepository $members,
-        Flusher $flusher
-    )
-    {
+        Flusher $flusher,
+    ) {
         $this->projects = $projects;
         $this->flusher = $flusher;
         $this->members = $members;
@@ -37,4 +36,3 @@ class Handler
         $this->flusher->flush();
     }
 }
-

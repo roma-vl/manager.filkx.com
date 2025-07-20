@@ -27,7 +27,7 @@ class ProjectAccess extends Voter
 
     protected function supports($attribute, $subject): bool
     {
-        return in_array($attribute, [self::VIEW, self::MANAGE_MEMBERS, self::EDIT], true) && $subject instanceof Project;
+        return \in_array($attribute, [self::VIEW, self::MANAGE_MEMBERS, self::EDIT], true) && $subject instanceof Project;
     }
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
@@ -42,13 +42,12 @@ class ProjectAccess extends Voter
         }
 
         return match ($attribute) {
-            self::VIEW => $this->security->isGranted('ROLE_WORK_MANAGE_PROJECTS') ||
-                $subject->hasMember(new Id($user->getId())),
+            self::VIEW => $this->security->isGranted('ROLE_WORK_MANAGE_PROJECTS')
+                || $subject->hasMember(new Id($user->getId())),
             self::EDIT => $this->security->isGranted('ROLE_WORK_MANAGE_PROJECTS'),
-            self::MANAGE_MEMBERS => $this->security->isGranted('ROLE_WORK_MANAGE_PROJECTS') ||
-                $subject->isMemberGranted(new Id($user->getId()), Permission::MANAGE_PROJECT_MEMBERS),
+            self::MANAGE_MEMBERS => $this->security->isGranted('ROLE_WORK_MANAGE_PROJECTS')
+                || $subject->isMemberGranted(new Id($user->getId()), Permission::MANAGE_PROJECT_MEMBERS),
             default => false,
         };
-
     }
 }

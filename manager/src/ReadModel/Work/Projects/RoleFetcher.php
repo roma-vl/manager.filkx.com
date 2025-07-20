@@ -6,7 +6,6 @@ namespace App\ReadModel\Work\Projects;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
-use Doctrine\DBAL\FetchMode;
 
 class RoleFetcher
 {
@@ -52,9 +51,8 @@ class RoleFetcher
 
         return array_map(static function (array $role) {
             return array_replace($role, [
-                'permissions' => json_decode($role['permissions'], true)
+                'permissions' => json_decode($role['permissions'], true),
             ]);
         }, $stmt->fetchAllAssociative());
     }
 }
-
