@@ -8,7 +8,7 @@ use Psr\Log\LoggerInterface;
 
 class ErrorHandler
 {
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(LoggerInterface $logger)
     {
