@@ -27,6 +27,7 @@ class GroupRepository
         if (!$group = $this->repo->find($id->getValue())) {
             throw new EntityNotFoundException('Group is not found.');
         }
+
         return $group;
     }
 

@@ -85,7 +85,8 @@ services:
   manager-vite:
     build:
       context: ./manager/docker/development
-      dockerfile: php-cli.docker # або окремий dockerfile, якщо хочеш
+      dockerfile: php-cli.docker
+    restart: always
     working_dir: /app
     command: npm run dev -- --host
     volumes:

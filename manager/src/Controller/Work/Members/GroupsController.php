@@ -13,7 +13,6 @@ use App\Model\Work\UseCase\Members\Group\Edit;
 use App\Model\Work\UseCase\Members\Group\Remove;
 use App\ReadModel\Work\Members\GroupFetcher;
 use App\Service\CommandFactory;
-use DomainException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -25,7 +24,8 @@ class GroupsController extends BaseController
 {
     public function __construct(
         private readonly ErrorHandler $errors,
-    ) {}
+    ) {
+    }
 
     #[Route('', name: '')]
     public function index(GroupFetcher $fetcher, InertiaService $inertia, Request $request): Response
@@ -58,7 +58,7 @@ class GroupsController extends BaseController
             $this->addFlash('success', 'Групу створено успішно.');
 
             return $inertia->redirect('/work/members/groups');
-        } catch (DomainException $e) {
+        } catch (\DomainException $e) {
             $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
 
@@ -101,7 +101,7 @@ class GroupsController extends BaseController
             $this->addFlash('success', 'Групу оновлено.');
 
             return $inertia->redirect('/work/members/groups');
-        } catch (DomainException $e) {
+        } catch (\DomainException $e) {
             $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
 
@@ -116,13 +116,12 @@ class GroupsController extends BaseController
         Remove\Handler $handler,
         InertiaService $inertia,
     ): Response {
-
         $command = new Remove\Command($group->getId()->getValue());
 
         try {
             $handler->handle($command);
             $this->addFlash('success', 'Групу видалено.');
-        } catch (DomainException $e) {
+        } catch (\DomainException $e) {
             $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
         }

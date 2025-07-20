@@ -24,6 +24,7 @@ class Command
     {
         $command = new self($group->getId()->getValue());
         $command->name = $group->getName();
+
         return $command;
     }
 }

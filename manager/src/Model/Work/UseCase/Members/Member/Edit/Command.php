@@ -32,6 +32,7 @@ class Command
         $command->firstName = $member->getName()->getFirst();
         $command->lastName = $member->getName()->getLast();
         $command->email = $member->getEmail()->getValue();
+
         return $command;
     }
 }

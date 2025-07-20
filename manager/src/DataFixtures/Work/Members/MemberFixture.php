@@ -8,8 +8,8 @@ use App\DataFixtures\UserFixture;
 use App\Model\User\Entity\User\User;
 use App\Model\Work\Entity\Members\Group\Group;
 use App\Model\Work\Entity\Members\Member\Email;
-use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Members\Member\Id;
+use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Members\Member\Name;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -22,19 +22,17 @@ class MemberFixture extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
-        /**
-         * @var User $admin
-         * @var User $user
-         */
-        $admin = $this->getReference(UserFixture::REFERENCE_ADMIN);
-        $user = $this->getReference(UserFixture::REFERENCE_USER);
+        /** @var User $admin */
+        $admin = $this->getReference(UserFixture::REFERENCE_ADMIN, User::class);
 
-        /**
-         * @var Group $staff
-         * @var Group $customers
-         */
-        $staff = $this->getReference(GroupFixture::REFERENCE_STAFF);
-        $customers = $this->getReference(GroupFixture::REFERENCE_CUSTOMERS);
+        /** @var User $user */
+        $user = $this->getReference(UserFixture::REFERENCE_USER, User::class);
+
+        /** @var Group $staff */
+        $staff = $this->getReference(GroupFixture::REFERENCE_STAFF, Group::class);
+
+        /** @var Group $customers */
+        $customers = $this->getReference(GroupFixture::REFERENCE_CUSTOMERS, Group::class);
 
         $member = $this->createMember($admin, $staff);
         $manager->persist($member);

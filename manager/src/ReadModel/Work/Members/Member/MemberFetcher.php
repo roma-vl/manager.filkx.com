@@ -13,8 +13,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use UnexpectedValueException;
-use function in_array;
 
 class MemberFetcher
 {
@@ -25,9 +23,8 @@ class MemberFetcher
     public function __construct(
         Connection $connection,
         EntityManagerInterface $em,
-        PaginatorInterface $paginator
-    )
-    {
+        PaginatorInterface $paginator,
+    ) {
         $this->connection = $connection;
         $this->repository = $em->getRepository(Member::class);
         $this->paginator = $paginator;
@@ -38,14 +35,6 @@ class MemberFetcher
         return $this->repository->find($id);
     }
 
-    /**
-     * @param Filter $filter
-     * @param int $page
-     * @param int $size
-     * @param string $sort
-     * @param string $direction
-     * @return PaginationInterface
-     */
     public function all(Filter $filter, int $page, int $size, string $sort, string $direction): PaginationInterface
     {
         $qb = $this->connection->createQueryBuilder()
@@ -54,8 +43,8 @@ class MemberFetcher
                 'TRIM(CONCAT(m.name_first, \' \', m.name_last)) AS name',
                 'm.email',
                 'g.name as group',
-                'm.status'
-//                '(SELECT COUNT(*) FROM work_projects_project_memberships ms WHERE ms.member_id = m.id) as memberships_count'
+                'm.status',
+                '(SELECT COUNT(*) FROM work_projects_project_memberships ms WHERE ms.member_id = m.id) as memberships_count'
             )
             ->from('work_members_members', 'm')
             ->innerJoin('m', 'work_members_groups', 'g', 'm.group_id = g.id');
@@ -80,8 +69,8 @@ class MemberFetcher
             $qb->setParameter('group', $filter->group);
         }
 
-        if (!in_array($sort, ['name', 'email', 'group', 'status'], true)) {
-            throw new UnexpectedValueException('Cannot sort by ' . $sort);
+        if (!\in_array($sort, ['name', 'email', 'group', 'status'], true)) {
+            throw new \UnexpectedValueException('Cannot sort by ' . $sort);
         }
 
         $qb->orderBy($sort, $direction === 'desc' ? 'desc' : 'asc');
@@ -98,7 +87,6 @@ class MemberFetcher
                 ->setParameter('id', $id)
                 ->executeQuery()
                 ->fetchOne() > 0;
-
     }
 
     public function activeGroupedList(): array
@@ -107,14 +95,15 @@ class MemberFetcher
             ->select([
                 'm.id',
                 'CONCAT(m.name_first, \' \', m.name_last) AS name',
-                'g.name AS group'
+                'g.name AS group',
             ])
             ->from('work_members_members', 'm')
             ->leftJoin('m', 'work_members_groups', 'g', 'g.id = m.group_id')
             ->andWhere('m.status = :status')
-            ->setParameter(':status', Status::ACTIVE)
+            ->setParameter('status', Status::ACTIVE)
             ->orderBy('g.name')->addOrderBy('name')
             ->executeQuery();
+
         return $stmt->fetchAll(FetchMode::ASSOCIATIVE);
     }
 
@@ -124,7 +113,7 @@ class MemberFetcher
             ->select([
                 'm.id',
                 'CONCAT(m.name_first, \' \', m.name_last) AS name',
-                'd.name AS department'
+                'd.name AS department',
             ])
             ->from('work_members_members', 'm')
             ->innerJoin('m', 'work_projects_project_memberships', 'ms', 'ms.member_id = m.id')
@@ -135,6 +124,7 @@ class MemberFetcher
             ->setParameter(':project', $project)
             ->orderBy('d.name')->addOrderBy('name')
             ->executeQuery();
+
         return $stmt->fetchAll(FetchMode::ASSOCIATIVE);
     }
 }
