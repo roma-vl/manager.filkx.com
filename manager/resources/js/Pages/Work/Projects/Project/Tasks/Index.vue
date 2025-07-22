@@ -1,10 +1,21 @@
 <script setup>
-import {ref, reactive, computed} from 'vue';
-import AppLayout from '../../../../Layouts/AppLayout.vue';
-import SortIcon from "../../../../Components/Icons/SortIcon.vue";
+import {ref, reactive} from 'vue';
+import ProjectTabs from "@/Components/Work/Projects/ProjectTabs.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
+import SortIcon from "@/Components/Icons/SortIcon.vue";
 import Pagination from "@/Components/ui/Pagination.vue";
-import TaskFilters from "../../../../Components/TaskFilters.vue";
-import Breadcrumbs from "../../../../Components/ui/Breadcrumbs.vue";
+import Breadcrumbs from "@/Components/ui/Breadcrumbs.vue";
+import TaskFilters from "@/Components/TaskFilters.vue";
+import {
+    formatPriority,
+    priorityBadgeClass,
+    statusBadgeClass,
+    typeBadgeClass,
+    formatStatus,
+    formatType
+} from "@/Helpers/tasks.helper.js";
+
+
 const props = defineProps({
     project: Object,
     members: Object,
@@ -17,7 +28,7 @@ const props = defineProps({
     direction: String,
     pagination: Object,
 });
-
+console.log(props, '111111')
 const text = ref(props.filters.text || '');
 const type = ref(props.filters.type || '');
 const status = ref(props.filters.status || '');
@@ -42,22 +53,11 @@ function toggleSort(field) {
     submitFilters(1);
 }
 
-
-const groupedMembers = computed(() => {
-    const groups = {}
-    for (const member of props.members) {
-        if (!groups[member.group]) groups[member.group] = []
-        groups[member.group].push(member)
-    }
-    return Object.entries(groups).map(([label, members]) => ({ label, members }))
-})
-
 function submitFilters(page = 1) {
     if (typeof page !== 'number') {
         page = 1;
     }
 
-    console.log(sort.value, 'sadasort.value')
     const query = new URLSearchParams({
         text: text.value,
         type: type.value,
@@ -71,7 +71,7 @@ function submitFilters(page = 1) {
         direction: direction.value,
     }).toString();
 
-    window.location.href = `/work/tasks?${query}`;
+    window.location.href = `/work/projects/${props.project.id}/tasks?${query}`;
 }
 
 function resetFilters() {
@@ -84,76 +84,6 @@ function resetFilters() {
     roots.value = ''
     submitFilters()
 }
-
-function formatStatus(status) {
-    const map = {
-        new: 'Нова',
-        in_progress: 'В процесі',
-        done: 'Завершена',
-        failed: 'Провалена',
-        help: 'Допомога',
-    };
-
-    return (map[status] ?? status).toUpperCase();
-}
-
-function formatPriority(priority) {
-    switch(priority) {
-        case 1: return 'LOW';
-        case 2: return 'NORMAL';
-        case 3: return 'FEATURE';
-        case 4: return 'HIGH';
-        case 5: return 'CRITICAL';
-        case 6: return 'BLOCKER';
-        default: return 'UNKNOWN';
-    }
-}
-
-function priorityBadgeClass(priority) {
-    switch(priority) {
-        case 1: return 'bg-green-600 text-green-100';
-        case 2: return 'bg-blue-600 text-blue-100';
-        case 3: return 'bg-yellow-500 text-yellow-900';
-        case 4: return 'bg-orange-600 text-orange-100';
-        case 5: return 'bg-red-700 text-red-100';
-        case 6: return 'bg-purple-700 text-purple-100';
-        default: return 'bg-gray-600 text-gray-100';
-    }
-}
-
-
-function formatType(type) {
-    const map = {
-        none: '',
-        bug: 'Помилка',
-        feature: 'Функціонал',
-        task: 'Задача',
-    };
-    return (map[type] ?? type).toUpperCase();
-}
-
-function typeBadgeClass(type) {
-    switch(type) {
-        case 'none': return 'bg-gray-600 text-gray-100';
-        case 'bug': return 'bg-red-600 text-red-100';
-        case 'feature': return 'bg-green-600 text-green-100';
-        case 'task': return 'bg-blue-600 text-blue-100';
-        default: return 'bg-gray-600 text-gray-100';
-    }
-}
-
-
-function statusBadgeClass(status) {
-    switch(status) {
-        case 'new': return 'bg-gray-500 text-gray-100';
-        case 'in_progress': return 'bg-blue-600 text-blue-100';
-        case 'done': return 'bg-green-600 text-green-100';
-        case 'failed': return 'bg-red-600 text-red-100';
-        case 'help': return 'bg-yellow-500 text-yellow-900';
-        default: return 'bg-gray-600 text-gray-100';
-    }
-}
-
 
 function paginationLink(page) {
     const query = new URLSearchParams({
@@ -169,8 +99,9 @@ function paginationLink(page) {
         direction: direction.value,
     }).toString();
 
-    return `/work/tasks?${query}`;
+    return `/work/projects/${props.project.id}/tasks?${query}`;
 }
+
 function handleSubmit(updatedFilters) {
     text.value = updatedFilters.text;
     type.value = updatedFilters.type;
@@ -181,18 +112,31 @@ function handleSubmit(updatedFilters) {
     roots.value = updatedFilters.roots;
     submitFilters(1);
 }
+
 </script>
 
 <template>
     <AppLayout>
-
-        <Breadcrumbs :items="[
+            <Breadcrumbs :items="[
               { label: 'Home', href: '/' },
               { label: 'Work', href: '/work' },
+              { label: project.name, href: `/work/projects/${project.id}` },
               { label: 'Tasks' }
             ]" />
 
+            <ProjectTabs :project-id="project.id" />
+            <!-- Tabs -->
             <component :is="project ? 'ProjectTabs' : 'WorkTabs'" :project="project" />
+
+            <!-- Add Task Button -->
+            <div v-if="project" class="mb-6">
+                <a
+                    :href="`/work/projects/${project.id}/tasks/create`"
+                    class="inline-block rounded p-3 bg-indigo-800 hover:bg-indigo-700
+                 shadow-lg shadow-indigo-700/40 text-white transition-colors"
+                >Add Task</a
+                >
+            </div>
 
             <TaskFilters
                 :filters="props.filters"
@@ -205,6 +149,7 @@ function handleSubmit(updatedFilters) {
                 @reset="resetFilters"
             />
 
+            <!-- Tasks Table -->
             <div
                 class="overflow-auto rounded-lg shadow-lg shadow-indigo-800/40"
                 tabindex="0"
@@ -368,67 +313,16 @@ function handleSubmit(updatedFilters) {
                     </tbody>
                 </table>
             </div>
-asd
-        <Pagination
-            :pagination="pagination"
-            :linkBuilder="paginationLink"
-        />
 
+            <Pagination
+                :pagination="pagination"
+                :linkBuilder="paginationLink"
+            />
     </AppLayout>
 </template>
 
 <style scoped>
-.input-dark {
-    @apply bg-gray-900 text-indigo-200 placeholder-indigo-400 rounded p-3
-    shadow-sm shadow-indigo-900/50 border border-indigo-800
-    focus:outline-none focus:ring-2 focus:ring-indigo-500
-    transition-all duration-300 ease-in-out;
-    scrollbar-width: thin;
-    scrollbar-color: #4c51bf #1a202c;
-}
 
-.input-dark::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-.input-dark::-webkit-scrollbar-track {
-    background: #1a202c;
-    border-radius: 8px;
-}
-.input-dark::-webkit-scrollbar-thumb {
-    background-color: #4c51bf;
-    border-radius: 8px;
-    border: 2px solid #1a202c;
-}
-
-.btn-primary {
-    @apply bg-indigo-700 hover:bg-indigo-600 text-white font-semibold rounded
-    px-6 py-3 shadow-md shadow-indigo-700/60 transition-all duration-300 ease-in-out;
-}
-
-.btn-primary:disabled {
-    @apply opacity-50 cursor-not-allowed;
-}
-
-.btn-secondary {
-    @apply bg-gray-800 hover:bg-gray-700 text-indigo-300 font-semibold rounded
-    px-6 py-3 shadow-md shadow-indigo-900/40 transition-all duration-300 ease-in-out;
-}
-
-.btn-secondary:disabled {
-    @apply opacity-50 cursor-not-allowed;
-}
-
-.btn-pagination {
-    @apply bg-indigo-700 hover:bg-indigo-600 text-white font-semibold px-4 py-2
-    shadow-md shadow-indigo-700/60 transition-all duration-300 ease-in-out;
-}
-
-.btn-pagination:disabled {
-    @apply opacity-50 cursor-not-allowed;
-}
-
-/* Custom scrollbar for table container */
 div[tabindex='0']::-webkit-scrollbar {
     height: 8px;
     width: 8px;

@@ -101,8 +101,8 @@
           >
           <NavItem
             icon="check-circle"
-            to="/work/projects/tasks"
-            :active="$page.url.startsWith('/work/projects/tasks')"
+            to="/work/tasks"
+            :active="$page.url.startsWith('/work/tasks')"
             >Tasks</NavItem
           >
           <NavItem
@@ -197,7 +197,16 @@
           >
             {{ flash.success }}
           </div>
+            <div
+                class="max-w-7xl mx-auto p-6 rounded-lg
+             bg-gradient-to-br from-indigo-900 via-gray-900 to-[#0e0f11]
+             shadow-md shadow-indigo-900/40
+             text-indigo-200
+             transition-all duration-300 ease-in-out"
+                role="main"
+            >
           <slot />
+        </div>
         </div>
       </Transition>
     </main>

@@ -128,8 +128,8 @@
   import { ref, computed } from 'vue'
   import { Head, Link } from '@inertiajs/inertia-vue3'
   import AppLayout from '@/Layouts/AppLayout.vue'
-  import { statusBadgeClass } from '../../../helpers.js'
   import RolesTabs from '../../../Components/Work/Projects/Project/Roles/RolesTabs.vue'
+  import {statusBadgeClass} from "../../../Helpers/helpers.js";
 
   const props = defineProps({
     projects: Array,
