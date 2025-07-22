@@ -5,6 +5,16 @@ import SortIcon from "../../../../Components/Icons/SortIcon.vue";
 import Pagination from "@/Components/ui/Pagination.vue";
 import TaskFilters from "../../../../Components/TaskFilters.vue";
 import Breadcrumbs from "../../../../Components/ui/Breadcrumbs.vue";
+import RolesTabs from "../../../../Components/Work/Projects/Project/Roles/RolesTabs.vue";
+import TasksTabs from "../../../../Components/Work/Projects/TasksTabs.vue";
+import {
+    formatPriority,
+    formatStatus,
+    formatType,
+    priorityBadgeClass,
+    typeBadgeClass
+} from "../../../../Helpers/tasks.helper.js";
+import {statusBadgeClass} from "../../../../Helpers/helpers.js";
 const props = defineProps({
     project: Object,
     members: Object,
@@ -42,22 +52,11 @@ function toggleSort(field) {
     submitFilters(1);
 }
 
-
-const groupedMembers = computed(() => {
-    const groups = {}
-    for (const member of props.members) {
-        if (!groups[member.group]) groups[member.group] = []
-        groups[member.group].push(member)
-    }
-    return Object.entries(groups).map(([label, members]) => ({ label, members }))
-})
-
 function submitFilters(page = 1) {
     if (typeof page !== 'number') {
         page = 1;
     }
 
-    console.log(sort.value, 'sadasort.value')
     const query = new URLSearchParams({
         text: text.value,
         type: type.value,
@@ -71,7 +70,7 @@ function submitFilters(page = 1) {
         direction: direction.value,
     }).toString();
 
-    window.location.href = `/work/tasks?${query}`;
+    window.location.href = `/work/projects/tasks?${query}`;
 }
 
 function resetFilters() {
@@ -84,76 +83,6 @@ function resetFilters() {
     roots.value = ''
     submitFilters()
 }
-
-function formatStatus(status) {
-    const map = {
-        new: 'Нова',
-        in_progress: 'В процесі',
-        done: 'Завершена',
-        failed: 'Провалена',
-        help: 'Допомога',
-    };
-
-    return (map[status] ?? status).toUpperCase();
-}
-
-function formatPriority(priority) {
-    switch(priority) {
-        case 1: return 'LOW';
-        case 2: return 'NORMAL';
-        case 3: return 'FEATURE';
-        case 4: return 'HIGH';
-        case 5: return 'CRITICAL';
-        case 6: return 'BLOCKER';
-        default: return 'UNKNOWN';
-    }
-}
-
-function priorityBadgeClass(priority) {
-    switch(priority) {
-        case 1: return 'bg-green-600 text-green-100';
-        case 2: return 'bg-blue-600 text-blue-100';
-        case 3: return 'bg-yellow-500 text-yellow-900';
-        case 4: return 'bg-orange-600 text-orange-100';
-        case 5: return 'bg-red-700 text-red-100';
-        case 6: return 'bg-purple-700 text-purple-100';
-        default: return 'bg-gray-600 text-gray-100';
-    }
-}
-
-
-function formatType(type) {
-    const map = {
-        none: '',
-        bug: 'Помилка',
-        feature: 'Функціонал',
-        task: 'Задача',
-    };
-    return (map[type] ?? type).toUpperCase();
-}
-
-function typeBadgeClass(type) {
-    switch(type) {
-        case 'none': return 'bg-gray-600 text-gray-100';
-        case 'bug': return 'bg-red-600 text-red-100';
-        case 'feature': return 'bg-green-600 text-green-100';
-        case 'task': return 'bg-blue-600 text-blue-100';
-        default: return 'bg-gray-600 text-gray-100';
-    }
-}
-
-
-function statusBadgeClass(status) {
-    switch(status) {
-        case 'new': return 'bg-gray-500 text-gray-100';
-        case 'in_progress': return 'bg-blue-600 text-blue-100';
-        case 'done': return 'bg-green-600 text-green-100';
-        case 'failed': return 'bg-red-600 text-red-100';
-        case 'help': return 'bg-yellow-500 text-yellow-900';
-        default: return 'bg-gray-600 text-gray-100';
-    }
-}
-
 
 function paginationLink(page) {
     const query = new URLSearchParams({
@@ -169,7 +98,7 @@ function paginationLink(page) {
         direction: direction.value,
     }).toString();
 
-    return `/work/tasks?${query}`;
+    return `/work/projects/tasks?${query}`;
 }
 function handleSubmit(updatedFilters) {
     text.value = updatedFilters.text;
@@ -187,13 +116,13 @@ function handleSubmit(updatedFilters) {
     <AppLayout>
 
         <Breadcrumbs :items="[
-              { label: 'Home', href: '/' },
-              { label: 'Work', href: '/work' },
-              { label: 'Tasks' }
-            ]" />
+          { label: 'Home', href: '/' },
+          { label: 'Work', href: '/work' },
+          { label: 'Projects', href: '/work/projects' },
+          { label: 'Tasks' }
+        ]" />
 
-            <component :is="project ? 'ProjectTabs' : 'WorkTabs'" :project="project" />
-
+        <RolesTabs />
             <TaskFilters
                 :filters="props.filters"
                 :types="props.type"
@@ -204,6 +133,7 @@ function handleSubmit(updatedFilters) {
                 @submit="handleSubmit"
                 @reset="resetFilters"
             />
+            <TasksTabs/>
 
             <div
                 class="overflow-auto rounded-lg shadow-lg shadow-indigo-800/40"
@@ -315,7 +245,7 @@ function handleSubmit(updatedFilters) {
                               <i class="fas fa-angle-double-right"></i>
                             </span>
                             <a
-                                :href="`/work/tasks/${task.id}`"
+                                :href="`/work/projects/tasks/${task.id}`"
                                 class="text-indigo-300 hover:underline transition-colors"
                             >
                                 {{ task.name }}
@@ -368,7 +298,7 @@ function handleSubmit(updatedFilters) {
                     </tbody>
                 </table>
             </div>
-asd
+
         <Pagination
             :pagination="pagination"
             :linkBuilder="paginationLink"
@@ -378,73 +308,4 @@ asd
 </template>
 
 <style scoped>
-.input-dark {
-    @apply bg-gray-900 text-indigo-200 placeholder-indigo-400 rounded p-3
-    shadow-sm shadow-indigo-900/50 border border-indigo-800
-    focus:outline-none focus:ring-2 focus:ring-indigo-500
-    transition-all duration-300 ease-in-out;
-    scrollbar-width: thin;
-    scrollbar-color: #4c51bf #1a202c;
-}
-
-.input-dark::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-.input-dark::-webkit-scrollbar-track {
-    background: #1a202c;
-    border-radius: 8px;
-}
-.input-dark::-webkit-scrollbar-thumb {
-    background-color: #4c51bf;
-    border-radius: 8px;
-    border: 2px solid #1a202c;
-}
-
-.btn-primary {
-    @apply bg-indigo-700 hover:bg-indigo-600 text-white font-semibold rounded
-    px-6 py-3 shadow-md shadow-indigo-700/60 transition-all duration-300 ease-in-out;
-}
-
-.btn-primary:disabled {
-    @apply opacity-50 cursor-not-allowed;
-}
-
-.btn-secondary {
-    @apply bg-gray-800 hover:bg-gray-700 text-indigo-300 font-semibold rounded
-    px-6 py-3 shadow-md shadow-indigo-900/40 transition-all duration-300 ease-in-out;
-}
-
-.btn-secondary:disabled {
-    @apply opacity-50 cursor-not-allowed;
-}
-
-.btn-pagination {
-    @apply bg-indigo-700 hover:bg-indigo-600 text-white font-semibold px-4 py-2
-    shadow-md shadow-indigo-700/60 transition-all duration-300 ease-in-out;
-}
-
-.btn-pagination:disabled {
-    @apply opacity-50 cursor-not-allowed;
-}
-
-/* Custom scrollbar for table container */
-div[tabindex='0']::-webkit-scrollbar {
-    height: 8px;
-    width: 8px;
-}
-
-div[tabindex='0']::-webkit-scrollbar-track {
-    background: #0e0f11;
-    border-radius: 8px;
-}
-
-div[tabindex='0']::-webkit-scrollbar-thumb {
-    background: #4c51bf;
-    border-radius: 8px;
-    border: 2px solid #0e0f11;
-}
-div[tabindex='0']::-webkit-scrollbar-thumb:hover {
-    background: #6366f1;
-}
 </style>

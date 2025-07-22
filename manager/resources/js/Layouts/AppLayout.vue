@@ -101,8 +101,8 @@
           >
           <NavItem
             icon="check-circle"
-            to="/work/tasks"
-            :active="$page.url.startsWith('/work/tasks')"
+            to="/work/projects/tasks"
+            :active="$page.url.startsWith('/work/projects/tasks')"
             >Tasks</NavItem
           >
           <NavItem
@@ -199,14 +199,15 @@
           </div>
             <div
                 class="max-w-7xl mx-auto p-6 rounded-lg
-             bg-gradient-to-br from-indigo-900 via-gray-900 to-[#0e0f11]
-             shadow-md shadow-indigo-900/40
-             text-indigo-200
-             transition-all duration-300 ease-in-out"
+                    bg-white text-gray-800 shadow-md shadow-gray-200/50
+                    dark:bg-gradient-to-br dark:from-indigo-900 dark:via-gray-900 dark:to-[#0e0f11]
+                    dark:text-indigo-200 dark:shadow-indigo-900/40
+                    transition-all duration-300 ease-in-out"
                 role="main"
             >
-          <slot />
-        </div>
+                <slot />
+            </div>
+
         </div>
       </Transition>
     </main>

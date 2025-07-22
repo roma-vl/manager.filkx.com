@@ -14,6 +14,7 @@ import {
     formatStatus,
     formatType
 } from "@/Helpers/tasks.helper.js";
+import TasksTabs from "../../../../../Components/Work/Projects/Tasks/TasksTabs.vue";
 
 
 const props = defineProps({
@@ -126,7 +127,6 @@ function handleSubmit(updatedFilters) {
 
             <ProjectTabs :project-id="project.id" />
             <!-- Tabs -->
-            <component :is="project ? 'ProjectTabs' : 'WorkTabs'" :project="project" />
 
             <!-- Add Task Button -->
             <div v-if="project" class="mb-6">
@@ -148,7 +148,7 @@ function handleSubmit(updatedFilters) {
                 @submit="handleSubmit"
                 @reset="resetFilters"
             />
-
+            <TasksTabs :project-id="project.id" />
             <!-- Tasks Table -->
             <div
                 class="overflow-auto rounded-lg shadow-lg shadow-indigo-800/40"
@@ -260,7 +260,7 @@ function handleSubmit(updatedFilters) {
                               <i class="fas fa-angle-double-right"></i>
                             </span>
                             <a
-                                :href="`/work/tasks/${task.id}`"
+                                :href="`/work/projects/tasks/${task.id}`"
                                 class="text-indigo-300 hover:underline transition-colors"
                             >
                                 {{ task.name }}

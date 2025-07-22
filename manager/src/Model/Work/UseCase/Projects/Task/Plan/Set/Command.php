@@ -14,7 +14,8 @@ class Command
     #[Assert\NotBlank]
     public int $id;
     #[Assert\NotBlank]
-    public $date;
+    public ?\DateTimeImmutable $date = null;
+
 
     public function __construct(string $actor, int $id)
     {

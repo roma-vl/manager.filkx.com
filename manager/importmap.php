@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Returns the importmap for this application.
  *
@@ -43,7 +41,7 @@ return [
         'version' => '4.5.0',
     ],
     'vue' => [
-        'version' => '3.2.26',
+        'version' => '3.5.13',
     ],
     'lodash.clonedeep' => [
         'version' => '4.5.0',
@@ -52,7 +50,7 @@ return [
         'version' => '0.11.0',
     ],
     '@vue/runtime-dom' => [
-        'version' => '3.2.26',
+        'version' => '3.5.13',
     ],
     'axios' => [
         'version' => '0.21.4',
@@ -64,16 +62,16 @@ return [
         'version' => '4.2.2',
     ],
     '@vue/runtime-core' => [
-        'version' => '3.2.26',
+        'version' => '3.5.13',
     ],
     '@vue/shared' => [
-        'version' => '3.2.26',
+        'version' => '3.5.13',
     ],
     'side-channel' => [
         'version' => '1.0.4',
     ],
     '@vue/reactivity' => [
-        'version' => '3.2.26',
+        'version' => '3.5.13',
     ],
     'get-intrinsic' => [
         'version' => '1.0.2',
@@ -95,5 +93,11 @@ return [
     ],
     '@tailwindcss/postcss' => [
         'version' => '4.1.11',
+    ],
+    'vue-router' => [
+        'version' => '4.5.1',
+    ],
+    '@vue/devtools-api' => [
+        'version' => '6.6.4',
     ],
 ];

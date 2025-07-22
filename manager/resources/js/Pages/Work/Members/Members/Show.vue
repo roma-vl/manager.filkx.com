@@ -3,8 +3,8 @@
   import Tabs from '@/Components/Work/Members/Groups/Tabs.vue'
   import AppLayout from '@/Layouts/AppLayout.vue'
   import { CheckCircleIcon, BanIcon } from 'lucide-vue-next'
-  import { statusBadgeClass } from '../../../../helpers.js'
   import axios from 'axios'
+  import {statusBadgeClass} from "../../../../Helpers/helpers.js";
 
   const props = defineProps({
     member: Object,

@@ -2,15 +2,11 @@
   <AppLayout>
     <Head title="Projects" />
 
-    <nav class="text-sm text-white/60 mb-6" aria-label="Breadcrumb">
-      <ol class="flex space-x-2">
-        <li><Link href="/" class="hover:text-indigo-300">Home</Link><span class="mx-2">/</span></li>
-        <li>
-          <Link href="/work" class="hover:text-indigo-300">Work</Link><span class="mx-2">/</span>
-        </li>
-        <li class="text-indigo-100 font-semibold">Projects</li>
-      </ol>
-    </nav>
+      <Breadcrumbs :items="[
+          { label: 'Home', href: '/' },
+          { label: 'Work', href: '/work' },
+          { label: 'Projects' }
+        ]" />
 
     <RolesTabs />
 
@@ -130,6 +126,7 @@
   import AppLayout from '@/Layouts/AppLayout.vue'
   import RolesTabs from '../../../Components/Work/Projects/Project/Roles/RolesTabs.vue'
   import {statusBadgeClass} from "../../../Helpers/helpers.js";
+  import Breadcrumbs from "../../../Components/ui/Breadcrumbs.vue";
 
   const props = defineProps({
     projects: Array,
