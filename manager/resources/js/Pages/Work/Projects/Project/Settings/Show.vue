@@ -2,8 +2,8 @@
   import AppLayout from '@/Layouts/AppLayout.vue'
   import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
   import { Link, usePage } from '@inertiajs/inertia-vue3'
-  import { statusBadgeClass } from '@/helpers'
   import DepartmentsTabs from '../../../../../Components/Work/Projects/Project/Settings/Departments/DepartmentsTabs.vue'
+  import {statusBadgeClass} from "../../../../../Helpers/helpers.js";
 
   const { props } = usePage()
   const project = props.value.project
