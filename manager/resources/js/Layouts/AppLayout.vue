@@ -96,8 +96,8 @@
           <NavItem
             icon="folder"
             to="/work/projects"
-            :active="$page.url.startsWith('/work/projects')"
-            >Projects</NavItem
+            :active="$page.url === '/work/projects'"
+          >Projects</NavItem
           >
           <NavItem
             icon="check-circle"

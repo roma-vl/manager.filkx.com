@@ -3,21 +3,13 @@ import { useForm, Link } from '@inertiajs/inertia-vue3'
 import AppLayout from '../../../../Layouts/AppLayout.vue'
 import {onBeforeUnmount, onMounted, ref} from 'vue'
 import Breadcrumbs from "../../../../Components/ui/Breadcrumbs.vue";
-import {statusBadgeClass} from "../../../../Helpers/helpers.js";
 import axios from "axios";
 import ChangeTypeDropdown from "./Partials/ChangeTypeDropdown.vue";
-
-import {
-    formatPriority,
-    formatStatus,
-    formatType,
-    priorityBadgeClass,
-    typeBadgeClass
-} from "../../../../Helpers/tasks.helper.js";
 import ChangeStatusDropdown from "./Partials/ChangeStatusDropdown.vue";
 import ChangePriorityDropdown from "./Partials/ChangePriorityDropdown.vue";
 import ChangeProgressBar from "./Partials/ChangeProgressBar.vue";
 import SubTasksTable from "../../../../Components/Task/SubTasksTable.vue";
+import MarkdownRenderer from "../../../../Components/ui/MarkdownRenderer.vue";
 
 const props = defineProps({
     task: Object,
@@ -181,10 +173,8 @@ function revokeExecutor(memberId) {
                     <div>
                         <p
                             class="min-w-full border-collapse border border-indigo-800 text-indigo-200 p-4 rounded-lg">
-                            {{task.content}}
+                            <MarkdownRenderer :content="task.content" />
                         </p>
-
-
                         <div
                             v-if="children.length"
                             class="overflow-auto rounded-lg shadow-lg shadow-indigo-800/40"

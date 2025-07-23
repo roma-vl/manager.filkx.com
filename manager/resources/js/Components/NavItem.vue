@@ -1,7 +1,7 @@
 <template>
   <Link
     :href="to"
-    class="flex items-center p-3 rounded-lg transition-colors"
+    class="flex items-center p-2 rounded-lg transition-colors m-1"
     :class="
       active ? 'bg-indigo-700 text-white' : 'text-indigo-200 hover:bg-indigo-700 hover:text-white'
     "

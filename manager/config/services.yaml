@@ -27,6 +27,7 @@ services:
     App\EventSubscriber\LogoutSubscriber:
         tags:
             - { name: kernel.event_subscriber }
+    cebe\markdown\MarkdownExtra: ~
 framework:
     router:
         default_uri: '%env(resolve:APP_URL)%'
