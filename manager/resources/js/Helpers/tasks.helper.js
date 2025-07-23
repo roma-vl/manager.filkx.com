@@ -1,23 +1,42 @@
-export const typeBadgeClass = type =>  {
+export const typeBadgeClass = type => {
     switch(type) {
-        case 'none': return 'bg-gray-600 text-gray-100';
-        case 'bug': return 'bg-red-600 text-red-100';
-        case 'feature': return 'bg-green-600 text-green-100';
-        case 'task': return 'bg-blue-600 text-blue-100';
-        default: return 'bg-gray-600 text-gray-100';
+        case 'none':
+            return 'bg-gray-600 text-gray-100';
+        case 'error':
+            return 'bg-rose-700 text-rose-100';
+        case 'bug':
+            return 'bg-red-600 text-red-100';
+        case 'feature':
+            return 'bg-emerald-600 text-emerald-100';
+        case 'task':
+            return 'bg-sky-600 text-sky-100';
+        case 'support':
+            return 'bg-purple-600 text-purple-100';
+        default:
+            return 'bg-gray-600 text-gray-100';
     }
 }
 
-export const statusBadgeClass = status =>  {
-    switch(status) {
-        case 'new': return 'bg-gray-500 text-gray-100';
-        case 'in_progress': return 'bg-blue-600 text-blue-100';
-        case 'done': return 'bg-green-600 text-green-100';
-        case 'failed': return 'bg-red-600 text-red-100';
-        case 'help': return 'bg-yellow-500 text-yellow-900';
-        default: return 'bg-gray-600 text-gray-100';
+
+export const statusBadgeClass = status => {
+    switch (status) {
+        case 'new':
+            return 'bg-green-800 text-green-100';
+        case 'working':
+            return 'bg-blue-600 text-blue-100';
+        case 'help':
+            return 'bg-yellow-400 text-yellow-900';
+        case 'checking':
+            return 'bg-purple-600 text-purple-100';
+        case 'rejected':
+            return 'bg-red-600 text-red-100';
+        case 'done':
+            return 'bg-green-600 text-green-100';
+        default:
+            return 'bg-gray-600 text-gray-100';
     }
 }
+
 
 export const formatPriority = priority => {
     switch(priority) {
@@ -56,8 +75,9 @@ export const formatStatus = status => {
 
 export const formatType = type => {
     const map = {
-        none: '',
-        bug: 'Помилка',
+        none: 'Невизначеено',
+        bug: 'баг',
+        error: 'Помилка',
         feature: 'Функціонал',
         task: 'Задача',
     };

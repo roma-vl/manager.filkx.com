@@ -8,9 +8,13 @@ use Webmozart\Assert\Assert;
 
 class Type
 {
+
     public const NONE = 'none';
     public const ERROR = 'error';
+    public const BUG = 'bug';
     public const FEATURE = 'feature';
+    public const TASK = 'task';
+    public const SUPPORT = 'support';
 
     private string $name;
 
@@ -19,7 +23,10 @@ class Type
         Assert::oneOf($name, [
             self::NONE,
             self::ERROR,
+            self::BUG,
             self::FEATURE,
+            self::TASK,
+            self::SUPPORT,
         ]);
 
         $this->name = $name;

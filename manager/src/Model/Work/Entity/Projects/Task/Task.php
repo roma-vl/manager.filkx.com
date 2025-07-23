@@ -259,7 +259,7 @@ class Task implements AggregateRoot
 
     public function changePriority(Member $actor, \DateTimeImmutable $date, int $priority): void
     {
-        Assert::range($priority, 1, 4);
+        Assert::range($priority, 1, 6);
         if ($priority === $this->priority) {
             throw new \DomainException('Priority is already same.');
         }

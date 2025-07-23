@@ -6,6 +6,7 @@ namespace App\Controller\Work\Projects;
 
 use App\Infrastructure\Inertia\InertiaService;
 use App\Model\Comment\UseCase\Comment;
+use App\Model\Work\Entity\Projects\Task\Progress;
 use App\Model\Work\Entity\Projects\Task\Status;
 use App\Model\Work\Entity\Projects\Task\Task;
 use App\Model\Work\Entity\Projects\Task\Type;
@@ -17,6 +18,10 @@ use App\Model\Work\UseCase\Projects\Task\Move;
 use App\Model\Work\UseCase\Projects\Task\Plan;
 use App\Model\Work\UseCase\Projects\Task\Remove;
 use App\Model\Work\UseCase\Projects\Task\Start;
+use App\Model\Work\UseCase\Projects\Task\Status as UseCaseStatus;
+use App\Model\Work\UseCase\Projects\Task\Type as UseCaseType;
+use App\Model\Work\UseCase\Projects\Task\Priority as UseCasePriority;
+use App\Model\Work\UseCase\Projects\Task\Progress as UseCaseProgress;
 use App\Model\Work\UseCase\Projects\Task\Take;
 use App\Model\Work\UseCase\Projects\Task\TakeAndStart;
 use App\ReadModel\Work\Members\Member\MemberFetcher;
@@ -29,6 +34,8 @@ use App\Security\Voter\Work\Projects\TaskAccess;
 use App\Controller\ErrorHandler;
 use App\Service\Uploader\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -806,8 +813,140 @@ class TasksController extends AbstractController
                 'type' => $task['type'],
             ], $tasks->childrenOf($task->getId()->getValue())),
 
+            'statuses' => [
+                ['id' => Status::NEW, 'name' => 'NEW'],
+                ['id' => Status::WORKING, 'name' => 'WORKING'],
+                ['id' => Status::HELP, 'name' => 'HELP'],
+                ['id' => Status::CHECKING, 'name' => 'CHECKING'],
+                ['id' => Status::REJECTED, 'name' => 'REJECTED'],
+                ['id' => Status::DONE, 'name' => 'DONE'],
+            ],
+            'types' => [
+                ['id' => Type::NONE, 'name' => 'NONE'],
+                ['id' => Type::ERROR, 'name' => 'ERROR'],
+                ['id' => Type::BUG, 'name' => 'BUG'],
+                ['id' => Type::FEATURE, 'name' => 'FEATURE'],
+                ['id' => Type::TASK, 'name' => 'TASK'],
+                ['id' => Type::SUPPORT, 'name' => 'SUPPORT'],
+            ],
+
+            'priorities' => [
+                ['id' => 1, 'name' => 'LOW'],
+                ['id' => 2, 'name' => 'NORMAL'],
+                ['id' => 3, 'name' => 'FEATURE'],
+                ['id' => 4, 'name' => 'HIGH'],
+                ['id' => 5, 'name' => 'CRITICAL'],
+                ['id' => 6, 'name' => 'BLOCKER'],
+            ],
+            'progress' => [
+                ['id' => Progress::PROGRESS_0, 'name' => Progress::PROGRESS_0],
+                ['id' => Progress::PROGRESS_25, 'name' => Progress::PROGRESS_25],
+                ['id' => Progress::PROGRESS_50, 'name' => Progress::PROGRESS_50],
+                ['id' => Progress::PROGRESS_75, 'name' => Progress::PROGRESS_75],
+                ['id' => Progress::PROGRESS_100, 'name' => Progress::PROGRESS_100],
+            ],
+
         ]);
     }
+    #[Route('/{id}/status', name: '.status', methods: ['POST'])]
+    public function changeStatus(Task $task, Request $request, UseCaseStatus\Handler $handler): Response
+    {
+        $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
+        $data = json_decode($request->getContent(), true);
+        $command = new UseCaseStatus\Command(
+            $this->getUser()->getId(),
+            $task->getId()->getValue(),
+        );
+
+        $command->status = $data['status'] ?: '';
+
+        try {
+            $handler->handle($command);
+            return $this->redirectToRoute('work.tasks.show', ['id' => $task->getId()]);
+        } catch (\DomainException $e) {
+            $this->errors->handle($e);
+            $this->addFlash('error', $e->getMessage());
+            return $this->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    #[Route('/{id}/type', name: '.type', methods: ['POST'])]
+    public function changeType(Task $task, Request $request, UseCaseType\Handler $handler): Response
+    {
+        $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
+
+        $data = json_decode($request->getContent(), true);
+
+        $command = new UseCaseType\Command(
+            $this->getUser()->getId(),
+            $task->getId()->getValue()
+        );
+
+        $command->type = $data['type'] ?? '';
+
+        try {
+            $handler->handle($command);
+            return $this->redirectToRoute('work.tasks.show', ['id' => $task->getId()]);
+        } catch (\DomainException $e) {
+            $this->errors->handle($e);
+            return $this->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    #[Route('/{id}/priority', name: '.priority', methods: ['POST'])]
+    public function changePriority(Task $task, Request $request, UseCasePriority\Handler $handler): Response
+    {
+        $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
+
+        $data = json_decode($request->getContent(), true);
+
+        $command = new UseCasePriority\Command(
+            $this->getUser()->getId(),
+            $task->getId()->getValue()
+        );
+        $command->priority = $data['priority'] ?? '';
+
+        try {
+            $handler->handle($command);
+            return $this->redirectToRoute('work.tasks.show', ['id' => $task->getId()]);
+        } catch (\DomainException $e) {
+            $this->errors->handle($e);
+            return $this->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 400);
+        }
+    }
+    #[Route('/{id}/progress', name: '.progress', methods: ['POST'])]
+    public function changeProgress(Task $task, Request $request, UseCaseProgress\Handler $handler): Response
+    {
+        $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
+
+        $data = json_decode($request->getContent(), true);
+        $command = new UseCaseProgress\Command(
+            $this->getUser()->getId(),
+            $task->getId()->getValue()
+        );
+
+        $command->progress = (int)($data['progress'] ?? 0);
+
+        try {
+            $handler->handle($command);
+            return $this->redirectToRoute('work.tasks.show', ['id' => $task->getId()]);
+        } catch (\DomainException $e) {
+            $this->errors->handle($e);
+            return $this->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 400);
+        }
+    }
 }
 
