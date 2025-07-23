@@ -1,31 +1,39 @@
-<script setup lang="ts">
+<script setup>
 import { computed } from 'vue'
 import MarkdownIt from 'markdown-it'
 import markdownItAnchor from 'markdown-it-anchor'
 import markdownItTaskLists from 'markdown-it-task-lists'
 import prism from 'prismjs'
 import 'prismjs/themes/prism-tomorrow.css'
+import 'prismjs/components/prism-markup.js'
+import 'prismjs/components/prism-php-extras.js'
+import 'prismjs/components/prism-javascript.js'
+import 'prismjs/components/prism-typescript.js'
+import 'prismjs/components/prism-bash.js'
+import 'prismjs/components/prism-json.js'
 
-// Додай імпорт мов, які точно треба (інакше буде undefined)
-import 'prismjs/components/prism-javascript'
-import 'prismjs/components/prism-typescript'
-import 'prismjs/components/prism-php'
-import 'prismjs/components/prism-bash'
-import 'prismjs/components/prism-json'
-
-const props = defineProps<{ content: string }>()
+const props = defineProps({
+    content: String,
+})
 
 const md = new MarkdownIt({
     html: true,
     linkify: true,
     typographer: true,
     highlight: (str, lang) => {
-        if (lang && prism.languages[lang]) {
-            const code = prism.highlight(str, prism.languages[lang], lang)
-            return `<pre class="language-${lang}"><code class="language-${lang}">${code}</code></pre>`
+        const language = (lang || '').toLowerCase()
+        if (language && prism.languages[language]) {
+            try {
+                const code = prism.highlight(str, prism.languages[language], language)
+                return `<pre class="language-${language}"><code class="language-${language}">${code}</code></pre>`
+            } catch (e) {
+                console.error('Prism highlight error:', e)
+                return `<pre class="language-text"><code>${md.utils.escapeHtml(str)}</code></pre>`
+            }
         }
         return `<pre class="language-text"><code>${md.utils.escapeHtml(str)}</code></pre>`
     }
+
 })
     .use(markdownItAnchor)
     .use(markdownItTaskLists)
@@ -38,7 +46,6 @@ const renderedHtml = computed(() => md.render(props.content))
 </template>
 
 <style scoped>
-/* Markdown checkboxes */
 .prose input[type="checkbox"] {
     margin-right: 0.5rem;
 }

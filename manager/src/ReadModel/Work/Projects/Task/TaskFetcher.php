@@ -118,7 +118,6 @@ class TaskFetcher
             $qb->setParameter('executor', $filter->executor);
         }
 
-        $ff =$filter->roots;
         if ($filter->roots) {
             $qb->andWhere('t.parent_id IS NULL');
         }

@@ -33,7 +33,7 @@ use App\ReadModel\Work\Projects\Task\TaskFetcher;
 use App\Security\Voter\Work\Projects\TaskAccess;
 use App\Controller\ErrorHandler;
 use App\Service\Uploader\FileUploader;
-use cebe\markdown\MarkdownExtra;
+use App\Service\Work\Processor\Processor;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -47,7 +47,7 @@ class TasksController extends AbstractController
     private const PER_PAGE = 10;
     public function __construct(
         private readonly ErrorHandler $errors,
-        private readonly MarkdownExtra $markdown,
+        private readonly Processor $processor
     )
     {
     }
@@ -767,10 +767,6 @@ class TasksController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $content = strip_tags($this->markdown->parse($task->getContent()),
-            '<p><ul><ol><li><strong><em><code><pre><blockquote><a><h1><h2><h3><br>');
-
-
         return $inertia->render($request, 'Work/Projects/Tasks/Show', [
             'project' => [
                 'id' => $task->getProject()->getId()->getValue(),
@@ -791,7 +787,7 @@ class TasksController extends AbstractController
                     'name' => $exec->getName()->getFull(),
                 ], $task->getExecutors()),
                 'progress' => $task->getProgress(),
-                'content' => $content,
+                'content' => $this->processor->process($task->getContent()),
                 'plan_date' => $task->getPlanDate()?->format('Y-m-d H:i:s'),
                 'start_date' => $task->getStartDate()?->format('Y-m-d H:i:s'),
                 'date' => $task->getDate()?->format('Y-m-d H:i:s'),
