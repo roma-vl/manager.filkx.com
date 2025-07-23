@@ -1,5 +1,13 @@
 <script setup>
 import { ref, computed } from 'vue'
+import {
+    Search,
+    SlidersHorizontal,
+    Users,
+    SquareCheck,
+    RefreshCw,
+    Check,
+} from 'lucide-vue-next'
 
 const props = defineProps({
     filters: Object,
@@ -55,100 +63,97 @@ function reset() {
 <template>
     <form
         @submit.prevent="submit"
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-8 p-4 rounded-md shadow-md
-          bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700"
-        aria-label="Фільтри задач"
+        class="flex flex-wrap items-center gap-3 p-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm"
     >
-        <!-- Пошук -->
-        <input
-            v-model="text"
-            type="text"
-            placeholder="Пошук..."
-            class="input-style"
-            aria-label="Пошук тексту"
-        />
+        <!-- Text Search -->
+        <div class="relative">
+            <Search class="absolute top-2.5 left-3 w-4 h-4 text-gray-400" />
+            <input
+                v-model="text"
+                type="text"
+                class="w-64 md:w-80 lg:w-96 pl-9 pr-3 py-2 text-sm rounded-md  bg-white dark:bg-gray-800 dark:text-white border-gray-300 dark:border-gray-700 focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Пошук..."
+            />
+        </div>
 
-        <!-- Тип задачі -->
-        <select v-model="type" class="select-style" aria-label="Тип">
-            <option value="">Всі типи</option>
+        <!-- Type -->
+        <select v-model="type" class="filter-select border-none">
+            <option value="">Тип</option>
             <option v-for="item in types" :key="item.id" :value="item.id">{{ item.name }}</option>
         </select>
 
-        <!-- Статус -->
-        <select v-model="status" class="select-style" aria-label="Статус">
-            <option value="">Всі статуси</option>
+        <!-- Status -->
+        <select v-model="status" class="filter-select border-none">
+            <option value="">Статус</option>
             <option v-for="item in statuses" :key="item.id" :value="item.id">{{ item.name }}</option>
         </select>
 
-        <!-- Пріоритет -->
-        <select v-model="priority" class="select-style" aria-label="Пріоритет">
-            <option value="">Всі пріоритети</option>
+        <!-- Priority -->
+        <select v-model="priority" class="filter-select border-none">
+            <option value="">Пріоритет</option>
             <option v-for="item in priorities" :key="item.id" :value="item.id">{{ item.name }}</option>
         </select>
 
-        <!-- Автор -->
-        <select v-model="author" class="select-style" aria-label="Автор">
-            <option value="">Автор...</option>
-            <template v-for="(group, index) in groupedMembers" :key="index">
-                <optgroup :label="group.label">
-                    <option v-for="member in group.members" :key="member.id" :value="member.id">
-                        {{ member.name }}
-                    </option>
-                </optgroup>
-            </template>
+        <!-- Author -->
+        <select v-model="author" class="filter-select border-none">
+            <option value="">Автор</option>
+            <optgroup
+                v-for="(group, i) in groupedMembers"
+                :key="'a'+i"
+                :label="group.label"
+            >
+                <option v-for="member in group.members" :key="member.id" :value="member.id">
+                    {{ member.name }}
+                </option>
+            </optgroup>
         </select>
 
-        <!-- Виконавець -->
-        <select v-model="executor" class="select-style" aria-label="Виконавець">
-            <option value="">Виконавець...</option>
-            <template v-for="(group, index) in groupedMembers" :key="index">
-                <optgroup :label="group.label">
-                    <option v-for="member in group.members" :key="member.id" :value="member.id">
-                        {{ member.name }}
-                    </option>
-                </optgroup>
-            </template>
+        <!-- Executor -->
+        <select v-model="executor" class="filter-select border-none">
+            <option value="">Виконавець</option>
+            <optgroup
+                v-for="(group, i) in groupedMembers"
+                :key="'e'+i"
+                :label="group.label"
+            >
+                <option v-for="member in group.members" :key="member.id" :value="member.id">
+                    {{ member.name }}
+                </option>
+            </optgroup>
         </select>
 
-        <!-- Чекбокс -->
-        <label class="flex items-center space-x-2 text-sm text-gray-700 dark:text-gray-300 col-span-full">
+        <!-- Checkbox: Only Roots -->
+        <label class="inline-flex items-center text-sm text-gray-600 dark:text-gray-300 cursor-pointer border-none">
             <input
                 type="checkbox"
                 v-model="roots"
-                class="w-4 h-4 text-indigo-600 dark:bg-gray-800 dark:border-gray-600"
+                class="w-4 h-4 text-indigo-600 border-gray-300 dark:border-gray-600 rounded focus:ring-indigo-500"
             />
-            <span>Тільки кореневі</span>
+            <span class="ml-2">Тільки кореневі</span>
         </label>
 
-        <!-- Кнопки -->
-        <div class="flex gap-2 col-span-full mt-2">
-            <button
-                type="submit"
-                class="w-full py-1.5 px-3 text-sm rounded-md bg-indigo-600 hover:bg-indigo-700 text-white transition"
-            >
-                Застосувати
-            </button>
+        <!-- Buttons -->
+        <div class="flex items-center gap-2 ml-auto">
             <button
                 type="button"
                 @click="reset"
-                class="w-full py-1.5 px-3 text-sm rounded-md border border-indigo-400 text-indigo-600 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-gray-800 transition"
+                class=" border-none flex items-center gap-1 px-3 py-1.5 text-sm border rounded-md border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
             >
-                Скинути
+                <RefreshCw class="w-4 h-4" /> Скинути
+            </button>
+
+            <button
+                type="submit"
+                class=" border-none flex items-center gap-1 px-4 py-1.5 text-sm rounded-md bg-indigo-600 hover:bg-indigo-700 text-white transition"
+            >
+                <Check class="w-4 h-4" /> Застосувати
             </button>
         </div>
     </form>
 </template>
 
 <style scoped>
-.input-style {
-    @apply w-full px-3 py-1.5 text-sm bg-white text-gray-800 border border-gray-300 rounded-md shadow-sm
-    placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
-    dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 dark:placeholder-gray-500;
-}
-
-.select-style {
-    @apply w-full px-3 py-1.5 text-sm bg-white text-gray-800 border border-gray-300 rounded-md shadow-sm
-    focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
-    dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700;
+.filter-select {
+    @apply px-3 py-2 text-sm rounded-md border bg-white dark:bg-gray-800 dark:text-white border-gray-300 dark:border-gray-700 focus:ring-indigo-500 focus:border-indigo-500;
 }
 </style>

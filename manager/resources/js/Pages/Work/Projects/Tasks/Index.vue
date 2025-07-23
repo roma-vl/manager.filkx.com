@@ -136,19 +136,19 @@ function handleSubmit(updatedFilters) {
             <TasksTabs/>
 
             <div
-                class="overflow-auto rounded-lg shadow-lg shadow-indigo-800/40"
+                class="overflow-auto shadow-indigo-800/40 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-indigo-800 shadow-sm"
                 tabindex="0"
                 aria-label="Tasks list table container"
             >
                 <table
-                    class="min-w-full border-collapse border border-indigo-800 text-indigo-200"
+                    class="min-w-full border-collapse border border-gray-300 dark:border-indigo-800 text-gray-800 dark:text-indigo-200"
                     role="table"
                 >
-                    <thead class="bg-indigo-800 sticky top-0 z-10">
+                    <thead class="bg-gray-100 dark:bg-indigo-800 sticky top-0 z-10">
                     <tr>
                         <th
                             @click="toggleSort('t.id')"
-                            class="border border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none cursor-pointer"
+                            class="border border-gray-300 dark:border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none cursor-pointer"
                             scope="col"
                         >
                             ID
@@ -156,63 +156,63 @@ function handleSubmit(updatedFilters) {
                         </th>
                         <th
                             @click="toggleSort('t.date')"
-                            class="border border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none cursor-pointer"
+                            class="border border-gray-300 dark:border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none cursor-pointer"
                             scope="col"
                         >
                             Date
                             <SortIcon :field="'t.date'" />
                         </th>
                         <th
-                            class="border border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none"
+                            class="border border-gray-300 dark:border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none cursor-pointer"
                             scope="col"
                         >
                             Author
                         </th>
                         <th
                             v-if="!project"
-                            class="border border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none"
+                            class="border border-gray-300 dark:border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none cursor-pointer"
                             scope="col"
                         >
                             Project
                         </th>
                         <th
-                            class="border border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none"
+                            class="border border-gray-300 dark:border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none cursor-pointer"
                             scope="col"
                         >
                             Name
                         </th>
                         <th
-                            class="border border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none"
+                            class="border border-gray-300 dark:border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none cursor-pointer"
                             scope="col"
                         >
                             Type
                         </th>
                         <th
-                            class="border border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none"
+                            class="border border-gray-300 dark:border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none cursor-pointer"
                             scope="col"
                         >
                             Priority
                         </th>
                         <th
-                            class="border border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none"
+                            class="border border-gray-300 dark:border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none cursor-pointer"
                             scope="col"
                         >
                             Executors
                         </th>
                         <th
-                            class="border border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none"
+                            class="border border-gray-300 dark:border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none cursor-pointer"
                             scope="col"
                         >
                             Plan Date
                         </th>
                         <th
-                            class="border border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none"
+                            class="border border-gray-300 dark:border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none cursor-pointer"
                             scope="col"
                         >
                             Status
                         </th>
                         <th
-                            class="border border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none"
+                            class="border border-gray-300 dark:border-indigo-700 p-3 text-left text-sm font-semibold tracking-wide select-none cursor-pointer"
                             scope="col"
                         >
                             Progress
@@ -282,17 +282,18 @@ function handleSubmit(updatedFilters) {
                           </span>
                         </td>
 
-                        <td class="border border-indigo-700 p-2 text-sm text-center">
-                            <div class="w-full bg-indigo-900 rounded-full h-4 relative overflow-hidden">
+                        <td class="p-2 text-sm text-center">
+                            <div class="w-full bg-gray-200 dark:bg-indigo-900 rounded-full h-4 relative overflow-hidden">
                                 <div
-                                    class="bg-indigo-500 h-4 rounded-full transition-all duration-500 ease-in-out"
+                                    class="bg-indigo-600 h-4 rounded-full transition-all duration-500 ease-in-out"
                                     :style="{ width: (task.progress ?? 0) + '%' }"
                                 ></div>
-                                <div class="absolute inset-0 flex items-center justify-center text-xs font-semibold text-indigo-100 select-none">
+                                <div class="absolute inset-0 flex items-center justify-center text-xs font-semibold text-gray-800 dark:text-indigo-100 select-none">
                                     {{ task.progress ? task.progress + '%' : '0%' }}
                                 </div>
                             </div>
                         </td>
+
 
                     </tr>
                     </tbody>
