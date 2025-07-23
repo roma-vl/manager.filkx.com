@@ -26,7 +26,6 @@ class UserFixture extends Fixture
     public function load(ObjectManager $manager): void
     {
         echo "Loading user fixture...\n";
-        echo 'DB URL: ' . $_ENV['DATABASE_URL'] . "\n";
 
         $user = User::signUpByEmail(
             Id::next(),

@@ -1,3 +1,104 @@
+
+<script setup>
+import { ref, computed } from 'vue'
+import { Head, Link } from '@inertiajs/inertia-vue3'
+import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import {statusBadgeClass} from "../../../../Helpers/helpers.js";
+
+const props = defineProps({
+    members: Array,
+    filters: Object,
+    groups: Array,
+    statuses: Array,
+    sort: String,
+    direction: String,
+    pagination: Object,
+})
+
+const name = ref(props.filters.name || '')
+const email = ref(props.filters.email || '')
+const group = ref(props.filters.group || '')
+const status = ref(props.filters.status || '')
+const sort = ref(props.sort || 'name')
+const direction = ref(props.direction || 'asc')
+
+const directionIcon = computed(() => (direction.value === 'asc' ? '↑' : '↓'))
+
+function toggleSort(field) {
+    if (sort.value === field) {
+        direction.value = direction.value === 'asc' ? 'desc' : 'asc'
+    } else {
+        sort.value = field
+        direction.value = 'asc'
+    }
+    submitFilters()
+}
+
+function submitFilters(page = 1) {
+    const query = new URLSearchParams({
+        name: name.value,
+        email: email.value,
+        group: group.value,
+        status: status.value,
+        sort: sort.value,
+        direction: direction.value,
+        page,
+    }).toString()
+
+    window.location.href = `/work/members?${query}`
+}
+
+function resetFilters() {
+    name.value = ''
+    email.value = ''
+    group.value = ''
+    status.value = ''
+    submitFilters()
+}
+
+function paginationLink(page) {
+    const query = new URLSearchParams({
+        name: name.value,
+        email: email.value,
+        group: group.value,
+        status: status.value,
+        sort: sort.value,
+        direction: direction.value,
+        page,
+    }).toString()
+
+    return `/work/members?${query}`
+}
+
+const paginationRange = computed(() => {
+    const current = props.pagination.currentPage
+    const last = props.pagination.lastPage
+    const delta = 2
+    const range = []
+
+    for (let i = Math.max(1, current - delta); i <= Math.min(last, current + delta); i++) {
+        range.push(i)
+    }
+
+    const result = []
+    if (range[0] > 1) {
+        result.push(1)
+        if (range[0] > 2) result.push('...')
+    }
+
+    result.push(...range)
+
+    if (range[range.length - 1] < last) {
+        if (range[range.length - 1] < last - 1) result.push('...')
+        result.push(last)
+    }
+
+    return result
+})
+</script>
+
+
 <template>
   <AppLayout>
     <Head title="Members" />
@@ -107,105 +208,6 @@
     </div>
   </AppLayout>
 </template>
-
-<script setup>
-  import { ref, computed } from 'vue'
-  import { Head, Link } from '@inertiajs/inertia-vue3'
-  import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import { statusBadgeClass } from '../../../../helpers.js'
-
-  const props = defineProps({
-    members: Array,
-    filters: Object,
-    groups: Array,
-    statuses: Array,
-    sort: String,
-    direction: String,
-    pagination: Object,
-  })
-
-  const name = ref(props.filters.name || '')
-  const email = ref(props.filters.email || '')
-  const group = ref(props.filters.group || '')
-  const status = ref(props.filters.status || '')
-  const sort = ref(props.sort || 'name')
-  const direction = ref(props.direction || 'asc')
-
-  const directionIcon = computed(() => (direction.value === 'asc' ? '↑' : '↓'))
-
-  function toggleSort(field) {
-    if (sort.value === field) {
-      direction.value = direction.value === 'asc' ? 'desc' : 'asc'
-    } else {
-      sort.value = field
-      direction.value = 'asc'
-    }
-    submitFilters()
-  }
-
-  function submitFilters(page = 1) {
-    const query = new URLSearchParams({
-      name: name.value,
-      email: email.value,
-      group: group.value,
-      status: status.value,
-      sort: sort.value,
-      direction: direction.value,
-      page,
-    }).toString()
-
-    window.location.href = `/work/members?${query}`
-  }
-
-  function resetFilters() {
-    name.value = ''
-    email.value = ''
-    group.value = ''
-    status.value = ''
-    submitFilters()
-  }
-
-  function paginationLink(page) {
-    const query = new URLSearchParams({
-      name: name.value,
-      email: email.value,
-      group: group.value,
-      status: status.value,
-      sort: sort.value,
-      direction: direction.value,
-      page,
-    }).toString()
-
-    return `/work/members?${query}`
-  }
-
-  const paginationRange = computed(() => {
-    const current = props.pagination.currentPage
-    const last = props.pagination.lastPage
-    const delta = 2
-    const range = []
-
-    for (let i = Math.max(1, current - delta); i <= Math.min(last, current + delta); i++) {
-      range.push(i)
-    }
-
-    const result = []
-    if (range[0] > 1) {
-      result.push(1)
-      if (range[0] > 2) result.push('...')
-    }
-
-    result.push(...range)
-
-    if (range[range.length - 1] < last) {
-      if (range[range.length - 1] < last - 1) result.push('...')
-      result.push(last)
-    }
-
-    return result
-  })
-</script>
 
 <style scoped>
   .input-dark {

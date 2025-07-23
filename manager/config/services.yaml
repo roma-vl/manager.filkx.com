@@ -27,6 +27,14 @@ services:
     App\EventSubscriber\LogoutSubscriber:
         tags:
             - { name: kernel.event_subscriber }
+
+    App\Service\Work\Processor\Driver\:
+        resource: '../src/Service/Work/Processor/Driver/*Driver.php'
+        tags: [ 'app.work_processor.driver' ]
+
+    App\Service\Work\Processor\Processor:
+        arguments: [ !tagged_iterator app.work_processor.driver ]
+
 framework:
     router:
         default_uri: '%env(resolve:APP_URL)%'

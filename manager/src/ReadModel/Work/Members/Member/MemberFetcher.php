@@ -8,6 +8,7 @@ use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Members\Member\Status;
 use App\ReadModel\Work\Members\Member\Filter\Filter;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\FetchMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -89,6 +90,9 @@ class MemberFetcher
                 ->fetchOne() > 0;
     }
 
+    /**
+     * @throws Exception
+     */
     public function activeGroupedList(): array
     {
         $stmt = $this->connection->createQueryBuilder()
@@ -104,9 +108,12 @@ class MemberFetcher
             ->orderBy('g.name')->addOrderBy('name')
             ->executeQuery();
 
-        return $stmt->fetchAll(FetchMode::ASSOCIATIVE);
+        return $stmt->fetchAllAssociative();
     }
 
+    /**
+     * @throws Exception
+     */
     public function activeDepartmentListForProject(string $project): array
     {
         $stmt = $this->connection->createQueryBuilder()
@@ -120,11 +127,11 @@ class MemberFetcher
             ->innerJoin('ms', 'work_projects_project_membership_departments', 'msd', 'msd.membership_id = ms.id')
             ->innerJoin('msd', 'work_projects_project_departments', 'd', 'd.id = msd.department_id')
             ->andWhere('m.status = :status AND ms.project_id = :project')
-            ->setParameter(':status', Status::ACTIVE)
-            ->setParameter(':project', $project)
+            ->setParameter('status', Status::ACTIVE)
+            ->setParameter('project', $project)
             ->orderBy('d.name')->addOrderBy('name')
             ->executeQuery();
 
-        return $stmt->fetchAll(FetchMode::ASSOCIATIVE);
+        return $stmt->fetchAllAssociative();
     }
 }

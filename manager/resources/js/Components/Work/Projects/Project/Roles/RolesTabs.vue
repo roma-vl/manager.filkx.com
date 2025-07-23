@@ -1,45 +1,47 @@
-<template>
-  <div class="border-b border-gray-200 mb-6">
-    <nav class="-mb-px flex space-x-4" aria-label="Tabs">
-      <Link
-        :href="`/work/projects`"
-        class="whitespace-nowrap py-4 px-4 border-b-2 font-medium text-sm"
-        :class="{
-          'border-indigo-500 text-indigo-600': isProjectTabActive,
-          'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300':
-            !isProjectTabActive,
-        }"
-      >
-        Project
-      </Link>
-
-      <Link
-        :href="`/work/projects/roles`"
-        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
-        :class="{
-          'border-indigo-500 text-indigo-600': isRolesTabActive,
-          'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300':
-            !isRolesTabActive,
-        }"
-      >
-        Roles
-      </Link>
-    </nav>
-  </div>
-</template>
-
 <script setup>
-  import { Link } from '@inertiajs/inertia-vue3'
-  import { computed } from 'vue'
-  import { usePage } from '@inertiajs/inertia-vue3'
+import { Link, usePage } from '@inertiajs/inertia-vue3'
+import { computed } from 'vue'
 
-  const page = usePage()
-
-  const isProjectTabActive = computed(
-    () =>
-      page.url.value.startsWith('/work/projects') &&
-      !page.url.value.startsWith('/work/projects/roles')
-  )
-
-  const isRolesTabActive = computed(() => page.url.value.startsWith('/work/projects/roles'))
+const page = usePage()
+const currentUrl = computed(() => page.url.value)
+const isActive = (path) => computed(() => currentUrl.value.startsWith(path))
 </script>
+
+<template>
+    <div class="border-b border-gray-200 dark:border-gray-700 mb-6">
+        <nav class="-mb-px flex space-x-4" aria-label="Проєкт">
+            <Link
+                href="/work/projects"
+                class="whitespace-nowrap py-4 px-4 border-b-2 font-medium text-sm"
+                :class="{
+                    'border-indigo-500 text-indigo-600 dark:text-indigo-400': isActive('/work/projects').value && !isActive('/work/projects/roles').value && !isActive('/work/projects/tasks').value,
+                    'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:border-gray-500': !(isActive('/work/projects').value && !isActive('/work/projects/roles').value && !isActive('/work/projects/tasks').value),
+                }"
+            >
+                Проєкт
+            </Link>
+
+            <Link
+                href="/work/projects/tasks"
+                class="whitespace-nowrap py-4 px-4 border-b-2 font-medium text-sm"
+                :class="{
+                    'border-indigo-500 text-indigo-600 dark:text-indigo-400': isActive('/work/projects/tasks').value,
+                    'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:border-gray-500': !isActive('/work/projects/tasks').value,
+                }"
+            >
+                Задачі
+            </Link>
+
+            <Link
+                href="/work/projects/roles"
+                class="whitespace-nowrap py-4 px-4 border-b-2 font-medium text-sm"
+                :class="{
+                    'border-indigo-500 text-indigo-600 dark:text-indigo-400': isActive('/work/projects/roles').value,
+                    'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:border-gray-500': !isActive('/work/projects/roles').value,
+                }"
+            >
+                Ролі
+            </Link>
+        </nav>
+    </div>
+</template>
