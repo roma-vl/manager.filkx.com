@@ -1,18 +1,32 @@
 <script setup>
 import { router } from '@inertiajs/inertia'
 import { Link } from '@inertiajs/inertia-vue3'
+import axios from "axios";
+import {ref, watch} from "vue";
 
 const props = defineProps({
     files: Array,
     taskId: Number
 })
 
-function deleteFile(fileId) {
+const localFiles = ref([...props.files]) // копія для маніпуляцій
+
+// Якщо зміниться props.files — синхронізуй з локальними
+watch(() => props.files, (newVal) => {
+    localFiles.value = [...newVal]
+})
+
+async function deleteFile(fileId) {
     if (!confirm('Are you sure?')) return
-    router.post(`/work/projects/tasks/${props.taskId}/files/${fileId}/delete`, {
-        _method: 'delete'
-    })
+
+    try {
+        await axios.post(`/work/projects/tasks/${props.taskId}/files/${fileId}/delete`)
+        localFiles.value = localFiles.value.filter(file => file.id !== fileId)
+    } catch (error) {
+        console.error('Failed to delete file:', error)
+    }
 }
+
 
 function formatSize(size) {
     return (size / 1024).toFixed(2) + ' KB'
@@ -57,9 +71,9 @@ function truncateFileName(filename, maxBaseLength = 20) {
         </div>
 
         <!-- File Grid -->
-        <div v-if="files?.length" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div v-if="localFiles?.length" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div
-                v-for="file in files"
+                v-for="file in localFiles"
                 :key="file.id"
                 class="group h-32 relative bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm hover:shadow-lg overflow-hidden transition"
             >

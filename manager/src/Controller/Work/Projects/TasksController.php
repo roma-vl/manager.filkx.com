@@ -351,14 +351,6 @@ class TasksController extends AbstractController
 
     }
 
-    /**
-     * @Route("/{id}/files", name=".files")
-     * @param Task $task
-     * @param Request $request
-     * @param Files\Add\Handler $handler
-     * @param FileUploader $uploader
-     * @return Response
-     */
     #[Route('/{id}/files', name: '.files', methods: ['GET', 'POST'])]
     public function files(
         Task $task,
@@ -378,7 +370,6 @@ class TasksController extends AbstractController
             ]);
         }
 
-//        $data = json_decode($request->getContent(), true);
         $command = new Files\Add\Command($this->getUser()->getId(), $task->getId()->getValue());
 
         $uploadedFiles = $request->files->get('files');
@@ -408,33 +399,27 @@ class TasksController extends AbstractController
     }
 
 
-    /**
-     * @Route("/{id}/files/{file_id}/delete", name=".files.delete", methods={"POST"})
-     * @ParamConverter("member", options={"id" = "member_id"})
-     * @param Task $task
-     * @param string $file_id
-     * @param Request $request
-     * @param Files\Remove\Handler $handler
-     * @return Response
-     */
-    public function fileDelete(Task $task, string $file_id, Request $request, Files\Remove\Handler $handler): Response
-    {
-        if (!$this->isCsrfTokenValid('delete-file', $request->request->get('token'))) {
-            return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
-        }
-
+    #[Route('/{id}/files/{file_id}/delete', name: '.delete', methods: ['post'])]
+    public function fileDelete(
+        Task $task,
+        string $file_id,
+        Files\Remove\Handler $handler
+    ): Response {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
         $command = new Files\Remove\Command($this->getUser()->getId(), $task->getId()->getValue(), $file_id);
 
         try {
             $handler->handle($command);
+            return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
         } catch (\DomainException $e) {
             $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
+            return $this->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 400);
         }
-
-        return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
     }
 
     /**
