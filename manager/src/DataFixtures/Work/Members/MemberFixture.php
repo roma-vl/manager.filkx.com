@@ -27,6 +27,7 @@ class MemberFixture extends Fixture implements DependentFixtureInterface
 
         /** @var User $user */
         $user = $this->getReference(UserFixture::REFERENCE_USER, User::class);
+        $userMe = $this->getReference(UserFixture::REFERENCE_USER_ME, User::class);
 
         /** @var Group $staff */
         $staff = $this->getReference(GroupFixture::REFERENCE_STAFF, Group::class);
@@ -40,6 +41,9 @@ class MemberFixture extends Fixture implements DependentFixtureInterface
 
         $member = $this->createMember($user, $customers);
         $manager->persist($member);
+
+        $memberMe = $this->createMember($userMe, $customers);
+        $manager->persist($memberMe);
         $this->setReference(self::REFERENCE_USER, $member);
 
         $manager->flush();

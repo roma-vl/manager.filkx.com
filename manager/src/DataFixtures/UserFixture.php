@@ -17,6 +17,7 @@ class UserFixture extends Fixture
 {
     public const REFERENCE_ADMIN = 'user_user_admin';
     public const REFERENCE_USER = 'user_user_user';
+    public const REFERENCE_USER_ME = 'user_user_user_me';
 
     public function __construct(
         private readonly PasswordHasher $hasher,
@@ -43,6 +44,8 @@ class UserFixture extends Fixture
         $user->changeRole(Role::admin());
 
         $manager->persist($user);
+        $this->setReference(self::REFERENCE_USER_ME, $user);
+
 
         $network = $this->createSignedUpByNetwork(
             new Name('David', 'Black'),

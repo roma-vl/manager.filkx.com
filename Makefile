@@ -22,7 +22,7 @@ docker-pull:
 docker-build:
 	docker-compose build
 
-manager-init: manager-composer-install manager-assets-install manager-oauth-keys manager-wait-db manager-migrations manager-fixtures manager-ready
+manager-init: manager-composer-install manager-wait-db manager-migrations manager-fixtures
 
 manager-clear:
 	docker run --rm -v ${PWD}/manager:/app --workdir=/app alpine rm -f .ready
@@ -66,3 +66,8 @@ manager-test-unit:
 
 manager-test-unit-coverage:
 	docker-compose run --rm manager-php-cli php bin/phpunit --testsuite=unit --coverage-clover var/clover.xml --coverage-html var/coverage
+
+fix-perms:
+	docker-compose run --rm manager-php-cli chmod -R 775 var && \
+	docker-compose run --rm manager-php-cli chown -R www-data:www-data var
+
