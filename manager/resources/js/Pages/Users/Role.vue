@@ -3,9 +3,9 @@
   import { ref } from 'vue'
   import AppLayout from '@/Layouts/AppLayout.vue'
   import SelectField from '@/Components/SelectField.vue'
-  import InputError from '../../Components/InputError.vue'
-  import InputLabel from '../../Components/InputLabel.vue'
-  import SecondaryButton from '../../Components/SecondaryButton.vue'
+  import InputError from '@/Components/InputError.vue'
+  import InputLabel from '@/Components/InputLabel.vue'
+  import SecondaryButton from '@/Components/SecondaryButton.vue'
 
   const props = defineProps({
     user: Object,
@@ -16,7 +16,6 @@
     },
   })
 
-  console.log(props, 'aaassas')
   const form = useForm({
     role: props.user.roles[0] ?? '',
   })

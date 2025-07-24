@@ -35,6 +35,10 @@ services:
     App\Service\Work\Processor\Processor:
         arguments: [ !tagged_iterator app.work_processor.driver ]
 
+    App\Service\Uploader\FileUploader:
+        arguments:
+            $storage: '@flysystem.default_filesystem'
+
 framework:
     router:
         default_uri: '%env(resolve:APP_URL)%'

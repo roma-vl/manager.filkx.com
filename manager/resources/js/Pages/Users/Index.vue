@@ -3,7 +3,7 @@
 
   import { computed, ref, watch } from 'vue'
   import AppLayout from '@/Layouts/AppLayout.vue'
-  import {roleBadgeClass, statusBadgeClass} from "../../Helpers/helpers.js";
+  import {roleBadgeClass, statusBadgeClass} from "@/Helpers/helpers.js";
 
   const props = defineProps({
     users: Array,
