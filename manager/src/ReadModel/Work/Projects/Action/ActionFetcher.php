@@ -8,7 +8,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Knp\Component\Pager\Pagination\PaginationInterface;
-use Knp\Component\Pager\Pagination\SlidingPagination;
 use Knp\Component\Pager\PaginatorInterface;
 
 class ActionFetcher
@@ -46,7 +45,7 @@ class ActionFetcher
     {
         $stmt = $this->createQb()
             ->andWhere('task.id = :task_id')
-            ->setParameter('task_id', (string)$id)
+            ->setParameter('task_id', (string) $id)
             ->orderBy('c.date', 'asc')
             ->execute();
 

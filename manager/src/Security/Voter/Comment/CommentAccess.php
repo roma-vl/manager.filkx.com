@@ -48,6 +48,5 @@ class CommentAccess extends Voter
             self::MANAGE => $this->security->isGranted('ROLE_WORK_MANAGE_PROJECTS') || $own,
             default => false,
         };
-
     }
 }

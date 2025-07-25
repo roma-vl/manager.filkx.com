@@ -7,10 +7,10 @@ namespace App\Model\Work\UseCase\Projects\Task\Move;
 use App\Model\Flusher;
 use App\Model\Work\Entity\Members\Member\Id as MemberId;
 use App\Model\Work\Entity\Members\Member\MemberRepository;
+use App\Model\Work\Entity\Projects\Project\Id as ProjectId;
+use App\Model\Work\Entity\Projects\Project\ProjectRepository;
 use App\Model\Work\Entity\Projects\Task\Id;
 use App\Model\Work\Entity\Projects\Task\TaskRepository;
-use App\Model\Work\Entity\Projects\Project\ProjectRepository;
-use App\Model\Work\Entity\Projects\Project\Id as ProjectId;
 
 class Handler
 {
@@ -23,9 +23,8 @@ class Handler
         MemberRepository $members,
         TaskRepository $tasks,
         ProjectRepository $projects,
-        Flusher $flusher
-    )
-    {
+        Flusher $flusher,
+    ) {
         $this->members = $members;
         $this->tasks = $tasks;
         $this->flusher = $flusher;
@@ -50,4 +49,3 @@ class Handler
         $this->flusher->flush($task);
     }
 }
-

@@ -19,4 +19,3 @@ class Command
         $this->id = $id;
     }
 }
-

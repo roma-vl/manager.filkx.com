@@ -21,10 +21,11 @@ class CalendarController extends AbstractController
     public function __construct(
         private readonly InertiaService $inertia,
         private readonly CalendarFetcher $calendar,
-    ) {}
+    ) {
+    }
 
     #[Route('', name: '', methods: ['GET'])]
-    public function index(Project $project,Request $request): Response|JsonResponse
+    public function index(Project $project, Request $request): Response|JsonResponse
     {
         $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
 
@@ -38,7 +39,7 @@ class CalendarController extends AbstractController
 
         if ($request->headers->get('X-Inertia') === null && $request->isXmlHttpRequest()) {
             return new JsonResponse([
-                'dates' => array_map(fn($d) => $d->format('Y-m-d'), iterator_to_array(
+                'dates' => array_map(fn ($d) => $d->format('Y-m-d'), iterator_to_array(
                     new \DatePeriod($result->start, new \DateInterval('P1D'), $result->end)
                 )),
                 'now' => $now->format('Y-m-d'),
@@ -59,7 +60,7 @@ class CalendarController extends AbstractController
         }
 
         return $this->inertia->render($request, 'Work/Projects/Project/Calendar', [
-            'dates' => array_map(fn($d) => $d->format('Y-m-d'), iterator_to_array(
+            'dates' => array_map(fn ($d) => $d->format('Y-m-d'), iterator_to_array(
                 new \DatePeriod($result->start, new \DateInterval('P1D'), $result->end)
             )),
             'now' => $now->format('Y-m-d'),
@@ -78,5 +79,4 @@ class CalendarController extends AbstractController
             'prev' => $result->month->modify('-1 month')->format('Y-m'),
         ]);
     }
-
 }

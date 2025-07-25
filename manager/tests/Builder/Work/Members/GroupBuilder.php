@@ -20,6 +20,7 @@ class GroupBuilder
     {
         $clone = clone $this;
         $clone->name = $name;
+
         return $clone;
     }
 

@@ -13,16 +13,16 @@ use Doctrine\DBAL\Types\Types;
 class CalendarFetcher
 {
     public function __construct(
-        private readonly Connection $connection
-    ) {}
-
+        private readonly Connection $connection,
+    ) {
+    }
 
     /**
      * @throws Exception
      */
     public function byMonth(Query $query): Result
     {
-        $month = new \DateTimeImmutable(sprintf('%d-%02d-01', $query->year, $query->month));
+        $month = new \DateTimeImmutable(\sprintf('%d-%02d-01', $query->year, $query->month));
         $start = self::calcFirstDayOfWeek($month)->setTime(0, 0);
         $end = $start->modify('+34 days')->setTime(23, 59, 59);
 
@@ -96,6 +96,7 @@ class CalendarFetcher
     private static function calcFirstDayOfWeek(\DateTimeImmutable $date): \DateTimeImmutable
     {
         $weekday = (int) $date->format('w');
+
         return $weekday === 0 ? $date->modify('-6 days') : $date->modify('-' . ($weekday - 1) . ' days');
     }
 }

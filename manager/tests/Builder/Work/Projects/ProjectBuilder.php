@@ -22,6 +22,7 @@ class ProjectBuilder
     {
         $clone = clone $this;
         $clone->name = $name;
+
         return $clone;
     }
 

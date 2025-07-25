@@ -11,12 +11,12 @@ class AuthorIdType extends GuidType
 {
     public const NAME = 'comment_comment_author_id';
 
-    public function convertToDatabaseValue($value, AbstractPlatform $platform):mixed
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): mixed
     {
         return $value instanceof AuthorId ? $value->getValue() : $value;
     }
 
-    public function convertToPHPValue($value, AbstractPlatform $platform):mixed
+    public function convertToPHPValue($value, AbstractPlatform $platform): mixed
     {
         return !empty($value) ? new AuthorId($value) : null;
     }
@@ -26,7 +26,7 @@ class AuthorIdType extends GuidType
         return self::NAME;
     }
 
-    public function requiresSQLCommentHint(AbstractPlatform $platform) : bool
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
     }

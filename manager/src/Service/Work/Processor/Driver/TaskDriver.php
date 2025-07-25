@@ -25,13 +25,11 @@ class TaskDriver implements Driver
                 return $matches[0];
             }
 
-            return sprintf(
+            return \sprintf(
                 '<a href="/work/projects/tasks/%s" class="text-green-600 hover:underline">%s</a>',
                 $task->getId()->getValue(),
                 htmlspecialchars($task->getName())
             );
-
         }, $text);
     }
-
 }

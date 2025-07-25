@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller\Work\Projects;
 
+use App\Controller\ErrorHandler;
 use App\Infrastructure\Inertia\InertiaService;
-use App\Model\Comment\UseCase\Comment;
 use App\Model\Work\Entity\Projects\Task\Progress;
 use App\Model\Work\Entity\Projects\Task\Status;
 use App\Model\Work\Entity\Projects\Task\Task;
@@ -16,27 +16,22 @@ use App\Model\Work\UseCase\Projects\Task\Executor;
 use App\Model\Work\UseCase\Projects\Task\Files;
 use App\Model\Work\UseCase\Projects\Task\Move;
 use App\Model\Work\UseCase\Projects\Task\Plan;
+use App\Model\Work\UseCase\Projects\Task\Priority as UseCasePriority;
+use App\Model\Work\UseCase\Projects\Task\Progress as UseCaseProgress;
 use App\Model\Work\UseCase\Projects\Task\Remove;
 use App\Model\Work\UseCase\Projects\Task\Start;
 use App\Model\Work\UseCase\Projects\Task\Status as UseCaseStatus;
-use App\Model\Work\UseCase\Projects\Task\Type as UseCaseType;
-use App\Model\Work\UseCase\Projects\Task\Priority as UseCasePriority;
-use App\Model\Work\UseCase\Projects\Task\Progress as UseCaseProgress;
 use App\Model\Work\UseCase\Projects\Task\Take;
 use App\Model\Work\UseCase\Projects\Task\TakeAndStart;
+use App\Model\Work\UseCase\Projects\Task\Type as UseCaseType;
 use App\ReadModel\Work\Members\Member\MemberFetcher;
-use App\ReadModel\Work\Projects\Action\ActionFetcher;
-use App\ReadModel\Work\Projects\Action\Feed\Feed;
 use App\ReadModel\Work\Projects\Task\CommentFetcher;
 use App\ReadModel\Work\Projects\Task\Filter;
 use App\ReadModel\Work\Projects\Task\TaskFetcher;
 use App\Security\Voter\Work\Projects\TaskAccess;
-use App\Controller\ErrorHandler;
 use App\Service\Uploader\FileUploader;
 use App\Service\Work\Processor\Processor;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,11 +40,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class TasksController extends AbstractController
 {
     private const PER_PAGE = 10;
+
     public function __construct(
         private readonly ErrorHandler $errors,
-        private readonly Processor $processor
-    )
-    {
+        private readonly Processor $processor,
+    ) {
     }
 
     #[Route('', name: '', methods: ['GET'])]
@@ -131,9 +126,10 @@ class TasksController extends AbstractController
                 ['id' => 4, 'name' => 'HIGH'],
                 ['id' => 5, 'name' => 'CRITICAL'],
                 ['id' => 6, 'name' => 'BLOCKER'],
-            ]
+            ],
         ]);
     }
+
     private function mapMembers(array $list): array
     {
         $result = [];
@@ -154,9 +150,8 @@ class TasksController extends AbstractController
         Request $request,
         TaskFetcher $taskFetcher,
         MemberFetcher $memberFetcher,
-        InertiaService $inertia
-    ): Response
-    {
+        InertiaService $inertia,
+    ): Response {
         $filter = Filter\Filter::all();
 
         $filter = $filter
@@ -226,7 +221,7 @@ class TasksController extends AbstractController
                 ['id' => 4, 'name' => 'HIGH'],
                 ['id' => 5, 'name' => 'CRITICAL'],
                 ['id' => 6, 'name' => 'BLOCKER'],
-            ]
+            ],
         ]);
     }
 
@@ -235,9 +230,8 @@ class TasksController extends AbstractController
         Request $request,
         TaskFetcher $taskFetcher,
         MemberFetcher $memberFetcher,
-        InertiaService $inertia
-    ): Response
-    {
+        InertiaService $inertia,
+    ): Response {
         $filter = Filter\Filter::all();
 
         $filter = $filter
@@ -307,49 +301,47 @@ class TasksController extends AbstractController
                 ['id' => 4, 'name' => 'HIGH'],
                 ['id' => 5, 'name' => 'CRITICAL'],
                 ['id' => 6, 'name' => 'BLOCKER'],
-            ]
+            ],
         ]);
     }
-
 
     #[Route('/{id}/edit', name: '.edit', methods: ['GET', 'POST'])]
     public function edit(
         Task $task,
         Request $request,
         Edit\Handler $handler,
-        InertiaService $inertia
-    ): Response
-    {
+        InertiaService $inertia,
+    ): Response {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
-            if ($request->isMethod('GET')) {
-                return $inertia->render($request, 'Work/Projects/Tasks/Edit', [
-                    'task' => [
-                        'id' => $task->getId()->getValue(),
-                        'name' => $task->getName(),
-                        'content' => $task->getContent(),
-                    ],
-                ]);
-            }
+        if ($request->isMethod('GET')) {
+            return $inertia->render($request, 'Work/Projects/Tasks/Edit', [
+                'task' => [
+                    'id' => $task->getId()->getValue(),
+                    'name' => $task->getName(),
+                    'content' => $task->getContent(),
+                ],
+            ]);
+        }
         $data = json_decode($request->getContent(), true);
         $command = Edit\Command::fromTask($this->getUser()->getId(), $task);
 
         $command->name = $data['name'] ?? [];
         $command->content = $data['content'] ?? null;
 
-
         try {
             $handler->handle($command);
+
             return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
         } catch (\DomainException $e) {
             $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
+
             return $this->json([
                 'success' => false,
                 'error' => $e->getMessage(),
             ], 400);
         }
-
     }
 
     #[Route('/{id}/files', name: '.files', methods: ['GET', 'POST'])]
@@ -358,7 +350,7 @@ class TasksController extends AbstractController
         Request $request,
         Files\Add\Handler $handler,
         FileUploader $uploader,
-        InertiaService $inertia
+        InertiaService $inertia,
     ): Response {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
@@ -367,14 +359,14 @@ class TasksController extends AbstractController
                 'task' => [
                     'id' => $task->getId()->getValue(),
                     'name' => $task->getName(),
-                ]
+                ],
             ]);
         }
 
         $command = new Files\Add\Command($this->getUser()->getId(), $task->getId()->getValue());
 
         $uploadedFiles = $request->files->get('files');
-        if (!is_array($uploadedFiles)) {
+        if (!\is_array($uploadedFiles)) {
             return $this->json(['error' => 'No files uploaded'], 400);
         }
 
@@ -392,19 +384,20 @@ class TasksController extends AbstractController
 
         try {
             $handler->handle($command);
+
             return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
         } catch (\DomainException $e) {
             $this->errors->handle($e);
+
             return $this->json(['error' => $e->getMessage()], 400);
         }
     }
-
 
     #[Route('/{id}/files/{file_id}/delete', name: '.delete', methods: ['post'])]
     public function fileDelete(
         Task $task,
         string $file_id,
-        Files\Remove\Handler $handler
+        Files\Remove\Handler $handler,
     ): Response {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
@@ -412,10 +405,12 @@ class TasksController extends AbstractController
 
         try {
             $handler->handle($command);
+
             return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
         } catch (\DomainException $e) {
             $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
+
             return $this->json([
                 'success' => false,
                 'error' => $e->getMessage(),
@@ -425,10 +420,6 @@ class TasksController extends AbstractController
 
     /**
      * @Route("/{id}/child", name=".child")
-     * @param Task $task
-     * @param Request $request
-     * @param ChildOf\Handler $handler
-     * @return Response
      */
     public function childOf(Task $task, Request $request, ChildOf\Handler $handler): Response
     {
@@ -442,6 +433,7 @@ class TasksController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $handler->handle($command);
+
                 return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
             } catch (\DomainException $e) {
                 $this->errors->handle($e);
@@ -462,9 +454,8 @@ class TasksController extends AbstractController
         Request $request,
         Executor\Assign\Handler $handler,
         MemberFetcher $members,
-        InertiaService $inertia
-    ): Response
-    {
+        InertiaService $inertia,
+    ): Response {
         $project = $task->getProject();
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
@@ -484,7 +475,7 @@ class TasksController extends AbstractController
                     'id' => $project->getId()->getValue(),
                     'name' => $project->getName(),
                 ],
-                'members' => array_map(static fn($member) => [
+                'members' => array_map(static fn ($member) => [
                     'id' => $member['id'],
                     'name' => $member['name'],
                 ], $members->activeDepartmentListForProject($project->getId()->getValue())),
@@ -498,10 +489,12 @@ class TasksController extends AbstractController
 
         try {
             $handler->handle($command);
+
             return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
         } catch (\DomainException $e) {
             $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
+
             return $this->json([
                 'success' => false,
                 'error' => $e->getMessage(),
@@ -523,7 +516,7 @@ class TasksController extends AbstractController
         $member = $members->find($member_id);
 
         if (!$member) {
-            throw $this->createNotFoundException("Member not found");
+            throw $this->createNotFoundException('Member not found');
         }
 
         $command = new Executor\Revoke\Command(
@@ -534,9 +527,11 @@ class TasksController extends AbstractController
 
         try {
             $handler->handle($command);
+
             return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
         } catch (\DomainException $e) {
             $this->errors->handle($e);
+
             return $this->json([
                 'success' => false,
                 'error' => $e->getMessage(),
@@ -544,13 +539,8 @@ class TasksController extends AbstractController
         }
     }
 
-
     /**
      * @Route("/{id}/take", name=".take", methods={"POST"})
-     * @param Task $task
-     * @param Request $request
-     * @param Take\Handler $handler
-     * @return Response
      */
     public function take(Task $task, Request $request, Take\Handler $handler): Response
     {
@@ -574,10 +564,6 @@ class TasksController extends AbstractController
 
     /**
      * @Route("/{id}/take/start", name=".take_and_start", methods={"POST"})
-     * @param Task $task
-     * @param Request $request
-     * @param TakeAndStart\Handler $handler
-     * @return Response
      */
     public function takeAndStart(Task $task, Request $request, TakeAndStart\Handler $handler): Response
     {
@@ -601,10 +587,6 @@ class TasksController extends AbstractController
 
     /**
      * @Route("/{id}/start", name=".start", methods={"POST"})
-     * @param Task $task
-     * @param Request $request
-     * @param Start\Handler $handler
-     * @return Response
      */
     public function start(Task $task, Request $request, Start\Handler $handler): Response
     {
@@ -624,10 +606,6 @@ class TasksController extends AbstractController
 
     /**
      * @Route("/{id}/move", name=".move")
-     * @param Task $task
-     * @param Request $request
-     * @param Move\Handler $handler
-     * @return Response
      */
     public function move(Task $task, Request $request, Move\Handler $handler): Response
     {
@@ -641,6 +619,7 @@ class TasksController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $handler->handle($command);
+
                 return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
             } catch (\DomainException $e) {
                 $this->errors->handle($e);
@@ -660,9 +639,8 @@ class TasksController extends AbstractController
         Task $task,
         Request $request,
         Plan\Set\Handler $handler,
-        InertiaService $inertia
-    ): Response
-    {
+        InertiaService $inertia,
+    ): Response {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
         if ($request->isMethod('GET')) {
@@ -677,29 +655,25 @@ class TasksController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $command = Plan\Set\Command::fromTask($this->getUser()->getId(), $task);
 
-
-        $command->date = $data['plan_date'] ?new \DateTimeImmutable($data['plan_date']) : '';
+        $command->date = $data['plan_date'] ? new \DateTimeImmutable($data['plan_date']) : '';
 
         try {
             $handler->handle($command);
+
             return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
         } catch (\DomainException $e) {
             $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
+
             return $this->json([
                 'success' => false,
                 'error' => $e->getMessage(),
             ], 400);
         }
-
     }
 
     /**
      * @Route("/{id}/plan/remove", name=".plan.remove", methods={"POST"})
-     * @param Task $task
-     * @param Request $request
-     * @param Plan\Remove\Handler $handler
-     * @return Response
      */
     public function removePlan(Task $task, Request $request, Plan\Remove\Handler $handler): Response
     {
@@ -723,10 +697,6 @@ class TasksController extends AbstractController
 
     /**
      * @Route("/{id}/delete", name=".delete", methods={"POST"})
-     * @param Task $task
-     * @param Request $request
-     * @param Remove\Handler $handler
-     * @return Response
      */
     public function delete(Task $task, Request $request, Remove\Handler $handler): Response
     {
@@ -755,7 +725,7 @@ class TasksController extends AbstractController
         TaskFetcher $tasks,
         CommentFetcher $commentFetcher,
         MemberFetcher $members,
-        InertiaService $inertia
+        InertiaService $inertia,
     ): Response {
         $this->denyAccessUnlessGranted(TaskAccess::VIEW, $task);
 
@@ -864,9 +834,9 @@ class TasksController extends AbstractController
                 ['id' => Progress::PROGRESS_75, 'name' => Progress::PROGRESS_75],
                 ['id' => Progress::PROGRESS_100, 'name' => Progress::PROGRESS_100],
             ],
-
         ]);
     }
+
     #[Route('/{id}/status', name: '.status', methods: ['POST'])]
     public function changeStatus(Task $task, Request $request, UseCaseStatus\Handler $handler): Response
     {
@@ -882,10 +852,12 @@ class TasksController extends AbstractController
 
         try {
             $handler->handle($command);
+
             return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
         } catch (\DomainException $e) {
             $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
+
             return $this->json([
                 'success' => false,
                 'error' => $e->getMessage(),
@@ -909,9 +881,11 @@ class TasksController extends AbstractController
 
         try {
             $handler->handle($command);
+
             return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
         } catch (\DomainException $e) {
             $this->errors->handle($e);
+
             return $this->json([
                 'success' => false,
                 'error' => $e->getMessage(),
@@ -934,15 +908,18 @@ class TasksController extends AbstractController
 
         try {
             $handler->handle($command);
+
             return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
         } catch (\DomainException $e) {
             $this->errors->handle($e);
+
             return $this->json([
                 'success' => false,
                 'error' => $e->getMessage(),
             ], 400);
         }
     }
+
     #[Route('/{id}/progress', name: '.progress', methods: ['POST'])]
     public function changeProgress(Task $task, Request $request, UseCaseProgress\Handler $handler): Response
     {
@@ -954,13 +931,15 @@ class TasksController extends AbstractController
             $task->getId()->getValue()
         );
 
-        $command->progress = (int)($data['progress'] ?? 0);
+        $command->progress = (int) ($data['progress'] ?? 0);
 
         try {
             $handler->handle($command);
+
             return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
         } catch (\DomainException $e) {
             $this->errors->handle($e);
+
             return $this->json([
                 'success' => false,
                 'error' => $e->getMessage(),
@@ -968,4 +947,3 @@ class TasksController extends AbstractController
         }
     }
 }
-

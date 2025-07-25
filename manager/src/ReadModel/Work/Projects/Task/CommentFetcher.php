@@ -7,8 +7,6 @@ namespace App\ReadModel\Work\Projects\Task;
 use App\Model\Work\Entity\Projects\Task\Task;
 use App\ReadModel\Comment\CommentRow;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception;
-use Doctrine\DBAL\FetchMode;
 
 class CommentFetcher
 {
@@ -36,13 +34,12 @@ class CommentFetcher
 
         $rows = $result->fetchAllAssociative();
 
-        return array_map(static fn(array $row) => new CommentRow(
+        return array_map(static fn (array $row) => new CommentRow(
             $row['id'],
             $row['text'],
             new \DateTimeImmutable($row['date']),
             $row['author_name'],
             $row['email']
         ), $rows);
-
     }
 }

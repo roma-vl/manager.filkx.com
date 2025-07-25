@@ -24,6 +24,7 @@ class RoleBuilder
     {
         $clone = clone $this;
         $clone->name = $name;
+
         return $clone;
     }
 
@@ -31,6 +32,7 @@ class RoleBuilder
     {
         $clone = clone $this;
         $clone->permissions = $permissions;
+
         return $clone;
     }
 

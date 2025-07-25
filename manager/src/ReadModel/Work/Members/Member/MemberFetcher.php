@@ -9,7 +9,6 @@ use App\Model\Work\Entity\Members\Member\Status;
 use App\ReadModel\Work\Members\Member\Filter\Filter;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
-use Doctrine\DBAL\FetchMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;

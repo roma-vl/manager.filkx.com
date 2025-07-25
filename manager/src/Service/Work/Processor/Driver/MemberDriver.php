@@ -25,12 +25,11 @@ class MemberDriver implements Driver
                 return $matches[0];
             }
 
-            return sprintf(
+            return \sprintf(
                 '<a href="/work/members/%s" class="text-blue-600 hover:underline">@%s</a>',
                 $member->getId()->getValue(),
                 htmlspecialchars($member->getName()->getFull())
             );
         }, $text);
     }
-
 }

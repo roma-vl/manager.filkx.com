@@ -8,7 +8,6 @@ use Webmozart\Assert\Assert;
 
 class Type
 {
-
     public const NONE = 'none';
     public const ERROR = 'error';
     public const BUG = 'bug';

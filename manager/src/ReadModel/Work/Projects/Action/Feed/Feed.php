@@ -12,7 +12,6 @@ class Feed
     private $comments;
 
     /**
-     * @param array $actions
      * @param CommentRow[] $comments
      */
     public function __construct(array $actions, array $comments)
@@ -22,8 +21,9 @@ class Feed
     }
 
     /**
-     * @return Item[]
      * @throws \Exception
+     *
+     * @return Item[]
      */
     public function getItems(): array
     {

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Controller\Widgets;
+declare(strict_types=1);
 
+namespace App\Controller\Widgets;
 
 use App\ReadModel\Work\Projects\Task\TaskFetcher;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

@@ -19,13 +19,14 @@ class Query
 
     public static function fromDate(\DateTimeImmutable $date): self
     {
-        return new self((int)$date->format('Y'), (int)$date->format('m'));
+        return new self((int) $date->format('Y'), (int) $date->format('m'));
     }
 
     public function forProject(string $project): self
     {
         $clone = clone $this;
         $clone->project = $project;
+
         return $clone;
     }
 
@@ -33,6 +34,7 @@ class Query
     {
         $clone = clone $this;
         $clone->member = $member;
+
         return $clone;
     }
 }

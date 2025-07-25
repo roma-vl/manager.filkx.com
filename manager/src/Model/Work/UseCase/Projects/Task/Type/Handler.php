@@ -8,8 +8,8 @@ use App\Model\Flusher;
 use App\Model\Work\Entity\Members\Member\Id as MemberId;
 use App\Model\Work\Entity\Members\Member\MemberRepository;
 use App\Model\Work\Entity\Projects\Task\Id;
-use App\Model\Work\Entity\Projects\Task\Type;
 use App\Model\Work\Entity\Projects\Task\TaskRepository;
+use App\Model\Work\Entity\Projects\Task\Type;
 
 class Handler
 {

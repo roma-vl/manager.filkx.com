@@ -16,7 +16,6 @@ class Command
     #[Assert\NotBlank]
     public ?\DateTimeImmutable $date = null;
 
-
     public function __construct(string $actor, int $id)
     {
         $this->actor = $actor;
@@ -27,7 +26,7 @@ class Command
     {
         $command = new self($actor, $task->getId()->getValue());
         $command->date = $task->getPlanDate() ?: new \DateTimeImmutable();
+
         return $command;
     }
 }
-

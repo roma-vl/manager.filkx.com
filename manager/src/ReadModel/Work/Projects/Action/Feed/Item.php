@@ -21,6 +21,7 @@ class Item
     {
         $item = new self($date);
         $item->action = $action;
+
         return $item;
     }
 
@@ -28,6 +29,7 @@ class Item
     {
         $item = new self($date);
         $item->comment = $comment;
+
         return $item;
     }
 

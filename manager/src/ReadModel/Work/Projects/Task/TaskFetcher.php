@@ -12,8 +12,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use UnexpectedValueException;
-use function in_array;
 
 class TaskFetcher
 {
@@ -33,18 +31,10 @@ class TaskFetcher
         return $this->repository->find($id);
     }
 
-    /**
-     * @param Filter $filter
-     * @param int $page
-     * @param int $size
-     * @param string|null $sort
-     * @param string|null $direction
-     * @return PaginationInterface
-     */
     public function all(Filter $filter, int $page, int $size, ?string $sort, ?string $direction): PaginationInterface
     {
-        if (!in_array($sort, [null, 't.id', 't.date', 'author_name', 'project_name', 'name', 't.type', 't.plan_date', 't.progress', 't.priority', 't.status'], true)) {
-            throw new UnexpectedValueException('Cannot sort by ' . $sort);
+        if (!\in_array($sort, [null, 't.id', 't.date', 'author_name', 'project_name', 'name', 't.type', 't.plan_date', 't.progress', 't.priority', 't.status'], true)) {
+            throw new \UnexpectedValueException('Cannot sort by ' . $sort);
         }
 
         $qb = $this->connection->createQueryBuilder()
@@ -133,7 +123,7 @@ class TaskFetcher
 
         $pagination = $this->paginator->paginate($qb, $page, $size);
 
-        $tasks = (array)$pagination->getItems();
+        $tasks = (array) $pagination->getItems();
         $executors = $this->batchLoadExecutors(array_column($tasks, 'id'));
 
         $pagination->setItems(array_map(static function (array $task) use ($executors) {

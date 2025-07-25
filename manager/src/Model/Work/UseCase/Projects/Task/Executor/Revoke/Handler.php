@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Model\Work\UseCase\Projects\Task\Executor\Revoke;
 
 use App\Model\Flusher;
+use App\Model\Work\Entity\Members\Member\Id as MemberId;
+use App\Model\Work\Entity\Members\Member\MemberRepository;
 use App\Model\Work\Entity\Projects\Task\Id;
 use App\Model\Work\Entity\Projects\Task\TaskRepository;
-use App\Model\Work\Entity\Members\Member\MemberRepository;
-use App\Model\Work\Entity\Members\Member\Id as MemberId;
 
 class Handler
 {
@@ -19,9 +19,8 @@ class Handler
     public function __construct(
         TaskRepository $tasks,
         MemberRepository $members,
-        Flusher $flusher
-    )
-    {
+        Flusher $flusher,
+    ) {
         $this->tasks = $tasks;
         $this->flusher = $flusher;
         $this->members = $members;
@@ -38,4 +37,3 @@ class Handler
         $this->flusher->flush($task);
     }
 }
-

@@ -24,7 +24,6 @@ class TaskRepository
     }
 
     /**
-     * @param Id $id
      * @return Task[]
      */
     public function allByParent(Id $id): array
@@ -38,6 +37,7 @@ class TaskRepository
         if (!$task = $this->repo->find($id->getValue())) {
             throw new EntityNotFoundException('Task is not found.');
         }
+
         return $task;
     }
 
@@ -60,5 +60,4 @@ class TaskRepository
             'SELECT nextval(\'work_projects_tasks_seq\')'
         )->fetchOne());
     }
-
 }

@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace App\Controller\Work\Projects\Project;
 
+use App\Controller\ErrorHandler;
 use App\Infrastructure\Inertia\InertiaService;
 use App\Model\Work\Entity\Projects\Project\Project;
 use App\Model\Work\Entity\Projects\Task\Status;
 use App\Model\Work\Entity\Projects\Task\Type;
 use App\Model\Work\UseCase\Projects\Task\Create;
-use App\Model\Work\UseCase\Projects\Task\Executor;
-use App\Model\Work\UseCase\Projects\Task\Plan;
 use App\ReadModel\Work\Members\Member\MemberFetcher;
 use App\ReadModel\Work\Projects\Task\Filter;
 use App\ReadModel\Work\Projects\Task\TaskFetcher;
 use App\Security\Voter\Work\Projects\ProjectAccess;
-use App\Controller\ErrorHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,9 +38,8 @@ class TasksController extends AbstractController
         Project $project,
         Request $request,
         MemberFetcher $memberFetcher,
-        InertiaService $inertia
-    ): Response
-    {
+        InertiaService $inertia,
+    ): Response {
         $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
 
         $filter = Filter\Filter::all()->withProject($project->getId()->getValue());
@@ -121,6 +118,7 @@ class TasksController extends AbstractController
             ],
         ]);
     }
+
     private function mapMembers(array $list): array
     {
         $result = [];
@@ -142,9 +140,8 @@ class TasksController extends AbstractController
         Request $request,
         TaskFetcher $taskFetcher,
         MemberFetcher $memberFetcher,
-        InertiaService $inertia
-    ): Response
-    {
+        InertiaService $inertia,
+    ): Response {
         $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
 
         $filter = Filter\Filter::forProject($project->getId()->getValue());
@@ -210,7 +207,7 @@ class TasksController extends AbstractController
                 ['id' => 4, 'name' => 'HIGH'],
                 ['id' => 5, 'name' => 'CRITICAL'],
                 ['id' => 6, 'name' => 'BLOCKER'],
-            ]
+            ],
         ]);
     }
 
@@ -220,9 +217,8 @@ class TasksController extends AbstractController
         Request $request,
         TaskFetcher $taskFetcher,
         MemberFetcher $memberFetcher,
-        InertiaService $inertia
-    ): Response
-    {
+        InertiaService $inertia,
+    ): Response {
         $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
 
         $filter = Filter\Filter::forProject($project->getId()->getValue());
@@ -288,7 +284,7 @@ class TasksController extends AbstractController
                 ['id' => 4, 'name' => 'HIGH'],
                 ['id' => 5, 'name' => 'CRITICAL'],
                 ['id' => 6, 'name' => 'BLOCKER'],
-            ]
+            ],
         ]);
     }
 
@@ -297,9 +293,8 @@ class TasksController extends AbstractController
         Project $project,
         Request $request,
         Create\Handler $handler,
-        InertiaService $inertia
-    ): Response
-    {
+        InertiaService $inertia,
+    ): Response {
         $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
 
         if ($request->isMethod('GET')) {
@@ -316,7 +311,7 @@ class TasksController extends AbstractController
                     'priority' => 2,
                     'names' => [''], // можна початковий масив назв
                     'content' => '',
-                    'parent' => $request->query->getInt('parent', (int)null),
+                    'parent' => $request->query->getInt('parent', (int) null),
                     'plan' => null,
                 ],
                 'types' => [
@@ -358,5 +353,4 @@ class TasksController extends AbstractController
             ], 400);
         }
     }
-
 }

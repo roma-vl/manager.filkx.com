@@ -11,12 +11,12 @@ class IdType extends IntegerType
 {
     public const NAME = 'work_projects_task_change_id';
 
-    public function convertToDatabaseValue($value, AbstractPlatform $platform):mixed
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): mixed
     {
         return $value instanceof Id ? $value->getValue() : $value;
     }
 
-    public function convertToPHPValue($value, AbstractPlatform $platform):mixed
+    public function convertToPHPValue($value, AbstractPlatform $platform): mixed
     {
         return !empty($value) ? new Id($value) : null;
     }
@@ -26,7 +26,7 @@ class IdType extends IntegerType
         return self::NAME;
     }
 
-    public function requiresSQLCommentHint(AbstractPlatform $platform) : bool
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
     }

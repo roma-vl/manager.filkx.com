@@ -40,7 +40,7 @@ class Comment
         Id $id,
         \DateTimeImmutable $date,
         string $text,
-        Entity $entity
+        Entity $entity,
     ) {
         $this->authorId = $author;
         $this->id = $id;

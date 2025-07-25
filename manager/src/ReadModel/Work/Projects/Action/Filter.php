@@ -28,7 +28,7 @@ class Filter
     {
         $clone = clone $this;
         $clone->member = $member;
+
         return $clone;
     }
 }
-

@@ -23,13 +23,12 @@ class NamesType extends AbstractType implements DataTransformerInterface
 
     /**
      * @param NameRow[] $value
-     * @return string
      */
     public function transform($value): string
     {
         $lines = [];
 
-        return implode(PHP_EOL, array_map(static function (NameRow $row) {
+        return implode(\PHP_EOL, array_map(static function (NameRow $row) {
             return $row->name;
         }, $lines));
     }
@@ -40,6 +39,7 @@ class NamesType extends AbstractType implements DataTransformerInterface
             if (empty($name)) {
                 return null;
             }
+
             return new NameRow($name);
         }, preg_split('#[\r\n]+#', $value)));
     }

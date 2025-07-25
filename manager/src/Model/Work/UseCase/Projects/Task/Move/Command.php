@@ -31,6 +31,7 @@ final class Command
     {
         $command = new self($actor, $task->getId()->getValue());
         $command->project = $task->getProject()->getId()->getValue();
+
         return $command;
     }
 }

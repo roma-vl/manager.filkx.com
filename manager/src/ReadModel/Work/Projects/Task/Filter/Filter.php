@@ -35,6 +35,7 @@ class Filter
     {
         $clone = clone $this;
         $clone->member = $member;
+
         return $clone;
     }
 
@@ -42,6 +43,7 @@ class Filter
     {
         $clone = clone $this;
         $clone->author = $author;
+
         return $clone;
     }
 
@@ -49,6 +51,7 @@ class Filter
     {
         $clone = clone $this;
         $clone->executor = $executor;
+
         return $clone;
     }
 
@@ -56,6 +59,7 @@ class Filter
     {
         $clone = clone $this;
         $clone->text = $text;
+
         return $clone;
     }
 
@@ -63,14 +67,15 @@ class Filter
     {
         $clone = clone $this;
         $clone->project = $project;
+
         return $clone;
     }
-
 
     public function withType(?string $type): self
     {
         $clone = clone $this;
         $clone->type = $type;
+
         return $clone;
     }
 
@@ -78,6 +83,7 @@ class Filter
     {
         $clone = clone $this;
         $clone->status = $status;
+
         return $clone;
     }
 
@@ -85,6 +91,7 @@ class Filter
     {
         $clone = clone $this;
         $clone->priority = $priority;
+
         return $clone;
     }
 
@@ -92,6 +99,7 @@ class Filter
     {
         $clone = clone $this;
         $clone->roots = $roots;
+
         return $clone;
     }
 }

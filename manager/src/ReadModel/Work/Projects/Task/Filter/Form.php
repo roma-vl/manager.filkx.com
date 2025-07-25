@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\ReadModel\Work\Projects\Task\Filter;
 
 use App\Model\Work\Entity\Projects\Task\Status;
@@ -48,15 +50,15 @@ class Form extends AbstractType
                 'Low' => 1,
                 'Normal' => 2,
                 'High' => 3,
-                'Extra' => 4
+                'Extra' => 4,
             ], 'required' => false, 'placeholder' => 'All priorities', 'attr' => ['onchange' => 'this.form.submit()']])
             ->add('author', Type\ChoiceType::class, [
                 'choices' => $members,
-                'required' => false, 'placeholder' => 'All authors', 'attr' => ['onchange' => 'this.form.submit()']
+                'required' => false, 'placeholder' => 'All authors', 'attr' => ['onchange' => 'this.form.submit()'],
             ])
             ->add('executor', Type\ChoiceType::class, [
                 'choices' => $members,
-                'required' => false, 'placeholder' => 'All executors', 'attr' => ['onchange' => 'this.form.submit()']
+                'required' => false, 'placeholder' => 'All executors', 'attr' => ['onchange' => 'this.form.submit()'],
             ])
             ->add('roots', Type\ChoiceType::class, ['choices' => [
                 'Roots' => Status::NEW,

@@ -72,6 +72,7 @@ final class Set
         $set->content = $content;
         $set->type = $type;
         $set->priority = $priority;
+
         return $set;
     }
 
@@ -79,6 +80,7 @@ final class Set
     {
         $set = new self();
         $set->name = $name;
+
         return $set;
     }
 
@@ -86,6 +88,7 @@ final class Set
     {
         $set = new self();
         $set->content = $content;
+
         return $set;
     }
 
@@ -93,6 +96,7 @@ final class Set
     {
         $set = new self();
         $set->type = $type;
+
         return $set;
     }
 
@@ -100,6 +104,7 @@ final class Set
     {
         $set = new self();
         $set->fileId = $file;
+
         return $set;
     }
 
@@ -107,6 +112,7 @@ final class Set
     {
         $set = new self();
         $set->removedFileId = $file;
+
         return $set;
     }
 
@@ -114,6 +120,7 @@ final class Set
     {
         $set = new self();
         $set->status = $status;
+
         return $set;
     }
 
@@ -121,6 +128,7 @@ final class Set
     {
         $set = new self();
         $set->progress = $progress;
+
         return $set;
     }
 
@@ -128,6 +136,7 @@ final class Set
     {
         $set = new self();
         $set->priority = $priority;
+
         return $set;
     }
 
@@ -135,6 +144,7 @@ final class Set
     {
         $set = new self();
         $set->parentId = $parent;
+
         return $set;
     }
 
@@ -142,6 +152,7 @@ final class Set
     {
         $set = new self();
         $set->removedParent = true;
+
         return $set;
     }
 
@@ -149,6 +160,7 @@ final class Set
     {
         $set = new self();
         $set->plan = $plan;
+
         return $set;
     }
 
@@ -156,6 +168,7 @@ final class Set
     {
         $set = new self();
         $set->removedPlan = true;
+
         return $set;
     }
 
@@ -163,6 +176,7 @@ final class Set
     {
         $set = new self();
         $set->executorId = $executor;
+
         return $set;
     }
 
@@ -170,6 +184,7 @@ final class Set
     {
         $set = new self();
         $set->revokedExecutorId = $executor;
+
         return $set;
     }
 
@@ -177,6 +192,7 @@ final class Set
     {
         $set = new self();
         $set->projectId = $project;
+
         return $set;
     }
 }

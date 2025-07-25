@@ -7,9 +7,9 @@ namespace App\Model\Work\UseCase\Projects\Task\Files\Remove;
 use App\Model\Flusher;
 use App\Model\Work\Entity\Members\Member\Id as MemberId;
 use App\Model\Work\Entity\Members\Member\MemberRepository;
+use App\Model\Work\Entity\Projects\Task\File\Id as FileId;
 use App\Model\Work\Entity\Projects\Task\Id;
 use App\Model\Work\Entity\Projects\Task\TaskRepository;
-use App\Model\Work\Entity\Projects\Task\File\Id as FileId;
 
 class Handler
 {
@@ -34,4 +34,3 @@ class Handler
         $this->flusher->flush($task);
     }
 }
-

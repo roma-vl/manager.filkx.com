@@ -19,7 +19,8 @@ class CalendarController extends BaseController
     public function __construct(
         private readonly InertiaService $inertia,
         private readonly CalendarFetcher $calendar,
-    ) {}
+    ) {
+    }
 
     #[Route('', name: '', methods: ['GET'])]
     public function index(Request $request): Response|JsonResponse
@@ -39,7 +40,7 @@ class CalendarController extends BaseController
 
         if ($request->headers->get('X-Inertia') === null && $request->isXmlHttpRequest()) {
             return new JsonResponse([
-                'dates' => array_map(fn($d) => $d->format('Y-m-d'), iterator_to_array(
+                'dates' => array_map(fn ($d) => $d->format('Y-m-d'), iterator_to_array(
                     new \DatePeriod($result->start, new \DateInterval('P1D'), $result->end)
                 )),
                 'now' => $now->format('Y-m-d'),
@@ -56,7 +57,7 @@ class CalendarController extends BaseController
         }
 
         return $this->inertia->render($request, 'Work/Projects/Calendar', [
-            'dates' => array_map(fn($d) => $d->format('Y-m-d'), iterator_to_array(
+            'dates' => array_map(fn ($d) => $d->format('Y-m-d'), iterator_to_array(
                 new \DatePeriod($result->start, new \DateInterval('P1D'), $result->end)
             )),
             'now' => $now->format('Y-m-d'),
