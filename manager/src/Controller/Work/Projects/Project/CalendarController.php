@@ -46,6 +46,10 @@ class CalendarController extends AbstractController
                     'month' => $result->month->format('Y-m'),
                     'items' => $result->items,
                 ],
+                'project' => [
+                    'id' => $project->getId()->getValue(),
+                    'name' => $project->getName(),
+                ],
                 'year' => $query->year,
                 'month' => $query->month,
                 'years' => range((int) date('Y') - 5, (int) date('Y') + 5),
@@ -54,7 +58,7 @@ class CalendarController extends AbstractController
             ]);
         }
 
-        return $this->inertia->render($request, 'Work/Projects/Calendar', [
+        return $this->inertia->render($request, 'Work/Projects/Project/Calendar', [
             'dates' => array_map(fn($d) => $d->format('Y-m-d'), iterator_to_array(
                 new \DatePeriod($result->start, new \DateInterval('P1D'), $result->end)
             )),
@@ -62,6 +66,10 @@ class CalendarController extends AbstractController
             'result' => [
                 'month' => $result->month->format('Y-m'),
                 'items' => $result->items,
+            ],
+            'project' => [
+                'id' => $project->getId()->getValue(),
+                'name' => $project->getName(),
             ],
             'year' => $query->year,
             'month' => $query->month,
