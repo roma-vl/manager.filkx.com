@@ -10,9 +10,6 @@ use Doctrine\ORM\EntityRepository;
 
 class CommentRepository
 {
-    /**
-     * @var EntityRepository
-     */
     private EntityRepository $repo;
     private EntityManagerInterface $em;
 

@@ -11,12 +11,14 @@ import ChangeProgressBar from "./Partials/ChangeProgressBar.vue";
 import SubTasksTable from "../../../../Components/Task/SubTasksTable.vue";
 import MarkdownRenderer from "../../../../Components/ui/MarkdownRenderer.vue";
 import FilesList from "@/Components/Task/FilesList.vue";
+import CommentList from "@/Components/Task/CommentList.vue";
 
 const props = defineProps({
     task: Object,
     project: Object,
     member: Object,
     children: Array,
+    comments: Array,
     statuses: Array,
     types: Array,
     priorities: Array,
@@ -195,6 +197,11 @@ function revokeExecutor(memberId) {
 
                         <div>
                             <FilesList :files="task.files" :task-id="task.id" />
+
+                        </div>
+                        <div>
+                            COMMENTS
+                            <CommentList :comments="comments" :task-id="task.id" />
 
                         </div>
                     </div>

@@ -26,10 +26,10 @@ class CalendarController extends BaseController
     {
         $now = new \DateTimeImmutable();
 
-        $query = Query::fromDate($now);
-
-        if (!$this->isGranted('ROLE_WORK_MANAGE_PROJECTS')) {
-            $query = $query->forMember($this->getUser()->getId());
+        if ($this->isGranted('ROLE_WORK_MANAGE_PROJECTS')) {
+            $query = Query::fromDate($now);
+        } else {
+            $query = Query::fromDate($now)->forMember($this->getUser()->getId());
         }
 
         $query->year = (int) $request->query->get('year', $query->year);
