@@ -37,7 +37,7 @@ class CalendarController extends BaseController
 
         $result = $this->calendar->byMonth($query);
 
-        if ($request->isXmlHttpRequest()) {
+        if ($request->headers->get('X-Inertia') === null && $request->isXmlHttpRequest()) {
             return new JsonResponse([
                 'dates' => array_map(fn($d) => $d->format('Y-m-d'), iterator_to_array(
                     new \DatePeriod($result->start, new \DateInterval('P1D'), $result->end)

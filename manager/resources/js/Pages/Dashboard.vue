@@ -2,6 +2,7 @@
   import AppLayout from '../Layouts/AppLayout.vue'
   import { usePage } from '@inertiajs/inertia-vue3'
   import { computed } from 'vue'
+  import CalendarWidget from "@/Components/Widgets/CalendarWidget.vue";
 
   const page = usePage()
   const user = computed(() => page.props.value.auth?.user)
@@ -14,10 +15,10 @@
 <template>
   <AppLayout>
     <section
-      class="dark:bg-[#0e0f11] bg-gradient-to-br from-gray-900 to-indigo-900 text-white min-h-[70vh] p-6 sm:p-10 rounded-2xl shadow-md transition-all duration-300 ease-in-out max-w-7xl mx-auto"
+      class=" text-white min-h-[70vh] p-6 sm:p-10 rounded-2xl shadow-md transition-all duration-300 ease-in-out max-w-7xl mx-auto"
     >
       <header class="mb-6">
-        <h1 class="text-3xl font-bold text-indigo-200">📊 Панель Керування</h1>
+        <h1 class="text-xl font-bold text-indigo-200">📊 Панель Керування</h1>
         <p class="text-white/80 text-sm mt-1">
           Вітаємо, <span class="font-semibold text-white">{{ user?.name || 'Користувачу' }}</span
           >!
@@ -47,14 +48,7 @@
         </div>
       </div>
 
-      <div class="mt-8">
-        <button
-          @click="$inertia.visit('/tasks')"
-          class="bg-indigo-700 hover:bg-indigo-600 text-white px-6 py-2 rounded-xl shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        >
-          Перейти до задач
-        </button>
-      </div>
+        <CalendarWidget />
     </section>
   </AppLayout>
 </template>

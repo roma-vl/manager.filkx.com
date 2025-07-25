@@ -2,6 +2,9 @@
 import {onMounted, ref, watch} from 'vue'
 import axios from 'axios'
 import AppLayout from "@/Layouts/AppLayout.vue";
+import RolesTabs from "@/Components/Work/Projects/Project/Roles/RolesTabs.vue";
+import {Head} from "@inertiajs/inertia-vue3";
+import Breadcrumbs from "@/Components/ui/Breadcrumbs.vue";
 
 const props = defineProps({
     dates: Array,
@@ -119,8 +122,15 @@ function goToNow() {
 <template>
     <AppLayout>
         <div class="max-w-7xl mx-auto ">
-            <h1 class="text-3xl font-extrabold mb-6 text-gray-900 dark:text-gray-100">Календар</h1>
 
+            <Head title="Projects" />
+
+            <Breadcrumbs :items="[
+                  { label: 'Home', href: '/' },
+                  { label: 'Work', href: '/work' },
+                  { label: 'Projects' }
+                ]" />
+            <RolesTabs />
             <div class="flex flex-wrap gap-3 items-center mb-6">
                 <select
                     v-model="selectedYear"
@@ -186,7 +196,7 @@ function goToNow() {
                         >
                             <div class="flex justify-between items-center mb-2">
                   <span
-                      class="font-semibold text-lg"
+                      class="font-semibold text-md"
                       :class="{'text-blue-600 dark:text-blue-400': date === now}"
                   >
                     {{ formatDate(date) }}
@@ -197,23 +207,44 @@ function goToNow() {
                                 <template v-for="item in result.items" :key="item.id">
                                     <div
                                         v-if="[item.date, item.plan_date, item.start_date, item.end_date].includes(date)"
-                                        class="bg-white dark:bg-gray-900 rounded-md p-2 shadow hover:shadow-lg transition cursor-pointer"
+                                        class="bg-white dark:bg-gray-900 rounded-md p-3 shadow hover:shadow-lg transition cursor-pointer border border-gray-200 dark:border-gray-700"
                                     >
                                         <a
                                             :href="`/work/projects/tasks/${item.id}`"
-                                            class="font-medium text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400"
+                                            class="font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400"
                                         >
                                             {{ item.name }}
                                         </a>
-                                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                            <template v-if="item.date === date">📌</template>
-                                            <template v-if="item.plan_date === date">🗓️</template>
-                                            <template v-if="item.start_date === date">▶️</template>
-                                            <template v-if="item.end_date === date">⏹️</template>
+
+                                        <div class="flex flex-wrap gap-2 mt-2 text-xs">
+                                            <template v-if="item.date === date">
+                                                <span class="inline-flex items-center gap-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-2 py-0.5 rounded-full">
+                                                    📌 Створено
+                                                </span>
+                                            </template>
+
+                                            <template v-if="item.plan_date === date">
+                                                <span class="inline-flex items-center gap-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 px-2 py-0.5 rounded-full">
+                                                    🗓️ Дата завершення
+                                                </span>
+                                            </template>
+
+                                            <template v-if="item.start_date === date">
+                                                <span class="inline-flex items-center gap-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-0.5 rounded-full">
+                                                    ▶️ Початок
+                                                </span>
+                                                                        </template>
+
+                                            <template v-if="item.end_date === date">
+                                                <span class="inline-flex items-center gap-1 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 px-2 py-0.5 rounded-full">
+                                                    ⏹️ Завершення
+                                                </span>
+                                            </template>
                                         </div>
                                     </div>
                                 </template>
                             </div>
+
                         </td>
                     </tr>
                     </tbody>
