@@ -40,7 +40,7 @@ function iconsForItem(item, date) {
                     <th
                         v-for="date in dates"
                         :key="date"
-                        class="text-center px-2 py-2 border-b bg-gray-100 dark:bg-gray-800 font-medium whitespace-nowrap w-[150px]"
+                        class="text-center px-2 py-2 border-b  font-medium whitespace-nowrap w-[150px]"
                     >
                         <span
                             :class="{'text-red-600 font-bold': date === now, 'text-gray-600 dark:text-gray-400': date !== now}"
@@ -55,7 +55,7 @@ function iconsForItem(item, date) {
                     <td
                         v-for="date in dates"
                         :key="date"
-                        class="align-top px-2 py-2 border-t border-b dark:border-gray-700 bg-white dark:bg-gray-900"
+                        class="align-top px-2 py-2  "
                     >
                         <div class="space-y-2">
                             <div

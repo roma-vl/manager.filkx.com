@@ -1,10 +1,9 @@
 <?php
 
 namespace App\Controller\Widgets;
+
 use App\Controller\BaseController;
-use App\Infrastructure\Inertia\InertiaService;
 use App\ReadModel\Work\Projects\Calendar\CalendarFetcher;
-use App\ReadModel\Work\Projects\Calendar\Query\Query;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

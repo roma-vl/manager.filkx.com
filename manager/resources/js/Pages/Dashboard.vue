@@ -3,6 +3,8 @@
   import { usePage } from '@inertiajs/inertia-vue3'
   import { computed } from 'vue'
   import CalendarWidget from "@/Components/Widgets/CalendarWidget.vue";
+  import OwnTasksWidget from "@/Components/Widgets/OwnTasksWidget.vue";
+  import MeTasksWidget from "@/Components/Widgets/MeTasksWidget.vue";
 
   const page = usePage()
   const user = computed(() => page.props.value.auth?.user)
@@ -15,7 +17,7 @@
 <template>
   <AppLayout>
     <section
-      class=" text-white min-h-[70vh] p-6 sm:p-10 rounded-2xl shadow-md transition-all duration-300 ease-in-out max-w-7xl mx-auto"
+      class=" text-white min-h-[70vh] p-6 sm:p-10 transition-all duration-300 ease-in-out max-w-7xl mx-auto"
     >
       <header class="mb-6">
         <h1 class="text-xl font-bold text-indigo-200">📊 Панель Керування</h1>
@@ -49,6 +51,13 @@
       </div>
 
         <CalendarWidget />
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-6">
+
+                <OwnTasksWidget />
+            <MeTasksWidget />
+
+        </div>
     </section>
   </AppLayout>
 </template>
