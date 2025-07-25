@@ -60,8 +60,8 @@ class TasksController extends AbstractController
             $filter,
             $request->query->getInt('page', 1),
             self::PER_PAGE,
-            $request->query->get('sort', 't.id'),
-            $request->query->get('direction', 'asc')
+            $request->query->get('sort'),
+            $request->query->get('direction')
         );
 
         return $inertia->render($request, 'Work/Projects/Project/Tasks/Index', [
@@ -87,6 +87,7 @@ class TasksController extends AbstractController
                 ], $task['executors']),
                 'parent' => $task['parent'] ?? null,
                 'type' => $task['type'],
+                'root' => $task['parent'],
             ], $pagination->getItems()),
             'members' => $this->mapMembers($memberFetcher->activeGroupedList()),
             'pagination' => [
