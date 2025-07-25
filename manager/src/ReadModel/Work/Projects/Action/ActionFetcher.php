@@ -12,8 +12,8 @@ use Knp\Component\Pager\PaginatorInterface;
 
 class ActionFetcher
 {
-    private $connection;
-    private $paginator;
+    private Connection $connection;
+    private PaginatorInterface $paginator;
 
     public function __construct(Connection $connection, PaginatorInterface $paginator)
     {
@@ -46,7 +46,7 @@ class ActionFetcher
         $stmt = $this->createQb()
             ->andWhere('task.id = :task_id')
             ->setParameter('task_id', (string) $id)
-            ->orderBy('c.date', 'asc')
+            ->orderBy('c.date', 'desc')
             ->execute();
 
         return $stmt->fetchAll(FetchMode::ASSOCIATIVE);

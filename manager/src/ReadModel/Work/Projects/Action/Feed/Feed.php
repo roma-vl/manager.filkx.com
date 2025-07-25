@@ -8,7 +8,7 @@ use App\ReadModel\Comment\CommentRow;
 
 class Feed
 {
-    private $actions;
+    private array $actions;
     private $comments;
 
     /**
@@ -20,11 +20,7 @@ class Feed
         $this->comments = $comments;
     }
 
-    /**
-     * @throws \Exception
-     *
-     * @return Item[]
-     */
+
     public function getItems(): array
     {
         $items = [];

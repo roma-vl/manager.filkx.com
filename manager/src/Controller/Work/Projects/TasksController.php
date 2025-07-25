@@ -25,6 +25,7 @@ use App\Model\Work\UseCase\Projects\Task\Take;
 use App\Model\Work\UseCase\Projects\Task\TakeAndStart;
 use App\Model\Work\UseCase\Projects\Task\Type as UseCaseType;
 use App\ReadModel\Work\Members\Member\MemberFetcher;
+use App\ReadModel\Work\Projects\Action\ActionFetcher;
 use App\ReadModel\Work\Projects\Task\CommentFetcher;
 use App\ReadModel\Work\Projects\Task\Filter;
 use App\ReadModel\Work\Projects\Task\TaskFetcher;
@@ -724,6 +725,7 @@ class TasksController extends AbstractController
         Task $task,
         TaskFetcher $tasks,
         CommentFetcher $commentFetcher,
+        ActionFetcher $actionFetcher,
         MemberFetcher $members,
         InertiaService $inertia,
     ): Response {
@@ -802,6 +804,35 @@ class TasksController extends AbstractController
                 'author_name' => $comment->author_name,
                 'author' => $comment->email,
             ], $commentFetcher->allForTask($task->getId()->getValue())),
+            'actions' => array_map(fn ($action) => [
+                'id' => $action['id'],
+                'task_id' => $action['task_id'],
+                'actor_id' => $action['actor_id'],
+                'date' => $action['date'],
+                'set_project_id' => $action['set_project_id'],
+                'set_name' => $action['set_name'],
+                'set_content' => $action['set_content'],
+                'set_file_id' => $action['set_file_id'],
+                'set_removed_file_id' => $action['set_removed_file_id'],
+                'set_type' => $action['set_type'],
+                'set_status' => $action['set_status'],
+                'set_progress' => $action['set_progress'],
+                'set_priority' => $action['set_priority'],
+                'set_parent_id' => $action['set_parent_id'],
+                'set_removed_parent' => $action['set_removed_parent'],
+                'set_plan' => $action['set_plan'],
+                'set_removed_plan' => $action['set_removed_plan'],
+                'set_executor_id' => $action['set_executor_id'],
+                'set_revoked_executor_id' => $action['set_revoked_executor_id'],
+                'task_name' => $action['task_name'],
+                'actor_name' => $action['actor_name'],
+                'project_id' => $action['project_id'],
+                'project_name' => $action['project_name'],
+                'set_executor_name' => $action['set_executor_name'],
+                'set_revoked_executor_name' => $action['set_revoked_executor_name'],
+                'set_project_name' => $action['set_project_name'],
+            ], $actionFetcher->allForTask($task->getId()->getValue())),
+
             'statuses' => [
                 ['id' => Status::NEW, 'name' => 'NEW'],
                 ['id' => Status::WORKING, 'name' => 'WORKING'],

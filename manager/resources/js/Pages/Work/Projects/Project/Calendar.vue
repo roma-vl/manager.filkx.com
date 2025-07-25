@@ -5,6 +5,7 @@
   import RolesTabs from '@/Components/Work/Projects/Project/Roles/RolesTabs.vue'
   import { Head } from '@inertiajs/inertia-vue3'
   import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import ProjectTabs from "@/Components/Work/Projects/ProjectTabs.vue";
 
   const props = defineProps({
     dates: Array,
@@ -129,7 +130,7 @@
           { label: 'Projects' },
         ]"
       />
-      <RolesTabs />
+        <ProjectTabs :project-id="project.id" />
       <div class="flex flex-wrap gap-3 items-center mb-6">
         <select
           v-model="selectedYear"

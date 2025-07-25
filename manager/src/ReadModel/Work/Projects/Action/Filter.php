@@ -7,7 +7,7 @@ namespace App\ReadModel\Work\Projects\Action;
 class Filter
 {
     public $member;
-    public $project;
+    public ?string $project;
 
     private function __construct(?string $project)
     {
