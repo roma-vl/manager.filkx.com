@@ -256,8 +256,8 @@ function handleSubmit(updatedFilters) {
                             </a>
                         </td>
                         <td class="border border-indigo-700 p-2 text-sm">
-                            <span v-if="task.parent" class="mr-1">
-                              <i class="fas fa-angle-double-right"></i>
+                            <span v-if="task.root" class="mr-1">
+                               ➔
                             </span>
                             <a
                                 :href="`/work/projects/tasks/${task.id}`"

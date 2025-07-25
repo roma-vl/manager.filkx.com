@@ -8,7 +8,7 @@ class File
 {
     public $path;
     public string $name;
-    public $size;
+    public int $size;
 
     public function __construct(string $path, string $name, int $size)
     {

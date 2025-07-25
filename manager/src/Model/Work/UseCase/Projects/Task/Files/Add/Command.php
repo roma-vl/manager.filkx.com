@@ -8,18 +8,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    /**
-     * @Assert\NotBlank()
-     */
-    public $actor;
-    /**
-     * @Assert\NotBlank()
-     */
-    public $id;
-    /**
-     * @var File[]
-     */
-    public $files;
+    #[Assert\NotBlank]
+    public string $actor;
+    #[Assert\NotBlank]
+    public int $id;
+
+    public array $files;
 
     public function __construct(string $actor, int $id)
     {

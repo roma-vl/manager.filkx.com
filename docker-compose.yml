@@ -33,6 +33,11 @@ services:
       - composer:/root/.composer/cache
     networks:
       - manager
+#  manager-node:
+#    image: node:12.7-alpine
+#    volumes:
+#      - ./manager:/app
+#    working_dir: /app
   manager-postgres:
     image: postgres:16
     restart: always
@@ -46,6 +51,22 @@ services:
       - "54321:5432"
     networks:
       - manager
+  storage:
+    build:
+      context: ./storage/docker/development
+      dockerfile: nginx.docker
+    volumes:
+      - ./storage:/app
+    ports:
+      - "8081:80"
+  storage-ftp:
+    image: stilliard/pure-ftpd
+    environment:
+      FTP_USER_NAME: app
+      FTP_USER_PASS: secret
+      FTP_USER_HOME: /app
+    volumes:
+      - ./storage/public:/app
   manager-mailpit:
     image: 'axllent/mailpit:latest'
     restart: always

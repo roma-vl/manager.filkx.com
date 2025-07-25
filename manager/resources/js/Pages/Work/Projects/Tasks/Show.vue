@@ -10,6 +10,7 @@ import ChangePriorityDropdown from "./Partials/ChangePriorityDropdown.vue";
 import ChangeProgressBar from "./Partials/ChangeProgressBar.vue";
 import SubTasksTable from "../../../../Components/Task/SubTasksTable.vue";
 import MarkdownRenderer from "../../../../Components/ui/MarkdownRenderer.vue";
+import FilesList from "@/Components/Task/FilesList.vue";
 
 const props = defineProps({
     task: Object,
@@ -22,6 +23,8 @@ const props = defineProps({
     progress: Array,
     feed: Object,
 })
+
+console.log(props.task, 'asdads')
 
 const openDropdown = ref(false);
 const form = useForm({});
@@ -122,6 +125,12 @@ function revokeExecutor(memberId) {
             </Link>
 
             <Link
+                :href="`/work/projects/tasks/${taskId}/files`"
+                class="inline-flex items-center px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded shadow transition"
+            >Add File
+            </Link>
+
+            <Link
                 :href="`/work/projects/tasks/${task.id}/edit`"
                 class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-2 py-1 rounded transition"
             >
@@ -182,6 +191,11 @@ function revokeExecutor(memberId) {
                             aria-label="Tasks list table container"
                         >
                             <SubTasksTable :children="children" :project-id="project.id" />
+                        </div>
+
+                        <div>
+                            <FilesList :files="task.files" :task-id="task.id" />
+
                         </div>
                     </div>
                 </div>

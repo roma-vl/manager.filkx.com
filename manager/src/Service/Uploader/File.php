@@ -6,9 +6,9 @@ namespace App\Service\Uploader;
 
 class File
 {
-    private $path;
-    private $name;
-    private $size;
+    private string $path;
+    private string $name;
+    private int $size;
 
     public function __construct(string $path, string $name, int $size)
     {
