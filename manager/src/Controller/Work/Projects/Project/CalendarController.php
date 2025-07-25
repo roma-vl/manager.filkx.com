@@ -7,9 +7,8 @@ namespace App\Controller\Work\Projects\Project;
 use App\Infrastructure\Inertia\InertiaService;
 use App\Model\Work\Entity\Projects\Project\Project;
 use App\ReadModel\Work\Projects\Calendar\CalendarFetcher;
-use App\ReadModel\Work\Projects\Calendar\Query;
+use App\ReadModel\Work\Projects\Calendar\Query\Query;
 use App\Security\Voter\Work\Projects\ProjectAccess;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +29,7 @@ class CalendarController extends AbstractController
         $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
 
         $now = new \DateTimeImmutable();
-        $query = Query\Query::fromDate($now)->forProject($project->getId()->getValue());
+        $query = Query::fromDate($now)->forProject($project->getId()->getValue());
 
         $query->year = (int) $request->query->get('year', $query->year);
         $query->month = (int) $request->query->get('month', $query->month);
