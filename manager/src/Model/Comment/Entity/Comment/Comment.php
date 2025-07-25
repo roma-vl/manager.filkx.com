@@ -28,7 +28,7 @@ class Comment
     #[ORM\Column(type: 'text')]
     private string $text;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true, name: 'update_date')]
+    #[ORM\Column(name: 'update_date', type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $updateDate = null;
 
     #[ORM\Version]

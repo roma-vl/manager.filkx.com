@@ -753,6 +753,7 @@ class TasksController extends AbstractController
         Request $request,
         Task $task,
         TaskFetcher $tasks,
+        CommentFetcher $commentFetcher,
         MemberFetcher $members,
         InertiaService $inertia
     ): Response {
@@ -823,6 +824,14 @@ class TasksController extends AbstractController
                 'type' => $task['type'],
             ], $tasks->childrenOf($task->getId()->getValue())),
 
+            'comments' => array_map(fn ($comment) => [
+                'id' => $comment->id,
+                'text' => $this->processor->process($comment->text),
+                'text_raw' => $comment->text,
+                'date' => $comment->date->format('Y-m-d H:i:s'),
+                'author_name' => $comment->author_name,
+                'author' => $comment->email,
+            ], $commentFetcher->allForTask($task->getId()->getValue())),
             'statuses' => [
                 ['id' => Status::NEW, 'name' => 'NEW'],
                 ['id' => Status::WORKING, 'name' => 'WORKING'],

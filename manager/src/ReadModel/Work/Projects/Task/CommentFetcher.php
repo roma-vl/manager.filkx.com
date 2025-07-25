@@ -7,6 +7,7 @@ namespace App\ReadModel\Work\Projects\Task;
 use App\Model\Work\Entity\Projects\Task\Task;
 use App\ReadModel\Comment\CommentRow;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\FetchMode;
 
 class CommentFetcher
@@ -18,6 +19,9 @@ class CommentFetcher
         $this->connection = $connection;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function allForTask(int $id): array
     {
         $result = $this->connection->createQueryBuilder()
@@ -28,7 +32,7 @@ class CommentFetcher
             ->setParameter('entity_type', Task::class)
             ->setParameter('entity_id', $id)
             ->orderBy('c.date')
-            ->execute();
+            ->executeQuery();
 
         $rows = $result->fetchAllAssociative();
 
@@ -37,7 +41,7 @@ class CommentFetcher
             $row['text'],
             new \DateTimeImmutable($row['date']),
             $row['author_name'],
-            $row['author_email']
+            $row['email']
         ), $rows);
 
     }
