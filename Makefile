@@ -71,3 +71,15 @@ fix-perms:
 	docker-compose run --rm manager-php-cli chmod -R 775 var && \
 	docker-compose run --rm manager-php-cli chown -R www-data:www-data var
 
+#perm:
+#	docker-compose run --rm manager-php-cli sh -c 'ln -s /var/storage/default /app/public/storage || true'
+
+perm:
+	docker-compose run --rm manager-php-cli sh -c "\
+		mkdir -p /app/var/storage/default && \
+		chown -R www-data:www-data /app/var/storage/default && \
+		chmod -R 775 /app/var/storage/default && \
+		ln -snf /app/var/storage/default /app/public/storage \
+	"
+
+
