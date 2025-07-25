@@ -2,11 +2,13 @@
   <AppLayout>
     <Head title="Projects" />
 
-      <Breadcrumbs :items="[
-          { label: 'Home', href: '/' },
-          { label: 'Work', href: '/work' },
-          { label: 'Projects' }
-        ]" />
+    <Breadcrumbs
+      :items="[
+        { label: 'Home', href: '/' },
+        { label: 'Work', href: '/work' },
+        { label: 'Projects' },
+      ]"
+    />
 
     <RolesTabs />
 
@@ -125,8 +127,8 @@
   import { Head, Link } from '@inertiajs/inertia-vue3'
   import AppLayout from '@/Layouts/AppLayout.vue'
   import RolesTabs from '../../../Components/Work/Projects/Project/Roles/RolesTabs.vue'
-  import {statusBadgeClass} from "../../../Helpers/helpers.js";
-  import Breadcrumbs from "../../../Components/ui/Breadcrumbs.vue";
+  import { statusBadgeClass } from '../../../Helpers/helpers.js'
+  import Breadcrumbs from '../../../Components/ui/Breadcrumbs.vue'
 
   const props = defineProps({
     projects: Array,

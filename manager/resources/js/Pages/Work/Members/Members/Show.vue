@@ -4,7 +4,7 @@
   import AppLayout from '@/Layouts/AppLayout.vue'
   import { CheckCircleIcon, BanIcon } from 'lucide-vue-next'
   import axios from 'axios'
-  import {statusBadgeClass} from "../../../../Helpers/helpers.js";
+  import { statusBadgeClass } from '../../../../Helpers/helpers.js'
 
   const props = defineProps({
     member: Object,

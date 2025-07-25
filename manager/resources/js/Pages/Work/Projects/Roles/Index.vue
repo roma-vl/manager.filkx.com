@@ -4,7 +4,7 @@
   import { usePage } from '@inertiajs/inertia-vue3'
   import { Link } from '@inertiajs/inertia-vue3'
   import RolesTabs from '../../../../Components/Work/Projects/Project/Roles/RolesTabs.vue'
-  import Breadcrumbs from "../../../../Components/ui/Breadcrumbs.vue";
+  import Breadcrumbs from '../../../../Components/ui/Breadcrumbs.vue'
 
   const { props } = usePage()
   const project = props.value.project
@@ -15,15 +15,16 @@
 <template>
   <AppLayout>
     <!-- Хлібні крихти -->
-      <Breadcrumbs :items="[
-          { label: 'Home', href: '/' },
-          { label: 'Work', href: '/work' },
-          { label: 'Projects', href: '/work/projects' },
-          { label: 'Roles' }
-        ]" />
+    <Breadcrumbs
+      :items="[
+        { label: 'Home', href: '/' },
+        { label: 'Work', href: '/work' },
+        { label: 'Projects', href: '/work/projects' },
+        { label: 'Roles' },
+      ]"
+    />
 
-
-      <!-- Таби проєкту -->
+    <!-- Таби проєкту -->
     <RolesTabs />
 
     <!-- Кнопка додавання -->

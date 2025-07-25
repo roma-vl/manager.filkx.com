@@ -73,7 +73,7 @@ fix-perms:
 
 format:
 	docker-compose run --rm manager-php-cli composer cs-fix
-	docker-compose run --rm manager-php-cli composer cs-fix
+	docker-compose run --rm manager-php-cli npm run format
 perm:
 	docker-compose run --rm manager-php-cli sh -c "\
 		mkdir -p /app/var/storage/default && \
