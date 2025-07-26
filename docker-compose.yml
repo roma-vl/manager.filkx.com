@@ -81,16 +81,23 @@ services:
       dockerfile: php-cli.docker
     depends_on:
       - manager-postgres
+      - manager-redis
+      - manager-queue-redis
+      - storage
+      - manager-mailpit
     command: php bin/console messenger:consume async
     restart: unless-stopped
     environment:
       MAILER_DSN: smtp://manager-mailpit:1025
     volumes:
       - ./manager:/app
+      - composer:/root/.composer/cache
     networks:
       - manager
   manager-redis:
     image: redis:latest
+    ports:
+      - '${FORWARD_REDIS_PORT:-6379}:6379'
     restart: always
     volumes:
       - manager-redis:/data
