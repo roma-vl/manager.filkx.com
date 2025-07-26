@@ -8,9 +8,9 @@ use App\ReadModel\Comment\CommentRow;
 
 class Item
 {
-    private $date;
-    private $action;
-    private $comment;
+    private \DateTimeImmutable $date;
+    private ?array $action = null;
+    private ?CommentRow $comment = null;
 
     private function __construct(\DateTimeImmutable $date)
     {
@@ -21,6 +21,7 @@ class Item
     {
         $item = new self($date);
         $item->action = $action;
+
         return $item;
     }
 
@@ -28,6 +29,7 @@ class Item
     {
         $item = new self($date);
         $item->comment = $comment;
+
         return $item;
     }
 

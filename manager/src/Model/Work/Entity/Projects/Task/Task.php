@@ -20,7 +20,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Webmozart\Assert\Assert;
 
-
 #[ORM\Entity]
 #[ORM\Table(name: 'work_projects_tasks')]
 #[ORM\Index(columns: ['date'])]
@@ -81,14 +80,12 @@ class Task implements AggregateRoot
     #[ORM\Column(type: 'work_projects_task_status', length: 16)]
     private Status $status;
 
-
     #[ORM\ManyToMany(targetEntity: Member::class)]
     #[ORM\JoinTable(name: 'work_projects_tasks_executors')]
     #[ORM\JoinColumn(name: 'task_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'member_id', referencedColumnName: 'id')]
     #[ORM\OrderBy(['name.first' => 'ASC'])]
     private Collection $executors;
-
 
     #[ORM\OneToMany(targetEntity: Change::class, mappedBy: 'task', cascade: ['persist'], orphanRemoval: true)]
     #[ORM\OrderBy(['id' => 'ASC'])]
@@ -106,7 +103,7 @@ class Task implements AggregateRoot
         Type $type,
         int $priority,
         string $name,
-        ?string $content
+        ?string $content,
     ) {
         $this->id = $id;
         $this->project = $project;
@@ -150,6 +147,7 @@ class Task implements AggregateRoot
                 $this->files->removeElement($current);
                 $this->addChange($actor, $date, Set::fromRemovedFile($current->getId()));
                 $this->recordEvent(new Event\TaskFileRemoved($actor->getId(), $this->id, $id, $current->getInfo()));
+
                 return;
             }
         }
@@ -167,7 +165,7 @@ class Task implements AggregateRoot
         $this->changeStatus($actor, $date, Status::working());
     }
 
-    public function setChildOf(Member $actor, \DateTimeImmutable $date, Task $parent): void
+    public function setChildOf(Member $actor, \DateTimeImmutable $date, self $parent): void
     {
         if ($parent === $this->parent) {
             return;
@@ -178,8 +176,7 @@ class Task implements AggregateRoot
             if ($current === $this) {
                 throw new \DomainException('Cyclomatic children.');
             }
-        }
-        while ($current && $current = $current->getParent());
+        } while ($current && $current = $current->getParent());
 
         $this->parent = $parent;
 
@@ -275,6 +272,7 @@ class Task implements AggregateRoot
                 return true;
             }
         }
+
         return false;
     }
 
@@ -295,6 +293,7 @@ class Task implements AggregateRoot
                 $this->executors->removeElement($current);
                 $this->addChange($actor, $date, Set::fromRevokedExecutor($current->getId()));
                 $this->recordEvent(new Event\TaskExecutorRevoked($actor->getId(), $this->id, $current->getId()));
+
                 return;
             }
         }
@@ -379,7 +378,7 @@ class Task implements AggregateRoot
         return $this->priority;
     }
 
-    public function getParent(): ?Task
+    public function getParent(): ?self
     {
         return $this->parent;
     }

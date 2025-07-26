@@ -24,6 +24,7 @@ class Processor
         foreach ($this->drivers as $driver) {
             $result = $driver->process($result);
         }
+
         return $result;
     }
 }

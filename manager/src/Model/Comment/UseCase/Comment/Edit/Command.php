@@ -23,6 +23,7 @@ class Command
     {
         $command = new self($comment->getId()->getValue());
         $command->text = $comment->getText();
+
         return $command;
     }
 }

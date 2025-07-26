@@ -44,4 +44,3 @@ class AssignTest extends TestCase
         $task->assignExecutor($member, new \DateTimeImmutable(), $executor);
     }
 }
-

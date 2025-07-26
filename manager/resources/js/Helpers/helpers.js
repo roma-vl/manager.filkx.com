@@ -23,3 +23,16 @@ export const statusBadgeClass = status => {
       return 'bg-blue-500 text-white'
   }
 }
+
+export function formatUtcDate(utcDate, locale = 'uk-UA', timeZone = 'Europe/Kyiv') {
+    const date = new Date(utcDate + 'Z');
+    return date.toLocaleString(locale, {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone
+    });
+}
+

@@ -9,8 +9,8 @@ use App\Model\Work\Entity\Members\Member\Id as MemberId;
 use App\Model\Work\Entity\Members\Member\MemberRepository;
 use App\Model\Work\Entity\Projects\Project\Id as ProjectId;
 use App\Model\Work\Entity\Projects\Project\ProjectRepository;
-use App\Model\Work\Entity\Projects\Task\Task;
 use App\Model\Work\Entity\Projects\Task\Id;
+use App\Model\Work\Entity\Projects\Task\Task;
 use App\Model\Work\Entity\Projects\Task\TaskRepository;
 use App\Model\Work\Entity\Projects\Task\Type;
 use Doctrine\DBAL\Exception;
@@ -45,7 +45,7 @@ class Handler
         $tasks = [];
 
         foreach ($command->names as $name) {
-            $nameText = is_object($name) && property_exists($name, 'name') ? $name->name : (string)$name;
+            $nameText = \is_object($name) && property_exists($name, 'name') ? $name->name : (string) $name;
 
             $task = new Task(
                 $this->tasks->nextId(),

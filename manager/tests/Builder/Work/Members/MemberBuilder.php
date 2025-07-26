@@ -27,6 +27,7 @@ class MemberBuilder
     {
         $clone = clone $this;
         $clone->id = $id;
+
         return $clone;
     }
 
@@ -34,6 +35,7 @@ class MemberBuilder
     {
         $clone = clone $this;
         $clone->email = $email;
+
         return $clone;
     }
 

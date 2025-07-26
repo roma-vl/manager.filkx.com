@@ -22,4 +22,3 @@ class CommentRow
         $this->email = $author_email;
     }
 }
-

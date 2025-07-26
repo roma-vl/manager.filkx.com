@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\DataFixtures\Work\Projects;
 
 use App\DataFixtures\Work\Members\MemberFixture;
-use App\Model\Work\Entity\Projects\Role\Role;
 use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Projects\Project\Department\Id as DepartmentId;
 use App\Model\Work\Entity\Projects\Project\Id;
 use App\Model\Work\Entity\Projects\Project\Project;
+use App\Model\Work\Entity\Projects\Role\Role;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;

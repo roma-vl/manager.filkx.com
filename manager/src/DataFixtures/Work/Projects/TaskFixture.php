@@ -33,8 +33,7 @@ class TaskFixture extends Fixture implements DependentFixtureInterface
 
         $date = new \DateTimeImmutable('-100 days');
 
-        for ($i = 0; $i < 100; $i++) {
-
+        for ($i = 0; $i < 100; ++$i) {
             /** @var Project $project */
             /** @var Member $actor */
             $project = $faker->randomElement($projects);
@@ -48,8 +47,8 @@ class TaskFixture extends Fixture implements DependentFixtureInterface
             }
 
             $memberships = $project->getMemberships();
-            foreach ($faker->randomElements($memberships, $faker->numberBetween(0, count($memberships))) as $membership) {
-                /** @var Membership $membership */
+            foreach ($faker->randomElements($memberships, $faker->numberBetween(0, \count($memberships))) as $membership) {
+                /* @var Membership $membership */
                 $task->assignExecutor($actor, $date, $membership->getMember());
             }
 

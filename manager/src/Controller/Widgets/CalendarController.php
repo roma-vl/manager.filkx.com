@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Widgets;
 
 use App\Controller\BaseController;
@@ -8,6 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+
 class CalendarController extends BaseController
 {
     public function __construct(private readonly CalendarFetcher $calendar)
@@ -26,12 +29,11 @@ class CalendarController extends BaseController
         $result = $this->calendar->byWeek($now, $userId);
 
         return new JsonResponse([
-            'dates' => array_map(fn($d) => $d->format('Y-m-d'), iterator_to_array(
+            'dates' => array_map(fn ($d) => $d->format('Y-m-d'), iterator_to_array(
                 new \DatePeriod($result->start, new \DateInterval('P1D'), $result->end)
             )),
             'now' => $now->format('Y-m-d'),
             'items' => $result->items,
         ]);
     }
-
 }

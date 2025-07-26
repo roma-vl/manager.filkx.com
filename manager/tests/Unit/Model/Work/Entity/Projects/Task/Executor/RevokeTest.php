@@ -42,4 +42,3 @@ class RevokeTest extends TestCase
         $task->revokeExecutor($member, new \DateTimeImmutable(), $executor->getId());
     }
 }
-

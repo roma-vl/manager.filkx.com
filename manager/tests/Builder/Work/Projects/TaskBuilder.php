@@ -33,6 +33,7 @@ class TaskBuilder
     {
         $clone = clone $this;
         $clone->id = $id;
+
         return $clone;
     }
 
@@ -40,6 +41,7 @@ class TaskBuilder
     {
         $clone = clone $this;
         $clone->type = $type;
+
         return $clone;
     }
 

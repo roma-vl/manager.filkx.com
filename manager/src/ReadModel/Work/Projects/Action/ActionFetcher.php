@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\ReadModel\Work\Projects\Action;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Knp\Component\Pager\Pagination\PaginationInterface;
-use Knp\Component\Pager\Pagination\SlidingPagination;
 use Knp\Component\Pager\PaginatorInterface;
 
 class ActionFetcher
 {
-    private $connection;
-    private $paginator;
+    private Connection $connection;
+    private PaginatorInterface $paginator;
 
     public function __construct(Connection $connection, PaginatorInterface $paginator)
     {
@@ -42,15 +42,18 @@ class ActionFetcher
         return $this->paginator->paginate($qb, $page, $size);
     }
 
+    /**
+     * @throws Exception
+     */
     public function allForTask(int $id): array
     {
         $stmt = $this->createQb()
             ->andWhere('task.id = :task_id')
-            ->setParameter('task_id', (string)$id)
-            ->orderBy('c.date', 'asc')
+            ->setParameter('task_id', (string) $id)
+            ->orderBy('c.date', 'desc')
             ->execute();
 
-        return $stmt->fetchAll(FetchMode::ASSOCIATIVE);
+        return $stmt->fetchAllAssociative();
     }
 
     private function createQb(): QueryBuilder

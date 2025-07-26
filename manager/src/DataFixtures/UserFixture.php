@@ -46,7 +46,6 @@ class UserFixture extends Fixture
         $manager->persist($user);
         $this->setReference(self::REFERENCE_USER_ME, $user);
 
-
         $network = $this->createSignedUpByNetwork(
             new Name('David', 'Black'),
             'facebook',

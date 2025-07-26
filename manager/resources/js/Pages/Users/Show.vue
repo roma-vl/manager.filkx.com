@@ -3,7 +3,7 @@
   import { Link, usePage } from '@inertiajs/inertia-vue3'
   import axios from 'axios'
   import { computed } from 'vue'
-  import {roleBadgeClass, statusBadgeClass} from "../../Helpers/helpers.js";
+  import { roleBadgeClass, statusBadgeClass } from '../../Helpers/helpers.js'
 
   const props = defineProps({
     user: Object,

@@ -38,4 +38,3 @@ class Handler
         $this->flusher->flush($task);
     }
 }
-

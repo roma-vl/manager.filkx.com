@@ -29,6 +29,7 @@ class Command
         $command = new self($actor, $task->getId()->getValue());
         $command->name = $task->getName();
         $command->content = $task->getContent();
+
         return $command;
     }
 }

@@ -25,6 +25,7 @@ class CommentRepository
         if (!$comment = $this->repo->find($id->getValue())) {
             throw new EntityNotFoundException('Comment is not found.');
         }
+
         return $comment;
     }
 

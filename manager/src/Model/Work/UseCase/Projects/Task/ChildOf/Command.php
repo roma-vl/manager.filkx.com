@@ -26,6 +26,7 @@ class Command
     {
         $command = new self($actor, $task->getId()->getValue());
         $command->parent = $task->getParent() ? $task->getParent()->getId()->getValue() : null;
+
         return $command;
     }
 }

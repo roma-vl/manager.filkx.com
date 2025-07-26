@@ -27,7 +27,7 @@ class TaskAccess extends Voter
 
     protected function supports($attribute, $subject): bool
     {
-        return in_array($attribute, [self::VIEW, self::MANAGE, self::DELETE], true) && $subject instanceof Task;
+        return \in_array($attribute, [self::VIEW, self::MANAGE, self::DELETE], true) && $subject instanceof Task;
     }
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
@@ -42,13 +42,12 @@ class TaskAccess extends Voter
         }
 
         return match ($attribute) {
-            self::VIEW => $this->security->isGranted('ROLE_WORK_MANAGE_PROJECTS') ||
-                $subject->getProject()->isMemberGranted(new Id($user->getId()), Permission::VIEW_TASKS),
-            self::MANAGE => $this->security->isGranted('ROLE_WORK_MANAGE_PROJECTS') ||
-                $subject->getProject()->isMemberGranted(new Id($user->getId()), Permission::MANAGE_TASKS),
+            self::VIEW => $this->security->isGranted('ROLE_WORK_MANAGE_PROJECTS')
+                || $subject->getProject()->isMemberGranted(new Id($user->getId()), Permission::VIEW_TASKS),
+            self::MANAGE => $this->security->isGranted('ROLE_WORK_MANAGE_PROJECTS')
+                || $subject->getProject()->isMemberGranted(new Id($user->getId()), Permission::MANAGE_TASKS),
             self::DELETE => $this->security->isGranted('ROLE_WORK_MANAGE_PROJECTS'),
             default => false,
         };
-
     }
 }

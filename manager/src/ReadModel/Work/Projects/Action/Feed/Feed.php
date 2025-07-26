@@ -4,43 +4,42 @@ declare(strict_types=1);
 
 namespace App\ReadModel\Work\Projects\Action\Feed;
 
-use App\ReadModel\Comment\CommentRow;
+use App\Service\Work\Processor\Processor;
 
 class Feed
 {
-    private $actions;
-    private $comments;
+    private array $actions;
+    private array $comments;
+    private Processor $processor;
 
-    /**
-     * @param array $actions
-     * @param CommentRow[] $comments
-     */
-    public function __construct(array $actions, array $comments)
+    public function __construct(array $actions, array $comments, Processor $processor)
     {
         $this->actions = $actions;
         $this->comments = $comments;
+        $this->processor = $processor;
     }
 
-    /**
-     * @return Item[]
-     * @throws \Exception
-     */
     public function getItems(): array
     {
         $items = [];
 
         foreach ($this->actions as $action) {
-            $items[] = Item::forAction(new \DateTimeImmutable($action['date']), $action);
+            $date = $action['date'] instanceof \DateTimeImmutable ? $action['date'] : new \DateTimeImmutable($action['date']);
+            $items[] = Item::forAction($date, $action);
         }
 
         foreach ($this->comments as $comment) {
-            $items[] = Item::forComment(new \DateTimeImmutable($comment->date), $comment);
+            $date = $comment->date instanceof \DateTimeImmutable ? $comment->date : new \DateTimeImmutable($comment->date);
+
+            $comment->text_raw =$comment->text;
+            $comment->text = $this->processor->process($comment->text);
+
+            $items[] = Item::forComment($date, $comment);
         }
 
-        usort($items, static function (Item $a, Item $b) {
-            return $a->getDate() <=> $b->getDate();
-        });
+        usort($items, static fn(Item $a, Item $b) => $b->getDate() <=> $a->getDate());
 
         return $items;
     }
 }
+
