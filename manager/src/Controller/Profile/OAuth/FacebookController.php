@@ -18,14 +18,14 @@ final class FacebookController extends AbstractController
     public function connect(ClientRegistry $clientRegistry): Response
     {
         return $clientRegistry
-            ->getClient('facebook_main') // 🔁 тут заміна
+            ->getClient('facebook_main')
             ->redirect(['email', 'public_profile']);
     }
 
     #[Route('/check', name: 'profile.oauth.facebook_check', methods: ['GET'])]
     public function check(ClientRegistry $clientRegistry, Handler $handler): Response
     {
-        $client = $clientRegistry->getClient('facebook_main'); // 🔁 тут також
+        $client = $clientRegistry->getClient('facebook_main');
 
         $command = new Command(
             $this->getUser()->getId(),

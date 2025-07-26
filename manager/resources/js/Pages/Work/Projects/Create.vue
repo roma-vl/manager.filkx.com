@@ -10,7 +10,6 @@
     project: Object,
   })
 
-  console.log(props.project, 'asd')
 
   const form = useForm({
     name: '',

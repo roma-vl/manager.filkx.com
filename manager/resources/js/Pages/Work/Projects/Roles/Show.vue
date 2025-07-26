@@ -5,7 +5,6 @@
   const { props } = usePage()
 
   const role = props.value.role
-  console.log(role, 'rolev')
 </script>
 
 <template>

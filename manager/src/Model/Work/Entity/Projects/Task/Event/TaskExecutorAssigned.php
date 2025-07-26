@@ -9,9 +9,9 @@ use App\Model\Work\Entity\Projects\Task\Id;
 
 class TaskExecutorAssigned
 {
-    public $actorId;
-    public $taskId;
-    public $executorId;
+    public MemberId $actorId;
+    public Id $taskId;
+    public MemberId $executorId;
 
     public function __construct(MemberId $actorId, Id $taskId, MemberId $executorId)
     {

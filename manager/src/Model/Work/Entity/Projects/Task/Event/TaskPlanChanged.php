@@ -9,9 +9,9 @@ use App\Model\Work\Entity\Projects\Task\Id;
 
 class TaskPlanChanged
 {
-    public $actorId;
-    public $taskId;
-    public $planDate;
+    public MemberId $actorId;
+    public Id $taskId;
+    public ?\DateTimeImmutable $planDate;
 
     public function __construct(MemberId $actorId, Id $taskId, ?\DateTimeImmutable $planDate)
     {

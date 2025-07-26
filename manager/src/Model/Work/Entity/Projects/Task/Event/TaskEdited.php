@@ -9,10 +9,10 @@ use App\Model\Work\Entity\Projects\Task\Id;
 
 class TaskEdited
 {
-    public $actorId;
-    public $taskId;
-    public $name;
-    public $content;
+    public MemberId $actorId;
+    public Id $taskId;
+    public string $name;
+    public ?string $content;
 
     public function __construct(MemberId $actorId, Id $taskId, string $name, ?string $content)
     {

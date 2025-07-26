@@ -9,9 +9,9 @@ use App\Model\Work\Entity\Projects\Task\Id;
 
 class TaskPriorityChanged
 {
-    public $actorId;
-    public $taskId;
-    public $priority;
+    public MemberId $actorId;
+    public Id $taskId;
+    public int $priority;
 
     public function __construct(MemberId $actorId, Id $taskId, int $priority)
     {

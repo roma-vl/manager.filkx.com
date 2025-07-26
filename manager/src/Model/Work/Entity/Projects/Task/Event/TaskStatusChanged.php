@@ -10,9 +10,9 @@ use App\Model\Work\Entity\Projects\Task\Status;
 
 class TaskStatusChanged
 {
-    public $actorId;
-    public $taskId;
-    public $status;
+    public MemberId $actorId;
+    public Id $taskId;
+    public Status $status;
 
     public function __construct(MemberId $actorId, Id $taskId, Status $status)
     {

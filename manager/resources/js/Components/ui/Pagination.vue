@@ -17,7 +17,6 @@
     },
   })
   const pagination = reactive({ ...props.pagination })
-  console.log(pagination, 'pagination')
   const paginationRange = computed(() => {
     const current = props.pagination.currentPage
     const last = props.pagination.lastPage

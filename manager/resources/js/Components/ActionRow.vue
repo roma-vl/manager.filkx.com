@@ -35,7 +35,6 @@ function taskType(type) {
     return map[type] ?? type;
 }
 
-console.log(props.action, 'ActionRow');
 </script>
 
 <template>

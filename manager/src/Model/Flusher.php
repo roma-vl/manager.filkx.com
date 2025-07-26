@@ -6,17 +6,21 @@ namespace App\Model;
 
 use Doctrine\ORM\EntityManagerInterface;
 
-class Flusher
+readonly class Flusher
 {
-    private EntityManagerInterface $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private EventDispatcher        $eventDispatcher)
     {
-        $this->entityManager = $entityManager;
     }
 
-    public function flush(): void
+    public function flush(AggregateRoot ...$roots): void
     {
         $this->entityManager->flush();
+
+        foreach ($roots as $root) {
+            $this->eventDispatcher->dispatch($root->releaseEvents());
+        }
     }
 }

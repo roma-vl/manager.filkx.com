@@ -11,10 +11,10 @@ use App\Model\Work\Entity\Projects\Task\Id;
 
 class TaskFileAdded
 {
-    public $actorId;
-    public $taskId;
-    public $fileId;
-    public $info;
+    public MemberId $actorId;
+    public Id $taskId;
+    public FileId $fileId;
+    public Info $info;
 
     public function __construct(MemberId $actorId, Id $taskId, FileId $fileId, Info $info)
     {

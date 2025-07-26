@@ -9,7 +9,6 @@
     user: Object,
     member: Object,
   })
-  console.log(props.member, 'asdasdasd')
   const user = computed(() => usePage().props.value.auth?.user)
   const me = props.user.id === user.value.id
   const allNetworks = ['facebook', 'google']

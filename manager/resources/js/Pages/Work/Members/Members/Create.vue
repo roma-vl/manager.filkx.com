@@ -10,7 +10,6 @@
     errors: Object,
     groups: Array,
   })
-  console.log(props.user, 'dfdsf')
   const form = useForm({
     id: props.user.id,
     group: '',

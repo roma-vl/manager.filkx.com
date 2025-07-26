@@ -32,7 +32,6 @@
     form.post('/users/create', form, {
       preserveScroll: true,
       onError: errs => {
-        console.log(errs, 'error')
 
         if (errs.errors) {
           flashError.value = errs.errors.join('; ')

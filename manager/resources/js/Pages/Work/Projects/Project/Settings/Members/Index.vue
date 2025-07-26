@@ -10,7 +10,6 @@
     memberships: Array,
   })
 
-  console.log(props.memberships.value, 'asdasd')
 
   function confirmAndRevoke(memberId) {
     if (!confirm('Are you sure?')) return

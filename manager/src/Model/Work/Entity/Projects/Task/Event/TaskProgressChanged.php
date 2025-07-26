@@ -9,9 +9,9 @@ use App\Model\Work\Entity\Projects\Task\Id;
 
 class TaskProgressChanged
 {
-    public $actorId;
-    public $taskId;
-    public $progress;
+    public MemberId $actorId;
+    public Id $taskId;
+    public int $progress;
 
     public function __construct(MemberId $actorId, Id $taskId, int $progress)
     {

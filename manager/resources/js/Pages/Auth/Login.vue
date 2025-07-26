@@ -14,11 +14,6 @@
     csrfToken: String,
   })
 
-  console.log(user.value)
-  console.log(page, 'page')
-  console.log(flash.value)
-  console.log(props.error)
-
   // Показуємо flash-повідомлення на 5 секунд
   watch(
     flash,

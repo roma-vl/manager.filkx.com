@@ -8,11 +8,10 @@
   const props = defineProps({
     task: Object,
     project: Object,
-    members: Array, // [{ id: string, name: string }]
-    selectedMembers: Array, // вибрані id мемберів (string[])
+    members: Array,
+    selectedMembers: Array,
   })
 
-  console.log(props.selectedMembers, 'asdad')
   const router = useRouter()
   const error = ref(null)
 
