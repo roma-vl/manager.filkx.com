@@ -26,6 +26,8 @@ use App\Model\Work\UseCase\Projects\Task\TakeAndStart;
 use App\Model\Work\UseCase\Projects\Task\Type as UseCaseType;
 use App\ReadModel\Work\Members\Member\MemberFetcher;
 use App\ReadModel\Work\Projects\Action\ActionFetcher;
+use App\ReadModel\Work\Projects\Action\Feed\Feed;
+use App\ReadModel\Work\Projects\Action\Feed\Item;
 use App\ReadModel\Work\Projects\Task\CommentFetcher;
 use App\ReadModel\Work\Projects\Task\Filter;
 use App\ReadModel\Work\Projects\Task\TaskFetcher;
@@ -735,11 +737,22 @@ class TasksController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
+        $feed = new Feed(
+            $actionFetcher->allForTask($task->getId()->getValue()),
+            $commentFetcher->allForTask($task->getId()->getValue()),
+            $this->processor
+        );
+
         return $inertia->render($request, 'Work/Projects/Tasks/Show', [
             'project' => [
                 'id' => $task->getProject()->getId()->getValue(),
                 'name' => $task->getProject()->getName(),
             ],
+            'feed' => array_map(fn(Item $item) => [
+                'date' => $item->getDate()->format(DATE_ATOM),
+                'action' => $item->getAction(),
+                'comment' => $item->getComment(),
+            ], $feed->getItems()),
             'task' => [
                 'id' => $task->getId()->getValue(),
                 'name' => $task->getName(),
@@ -795,15 +808,6 @@ class TasksController extends AbstractController
                 'parent' => $task['parent'] ?? null,
                 'type' => $task['type'],
             ], $tasks->childrenOf($task->getId()->getValue())),
-
-            'comments' => array_map(fn ($comment) => [
-                'id' => $comment->id,
-                'text' => $this->processor->process($comment->text),
-                'text_raw' => $comment->text,
-                'date' => $comment->date->format('Y-m-d H:i:s'),
-                'author_name' => $comment->author_name,
-                'author' => $comment->email,
-            ], $commentFetcher->allForTask($task->getId()->getValue())),
             'actions' => array_map(fn ($action) => [
                 'id' => $action['id'],
                 'task_id' => $action['task_id'],

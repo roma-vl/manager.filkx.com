@@ -56,15 +56,14 @@
 </script>
 
 <template>
-  <div class="mt-6">
+  <div class="">
     <!-- Header -->
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-xl font-semibold text-gray-800 dark:text-white">📎 Files</h2>
+    <div class="flex justify-between items-center">
+      <span></span>
       <Link
         :href="`/work/projects/tasks/${taskId}/files`"
         class="inline-flex items-center px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded shadow transition"
-      >
-        <span class="fa fa-plus mr-2" /> Add File
+      >Add File
       </Link>
     </div>
 
