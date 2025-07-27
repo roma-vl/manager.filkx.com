@@ -6,12 +6,11 @@ namespace App\Controller;
 
 use App\Infrastructure\Inertia\InertiaService;
 use App\Service\CentrifugoPublisher;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-class HomeController extends AbstractController
+class HomeController extends BaseController
 {
     #[Route('/', name: 'home')]
     public function index(
@@ -20,7 +19,15 @@ class HomeController extends AbstractController
         InertiaService $inertia
     ): Response
     {
-        $centrifugoPublisher->publish('chat', ['text' => 'Привіт з сервера!']);
+        $userId = 'user:' . $this->getUser()->getId();
+        $centrifugoPublisher->publish('chat:general', [
+            'text' => 'Привіт з сервера!'
+        ]);
+        // Надсилання повідомлення конкретному користувачу
+        $centrifugoPublisher->publish($userId, [
+            'text' => 'Приватне повідомлення для тебе!',
+        ]);
+
 
         return $inertia->render($request, 'Home', [
             'message' => 'Inertia без Laravel!',

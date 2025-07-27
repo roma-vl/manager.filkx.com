@@ -37,7 +37,7 @@ onMounted(async () => {
             console.log(`disconnected: ${ctx.code}, ${ctx.reason}`);
         }).connect();
 
-        const sub = centrifuge.value.newSubscription('chat');
+        const sub = centrifuge.value.newSubscription('chat:general');
 
         sub.on('publication', function (ctx) {
             console.log(ctx.data, 'ctx.data')
@@ -50,6 +50,17 @@ onMounted(async () => {
         }).on('unsubscribed', function (ctx) {
             console.log(`unsubscribed: ${ctx.code}, ${ctx.reason}`);
         }).subscribe();
+
+        const userId = page.props.value.auth.user.id
+
+        console.log(userId)
+        const subPrivate = centrifuge.value.newSubscription(`user:${userId}`);
+
+        subPrivate.on('publication', function (ctx) {
+            console.log(ctx.data, 'ctx.data11')
+            console.log('🔥 Приватне повідомлення:', ctx.data);
+        }).subscribe();
+
     } catch (error) {
         console.error('Centrifugo initialization error:', error);
     }

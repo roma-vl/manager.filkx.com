@@ -27,9 +27,10 @@ class CentrifugoTokenController extends AbstractController
 
         $payload = [
             'sub' => (string)$user->getId(),
-            'exp' => time() + 3600, // 1 година
-            'channels' => ['chat'] // Дозволені канали
+            'exp' => time() + 3600,
+            'subscribe_to_channels' => ['chat:general', 'user:' . $user->getId()]
         ];
+
 
         $token = JWT::encode($payload, $hmacSecretKey, 'HS256');
 
