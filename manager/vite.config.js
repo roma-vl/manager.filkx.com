@@ -4,6 +4,9 @@ import path from 'path'
 
 export default defineConfig({
     plugins: [vue()],
+    optimizeDeps: {
+        include: ['vue3-toastify'],
+    },
     root: 'resources',
     base: '/build/',
     server: {

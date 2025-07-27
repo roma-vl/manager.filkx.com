@@ -1,5 +1,5 @@
 <script setup>
-import {ref, computed, watch, onMounted} from 'vue'
+import {ref, computed, watch, onMounted, onBeforeUnmount} from 'vue'
 import { Link, usePage } from '@inertiajs/inertia-vue3'
 import SearchBar from '../Components/SearchBar.vue'
 import NavItem from '../Components/NavItem.vue'
@@ -12,59 +12,36 @@ const flash = computed(() => page.props.value.flash || {})
 const roles = page.props.value.auth.roles
 const canManageUsers = roles?.includes('ROLE_MANAGE_USERS')
 const showFlash = ref(false)
+import {useCentrifugo} from "@/services/useCentrifugo.js";
+import {toast} from "vue3-toastify";
 
-import axios from 'axios'
-import { Centrifuge } from 'centrifuge'
+const { init, subscribe, unsubscribe, disconnect } = useCentrifugo()
 
-const centrifuge = ref(null)
-
+const counterText = ref('')
+const privateMessages = ref([])
+const userId = page.props.value.auth.user.id
 onMounted(async () => {
-    try {
-        const { data } = await axios.get('/api/centrifugo/token');
-        if (!data.token) throw new Error('No token received');
-        const container = document.getElementById('counter');
-        centrifuge.value = new Centrifuge('ws://localhost:8083/connection/websocket', {
-            token: data.token,
-            debug: true,
-        });
+    await init()
 
-        // Обробники подій
-        centrifuge.value.on('connecting', function (ctx) {
-            console.log(`connecting: ${ctx.code}, ${ctx.reason}`);
-        }).on('connected', function (ctx) {
-            console.log(`connected over ${ctx.transport}`);
-        }).on('disconnected', function (ctx) {
-            console.log(`disconnected: ${ctx.code}, ${ctx.reason}`);
-        }).connect();
+    subscribe('chat:general', {
+        publication(ctx) {
+            toast.info(ctx.data.text)
+        },
+    })
 
-        const sub = centrifuge.value.newSubscription('chat:general');
+    subscribe(`user:${userId}`, {
+        publication(ctx) {
+            privateMessages.value.push(ctx.data)
+            toast.info(ctx.data.text)
+        },
+    })
+})
 
-        sub.on('publication', function (ctx) {
-            console.log(ctx.data, 'ctx.data')
-            container.innerHTML = ctx.data.text;
-            document.title = ctx.data.value;
-        }).on('subscribing', function (ctx) {
-            console.log(`subscribing: ${ctx.code}, ${ctx.reason}`);
-        }).on('subscribed', function (ctx) {
-            console.log('subscribed', ctx);
-        }).on('unsubscribed', function (ctx) {
-            console.log(`unsubscribed: ${ctx.code}, ${ctx.reason}`);
-        }).subscribe();
-
-        const userId = page.props.value.auth.user.id
-
-        console.log(userId)
-        const subPrivate = centrifuge.value.newSubscription(`user:${userId}`);
-
-        subPrivate.on('publication', function (ctx) {
-            console.log(ctx.data, 'ctx.data11')
-            console.log('🔥 Приватне повідомлення:', ctx.data);
-        }).subscribe();
-
-    } catch (error) {
-        console.error('Centrifugo initialization error:', error);
-    }
-});
+onBeforeUnmount(() => {
+    unsubscribe('chat:general')
+    unsubscribe(`user:${userId}`)
+    disconnect()
+})
 
   watch(
     flash,
@@ -251,7 +228,14 @@ onMounted(async () => {
             class="mx-auto p-3 rounded-lg bg-white text-gray-800 shadow-md shadow-gray-200/50 dark:bg-gradient-to-br dark:from-indigo-900 dark:via-gray-900 dark:to-[#0e0f11] dark:text-indigo-200 dark:shadow-indigo-900/40 transition-all duration-300 ease-in-out"
             role="main"
           >
-              <div id="counter">-</div> sasafdsaf
+              <div>
+                  <h1>Messages:</h1>
+                  <div id="counter">{{ counterText }}</div>
+                  <h2>Private Messages:</h2>
+                  <ul>
+                      <li v-for="(msg, idx) in privateMessages" :key="idx">{{ msg.text }}</li>
+                  </ul>
+              </div>
             <slot />
           </div>
         </div>
