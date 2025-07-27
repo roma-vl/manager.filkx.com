@@ -36,6 +36,7 @@
     "@inertiajs/inertia-vue3": "^0.6.0",
     "@vuepic/vue-datepicker": "^11.0.2",
     "axios": "^1.10.0",
+    "centrifuge": "^5.4.0",
     "highlight.js": "^11.11.1",
     "lucide-vue-next": "^0.525.0",
     "markdown-it": "^14.1.0",

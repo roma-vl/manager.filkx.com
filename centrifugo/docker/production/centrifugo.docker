@@ -1,0 +1,3 @@
+FROM centrifugo/centrifugo:latest
+
+COPY ./docker/production/centrifugo/config.json /centrifugo/config.json
