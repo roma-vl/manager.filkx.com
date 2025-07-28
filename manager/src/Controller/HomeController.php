@@ -23,7 +23,7 @@ class HomeController extends BaseController
         $centrifugoPublisher->publish('chat:general', [
             'text' => 'Привіт з сервера!'
         ]);
-        // Надсилання повідомлення конкретному користувачу
+
         $centrifugoPublisher->publish($userId, [
             'text' => 'Приватне повідомлення для тебе!',
         ]);

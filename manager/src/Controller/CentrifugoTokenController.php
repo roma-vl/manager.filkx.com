@@ -36,7 +36,7 @@ class CentrifugoTokenController extends AbstractController
 
         return $this->json([
             'token' => $token,
-            'user' => $user->getUserIdentifier() // Для дебагу
+            'user' => $user->getUserIdentifier()
         ]);
     }
 }
