@@ -14,7 +14,6 @@
     form.post(`/reset/${props.token}`)
   }
 
-  console.log(page, 'page')
 </script>
 
 <template>

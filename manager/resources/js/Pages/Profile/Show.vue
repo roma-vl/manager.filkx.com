@@ -2,7 +2,7 @@
   import { computed, reactive, ref, watchEffect } from 'vue'
   import { useForm, usePage } from '@inertiajs/inertia-vue3'
   import AppLayout from '../../Layouts/AppLayout.vue'
-  import { roleBadgeClass, statusBadgeClass } from '../../helpers.js'
+  import {roleBadgeClass, statusBadgeClass} from "@/Helpers/helpers.js";
 
   const page = usePage()
   const user = computed(() => page.props.value.auth?.user)
@@ -46,7 +46,6 @@
 
   function saveField(field) {
     if (field === 'name') {
-      console.log(form, 'form')
       form.post('/profile/name', {
         preserveScroll: true,
         onSuccess: () => {

@@ -8,7 +8,6 @@
 
   const user = computed(() => page.props.value.auth?.user)
 
-  console.log(user.value)
 </script>
 
 <template>

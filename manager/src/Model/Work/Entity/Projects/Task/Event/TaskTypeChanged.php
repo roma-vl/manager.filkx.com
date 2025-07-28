@@ -10,9 +10,9 @@ use App\Model\Work\Entity\Projects\Task\Type;
 
 class TaskTypeChanged
 {
-    public $actorId;
-    public $taskId;
-    public $type;
+    public MemberId $actorId;
+    public Id $taskId;
+    public Type $type;
 
     public function __construct(MemberId $actorId, Id $taskId, Type $type)
     {

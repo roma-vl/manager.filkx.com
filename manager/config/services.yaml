@@ -16,6 +16,8 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/'
+        exclude: '../src/{DependencyInjection,Entity,Tests,Kernel.php,Annotation,Command}'
+#        tags: [ 'messenger.message_handler' ]
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     App\Model\User\Service\ResetTokenizer:
@@ -39,6 +41,15 @@ services:
         arguments:
             $storage: '@League\Flysystem\FilesystemOperator $defaultStorage'
             $baseUrl: '%env(STORAGE_BASE_URL)%'
+#
+#    phpcent\Client:
+#        factory: [ 'App\Service\PhpCentFactory', 'create' ]
+
+    App\Service\CentrifugoPublisher:
+        arguments:
+            $client: '@http_client'
+            $centrifugoApiKey: '%env(CENTRIFUGO_API_KEY)%'
+
 
 framework:
     router:

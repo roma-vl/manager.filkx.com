@@ -1,0 +1,42 @@
+{
+    "client": {
+        "token": {
+            "hmac_secret_key": "my_secret"
+        },
+        "allowed_origins": ["*"]
+    },
+    "http_api": {
+        "key": "my_api_key"
+    },
+    "admin": {
+        "password": "password",
+        "secret": "secret",
+        "enabled": true
+    },
+    "channel": {
+        "namespaces": [
+            {
+                "name": "user",
+                "allow_subscribe_for_client": true
+            },
+            {
+                "name": "chat",
+                "allow_subscribe_for_client": true
+            }
+        ]
+    },
+    "channel_options": {
+        "user:*": {
+            "presence": true,
+            "join_leave": true,
+            "publish": true
+        },
+        "chat:general": {
+            "presence": false,
+            "join_leave": false,
+            "publish": true,
+            "allow_subscribe_for_client": true
+        }
+    }
+
+}

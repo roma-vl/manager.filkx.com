@@ -9,7 +9,6 @@
     departments: Object,
   })
 
-  console.log(props, 'props.membership')
 
   const form = useForm({
     departments: props.membership?.departments ?? [],

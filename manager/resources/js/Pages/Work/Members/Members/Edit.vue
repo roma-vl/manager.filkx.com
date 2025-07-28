@@ -9,7 +9,6 @@
     errors: Object,
     groups: Array,
   })
-  console.log(props.member, 'sas')
 
   const form = useForm({
     id: props.member.id,

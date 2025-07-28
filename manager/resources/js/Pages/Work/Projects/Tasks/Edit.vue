@@ -11,8 +11,6 @@
     priorities: Array,
   })
 
-  console.log(props.task)
-
   const router = useRouter()
   const error = ref(null)
 

@@ -1,17 +1,47 @@
 <script setup>
-  import { ref, computed, watch, onMounted } from 'vue'
-  import { Link, usePage } from '@inertiajs/inertia-vue3'
-  import SearchBar from '../Components/SearchBar.vue'
-  import NavItem from '../Components/NavItem.vue'
-  import UserDropdown2 from '../Components/UserDropdown2.vue'
-  import DarkModeToggle from '../Components/DarkModeToggle.vue'
+import {ref, computed, watch, onMounted, onBeforeUnmount} from 'vue'
+import { Link, usePage } from '@inertiajs/inertia-vue3'
+import SearchBar from '../Components/SearchBar.vue'
+import NavItem from '../Components/NavItem.vue'
+import UserDropdown2 from '../Components/UserDropdown2.vue'
+import DarkModeToggle from '../Components/DarkModeToggle.vue'
 
-  const page = usePage()
-  const sidebarOpen = ref(window.innerWidth >= 1024)
-  const flash = computed(() => page.props.value.flash || {})
-  const roles = page.props.value.auth.roles
-  const canManageUsers = roles?.includes('ROLE_MANAGE_USERS')
-  const showFlash = ref(false)
+const page = usePage()
+const sidebarOpen = ref(window.innerWidth >= 1024)
+const flash = computed(() => page.props.value.flash || {})
+const roles = page.props.value.auth.roles
+const canManageUsers = roles?.includes('ROLE_MANAGE_USERS')
+const showFlash = ref(false)
+import {useCentrifugo} from "@/services/useCentrifugo.js";
+import {toast} from "vue3-toastify";
+
+const { init, subscribe, unsubscribe, disconnect } = useCentrifugo()
+
+const counterText = ref('')
+const privateMessages = ref([])
+const userId = page.props.value.auth.user.id
+onMounted(async () => {
+    await init()
+
+    subscribe('chat:general', {
+        publication(ctx) {
+            toast.info(ctx.data.text)
+        },
+    })
+
+    subscribe(`user:${userId}`, {
+        publication(ctx) {
+            privateMessages.value.push(ctx.data)
+            toast.info(ctx.data.text)
+        },
+    })
+})
+
+onBeforeUnmount(() => {
+    unsubscribe('chat:general')
+    unsubscribe(`user:${userId}`)
+    disconnect()
+})
 
   watch(
     flash,
@@ -198,6 +228,14 @@
             class="mx-auto p-3 rounded-lg bg-white text-gray-800 shadow-md shadow-gray-200/50 dark:bg-gradient-to-br dark:from-indigo-900 dark:via-gray-900 dark:to-[#0e0f11] dark:text-indigo-200 dark:shadow-indigo-900/40 transition-all duration-300 ease-in-out"
             role="main"
           >
+              <div>
+                  <h1>Messages:</h1>
+                  <div id="counter">{{ counterText }}</div>
+                  <h2>Private Messages:</h2>
+                  <ul>
+                      <li v-for="(msg, idx) in privateMessages" :key="idx">{{ msg.text }}</li>
+                  </ul>
+              </div>
             <slot />
           </div>
         </div>

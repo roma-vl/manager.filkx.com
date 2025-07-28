@@ -27,7 +27,7 @@
     direction: String,
     pagination: Object,
   })
-  console.log(11)
+
   const text = ref(props.filters.text || '')
   const type = ref(props.filters.type || '')
   const status = ref(props.filters.status || '')

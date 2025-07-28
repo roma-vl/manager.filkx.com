@@ -28,7 +28,7 @@
     direction: String,
     pagination: Object,
   })
-  console.log(props, '111111')
+
   const text = ref(props.filters.text || '')
   const type = ref(props.filters.type || '')
   const status = ref(props.filters.status || '')

@@ -8,8 +8,6 @@
     errors: Object,
   })
 
-  console.log(props.role, 'sasdad')
-
   const breadcrumb = [
     { title: 'Home', url: '/' },
     { title: 'Work', url: '/work' },

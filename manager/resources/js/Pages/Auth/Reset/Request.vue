@@ -13,7 +13,6 @@
   const props = defineProps({
     errors: Object,
   })
-  console.log(props.errors)
 </script>
 
 <template>

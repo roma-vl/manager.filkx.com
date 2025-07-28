@@ -13,7 +13,6 @@
   })
 
   const selectedStatus = ref(props.currentStatus)
-  console.log(selectedStatus.value)
 
   const dropdownOpen = ref(false)
   const isSubmitting = ref(false)

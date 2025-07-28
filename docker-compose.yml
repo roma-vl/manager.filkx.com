@@ -81,16 +81,22 @@ services:
       dockerfile: php-cli.docker
     depends_on:
       - manager-postgres
+      - manager-redis
+      - storage
+      - manager-mailpit
     command: php bin/console messenger:consume async
     restart: unless-stopped
     environment:
       MAILER_DSN: smtp://manager-mailpit:1025
     volumes:
       - ./manager:/app
+      - composer:/root/.composer/cache
     networks:
       - manager
   manager-redis:
     image: redis:latest
+    ports:
+      - '${FORWARD_REDIS_PORT:-6379}:6379'
     restart: always
     volumes:
       - manager-redis:/data
@@ -118,6 +124,22 @@ services:
       - manager
     depends_on:
       - manager-php-fpm
+  centrifugo:
+    container_name: centrifugo
+    image: centrifugo/centrifugo:v6
+    restart: always
+    networks:
+      - manager
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - ./centrifugo/docker/development/centrifugo/config.json:/centrifugo/config.json
+    ports:
+      - "8083:8000"
+    command: centrifugo -c config.json
+#    command: centrifugo  --admin_insecure
 
 volumes:
   composer:
