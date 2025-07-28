@@ -3,3 +3,18 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+
+# config/routes.yaml
+api_login_check:
+    path: /api/login_check
+
+api:
+    resource: ../src/Controller/Api/
+    prefix: /api
+    name_prefix: api.
+    trailing_slash_on_root: true
+    type: attribute
+    defaults:
+        _format: json
+
