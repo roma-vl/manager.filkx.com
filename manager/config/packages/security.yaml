@@ -12,6 +12,7 @@ security:
             id: App\Security\UserProvider
 #    hide_user_not_found: false
     firewalls:
+
         login:
             pattern: ^/api/login_check$
             stateless: true
@@ -84,6 +85,7 @@ security:
     access_control:
         - { path: ^/api/login$, roles: PUBLIC_ACCESS }
         - { path: ^/api/login_check$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/doc, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/signup, roles: PUBLIC_ACCESS }

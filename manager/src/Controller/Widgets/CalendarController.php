@@ -17,7 +17,7 @@ class CalendarController extends BaseController
     {
     }
 
-    #[Route('/api/widgets/work/projects/calendar', name: 'api.widgets.work.projects.calendar')]
+    #[Route('/api/widgets/work/projects/calendar', name: 'api.widgets.work.projects.calendar', methods: ['GET'])]
     public function widget(Request $request): JsonResponse
     {
         if (!$this->isGranted('ROLE_WORK_MANAGE_PROJECTS')) {
