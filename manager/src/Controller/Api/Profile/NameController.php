@@ -34,11 +34,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
             response: 200,
             description: 'Name updated successfully'
         ),
-        new OA\Response(
-            response: 400,
-            description: 'Validation errors',
-            content: new OA\JsonContent(ref: '#/components/schemas/ErrorModel')
-        )
     ]
 )]
 #[Route('/api/profile/name', name: 'api.profile.name', methods: ['PUT'])]

@@ -46,17 +46,6 @@ final class SignUpController extends AbstractController
             ),
         ]
     )]
-    #[OA\Schema(
-        schema: 'ViolationList',
-        type: 'array',
-        items: new OA\Items(
-            properties: [
-                new OA\Property(property: 'propertyPath', type: 'string'),
-                new OA\Property(property: 'message', type: 'string'),
-            ],
-            type: 'object'
-        )
-    )]
 
     #[Route('/auth/signup', name: 'api.auth.signup', methods: ['POST'])]
     public function __invoke(Request $request, SignUp\Request\Handler $handler): JsonResponse

@@ -70,10 +70,6 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
                             type: 'object'
                         )
                     ),
-                    new OA\Property(
-                        property: 'pagination',
-                        ref: '#/components/schemas/Pagination'
-                    ),
                 ],
                 type: 'object'
             )
