@@ -12,15 +12,31 @@ security:
             id: App\Security\UserProvider
 #    hide_user_not_found: false
     firewalls:
+
+        login:
+            pattern: ^/api/login_check$
+            stateless: true
+            json_login:
+                check_path: /api/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+                username_path: email
+                password_path: password
+
+
+        api:
+            pattern: ^/api
+            stateless: true
+            jwt: ~
+
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-
         main:
             lazy: true
             pattern: ^/
             provider: app_user_provider
-#            user_checker: security.user_checker
+            #            user_checker: security.user_checker
             user_checker: App\Security\UserChecker
             custom_authenticator: App\Security\LoginFormAuthenticator
             custom_authenticators:
@@ -35,7 +51,7 @@ security:
                 enable_csrf: false
                 csrf_token_id: authenticate
                 csrf_parameter: _token
-#                csrf_token_manager: security.csrf.token_manager
+            #                csrf_token_manager: security.csrf.token_manager
             logout:
                 path: app_logout
                 target: app_login
@@ -44,8 +60,6 @@ security:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 week
                 path: /
-
-
             # where to redirect after logout
             # target: app_any_route
 
@@ -69,6 +83,10 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/api/login$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/login_check$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/doc, roles: PUBLIC_ACCESS }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/signup, roles: PUBLIC_ACCESS }
         - { path: ^/oauth, roles: PUBLIC_ACCESS }
