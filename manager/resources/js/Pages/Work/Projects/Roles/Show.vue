@@ -1,6 +1,7 @@
 <script setup>
   import AppLayout from '@/Layouts/AppLayout.vue'
   import { Link, usePage } from '@inertiajs/inertia-vue3'
+  import Breadcrumbs from "@/Components/ui/Breadcrumbs.vue";
 
   const { props } = usePage()
 
@@ -9,23 +10,17 @@
 
 <template>
   <AppLayout>
-    <!-- Хлібні крихти -->
-    <nav class="text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
-      <ol class="flex items-center space-x-2">
-        <li><Link href="/" class="hover:text-primary">Home</Link><span>/</span></li>
-        <li><Link href="/work" class="hover:text-primary">Work</Link><span>/</span></li>
-        <li>
-          <Link href="/work/projects" class="hover:text-primary">Projects</Link><span>/</span>
-        </li>
-        <li>
-          <Link href="/work/projects/roles" class="hover:text-primary">Roles</Link><span>/</span>
-        </li>
-        <li class="text-foreground font-semibold">{{ role.name }}</li>
-      </ol>
-    </nav>
+      <Breadcrumbs
+          :items="[
+        { label: 'Home', href: '/' },
+        { label: 'Work', href: '/work' },
+        { label: 'Projects', href: '/work/projects' },
+        { label: 'Roles', href: '/work/projects/roles' },
+        { label: role.name },
+      ]"
+      />
 
-    <!-- Дії -->
-    <div class="flex gap-3 mb-4">
+    <div class="flex gap-2 mb-4 my-6 justify-end">
       <Link :href="`/work/projects/roles/${role.id}/edit`" class="btn btn-primary"> Edit </Link>
       <form
         :action="`/work/projects/roles/${role.id}/delete`"
@@ -38,7 +33,6 @@
       <Link :href="`/work/projects/roles/${role.id}/copy`" class="btn btn-primary"> Copy </Link>
     </div>
 
-    <!-- Інформація про роль -->
     <div class="box bg-white dark:bg-gray-900 rounded-xl shadow p-6">
       <table class="table-auto w-full border-collapse border border-gray-200 dark:border-gray-700">
         <tbody>

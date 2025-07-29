@@ -2,6 +2,11 @@
   import AppLayout from '@/Layouts/AppLayout.vue'
   // import Breadcrumb from '@/Components/Breadcrumb.vue'
   import { useForm } from '@inertiajs/inertia-vue3'
+  import Breadcrumbs from "@/Components/ui/Breadcrumbs.vue";
+  import SecondaryButton from "@/Components/SecondaryButton.vue";
+  import InputError from "@/Components/InputError.vue";
+  import InputLabel from "@/Components/InputLabel.vue";
+  import TextInput from "@/Components/TextInput.vue";
 
   const props = defineProps({
     permissions: Array,
@@ -32,28 +37,21 @@
 
 <template>
   <AppLayout>
-    <ol class="breadcrumb mb-4">
-      <li class="breadcrumb-item"><a href="/home">Home</a></li>
-      <li class="breadcrumb-item"><a href="/work">Work</a></li>
-      <li class="breadcrumb-item"><a href="/work/projects">Projects</a></li>
-      <li class="breadcrumb-item"><a href="/work/projects/roles">Roles</a></li>
-      <li class="breadcrumb-item active">Create</li>
-    </ol>
+      <Breadcrumbs
+          :items="[
+        { label: 'Home', href: '/' },
+        { label: 'Work', href: '/work' },
+        { label: 'Projects', href: '/work/projects' },
+        { label: 'Roles', href: '/work/projects/roles' },
+        { label: 'Create' },
+      ]"
+      />
 
-    <form @submit.prevent="submit">
-      <div class="card p-6">
-        <div class="mb-4">
-          <label for="name" class="block font-semibold mb-1">Назва ролі</label>
-          <input
-            v-model="form.name"
-            id="name"
-            type="text"
-            class="input"
-            :class="{ 'border-red-500': form.errors.name }"
-          />
-          <p v-if="form.errors.name" class="text-red-500 text-sm mt-1">
-            {{ form.errors.name }}
-          </p>
+    <form @submit.prevent="submit" class="max-w-3xl mx-auto space-y-6  p-6 ">
+        <div>
+            <InputLabel for="name" value="Назва ролі" />
+            <TextInput id="name" v-model="form.name" class="mt-1 block w-full" autofocus />
+            <InputError :message="form.errors.name" class="mt-2" />
         </div>
 
         <div class="mb-4">
@@ -78,23 +76,16 @@
           </p>
         </div>
 
-        <button type="submit" class="btn btn-primary">Створити</button>
+      <div class="flex justify-end pt-4">
+          <SecondaryButton :disabled="form.processing" type="submit">
+              <span v-if="form.processing" class="animate-pulse">Creating...</span>
+              <span v-else>Create</span>
+          </SecondaryButton>
       </div>
+
     </form>
   </AppLayout>
 </template>
 
 <style scoped>
-  .input {
-    @apply border border-gray-300 rounded px-3 py-2 w-full;
-  }
-  .checkbox {
-    @apply h-4 w-4 text-indigo-600;
-  }
-  .btn {
-    @apply bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700;
-  }
-  .card {
-    @apply bg-white rounded shadow;
-  }
 </style>
