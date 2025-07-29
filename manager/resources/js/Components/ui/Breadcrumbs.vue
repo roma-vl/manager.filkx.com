@@ -1,33 +1,46 @@
 <script setup>
-  const props = defineProps({
+const props = defineProps({
     items: {
-      type: Array,
-      required: true,
-      default: () => [],
+        type: Array,
+        required: true,
+        default: () => [],
     },
-  })
+})
 </script>
 
 <template>
-  <nav aria-label="Breadcrumb" class="mb-6">
-    <ol class="flex flex-wrap gap-x-2 text-white/80 text-sm" role="list">
-      <li v-for="(item, index) in items" :key="index">
-        <template v-if="index < items.length - 1">
-          <a :href="item.href" class="hover:text-indigo-300 transition-colors">{{ item.label }}</a>
-          /
-        </template>
-        <template v-else>
-          <span class="text-white font-semibold" aria-current="page">{{ item.label }}</span>
-        </template>
-      </li>
-    </ol>
-  </nav>
+    <nav class="mb-6" aria-label="Breadcrumb">
+        <ol class="flex flex-wrap items-center space-x-2 text-sm
+               text-gray-600 dark:text-gray-400">
+            <li v-for="(item, index) in items" :key="index" class="flex items-center gap-2">
+                <template v-if="index < items.length - 1">
+                    <a
+                        :href="item.href"
+                        class="hover:text-indigo-600 dark:hover:text-indigo-400
+                   transition-colors font-medium"
+                    >
+                        {{ item.label }}
+                    </a>
+                    <svg
+                        class="w-4 h-4 text-gray-400 dark:text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                    >
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </template>
+                <template v-else>
+          <span
+              class="font-semibold text-gray-900 dark:text-white"
+              aria-current="page"
+          >
+            {{ item.label }}
+          </span>
+                </template>
+            </li>
+        </ol>
+    </nav>
 </template>
-
-<style scoped>
-  nav ol {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-</style>
