@@ -21,7 +21,7 @@ const props = defineProps({
             :items="[
           { label: 'Home', href: '/' },
           { label: 'Work', href: '/work' },
-             { label: 'Projects', href: '/work/projects'  },
+          { label: 'Projects', href: '/work/projects' },
           { label: 'Actions' },
         ]"
         />
