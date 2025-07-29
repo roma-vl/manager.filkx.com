@@ -14,7 +14,6 @@
 
 <template>
   <AppLayout>
-    <!-- Хлібні крихти -->
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },
@@ -24,11 +23,9 @@
       ]"
     />
 
-    <!-- Таби проєкту -->
     <RolesTabs />
 
-    <!-- Кнопка додавання -->
-    <div class="mb-4">
+    <div class="flex gap-2 mb-4 my-6 justify-end">
       <Link
         :href="`/work/projects/roles/create`"
         class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-xl shadow"

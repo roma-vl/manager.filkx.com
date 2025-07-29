@@ -12,23 +12,6 @@ security:
             id: App\Security\UserProvider
 #    hide_user_not_found: false
     firewalls:
-
-        login:
-            pattern: ^/api/login_check$
-            stateless: true
-            json_login:
-                check_path: /api/login_check
-                success_handler: lexik_jwt_authentication.handler.authentication_success
-                failure_handler: lexik_jwt_authentication.handler.authentication_failure
-                username_path: email
-                password_path: password
-
-
-        api:
-            pattern: ^/api
-            stateless: true
-            jwt: ~
-
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
@@ -60,6 +43,23 @@ security:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 week
                 path: /
+        login:
+            pattern: ^/api/login_check$
+            stateless: true
+            json_login:
+                check_path: /api/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+                username_path: email
+                password_path: password
+
+
+        api:
+            pattern: ^/api
+            stateless: true
+            jwt: ~
+
+
             # where to redirect after logout
             # target: app_any_route
 

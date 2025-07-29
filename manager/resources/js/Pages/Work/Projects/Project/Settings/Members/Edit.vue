@@ -1,6 +1,8 @@
 <script setup>
   import { useForm } from '@inertiajs/inertia-vue3'
   import AppLayout from '@/Layouts/AppLayout.vue'
+  import SecondaryButton from "@/Components/SecondaryButton.vue";
+  import Breadcrumbs from "@/Components/ui/Breadcrumbs.vue";
 
   const props = defineProps({
     project: Object,
@@ -9,6 +11,7 @@
     departments: Object,
   })
 
+  console.log(props.membership);
 
   const form = useForm({
     departments: props.membership?.departments ?? [],
@@ -28,11 +31,24 @@
       <h1>Edit Member — {{ project.name }}</h1>
     </template>
 
-    <form class="card" @submit.prevent="submit">
+      <Breadcrumbs
+          :items="[
+        { label: 'Home', href: '/' },
+        { label: 'Work', href: '/work' },
+        { label: 'Projects', href: '/work/projects' },
+        { label: project.name, href: `/work/projects/${project.id}` },
+        { label: 'Settings', href: `/work/projects/${project.id}/settings` },
+        { label: 'Members', href: `/work/projects/${project.id}/settings/members` },
+        { label: membership.name, href: `/work/projects/${project.id}/settings/members/${membership.id}` },
+        { label: 'Edit' },
+      ]"
+      />
+
+    <form class="max-w-3xl mx-auto space-y-6  p-6 " @submit.prevent="submit">
       <div class="card-body space-y-6">
         <!-- Departments Checkboxes -->
         <div>
-          <label class="block font-medium text-white/80">Departments</label>
+          <label class="block mb-1 text-sm font-medium text-indigo-300">Departments</label>
           <div class="flex flex-col gap-1">
             <label
               v-for="(name, id) in departments"
@@ -50,7 +66,7 @@
 
         <!-- Roles Checkboxes -->
         <div>
-          <label class="block font-medium text-white/80">Roles</label>
+          <label class="block mb-1 text-sm font-medium text-indigo-300">Roles</label>
           <div class="flex flex-col gap-1">
             <label
               v-for="(name, id) in roles"
@@ -64,16 +80,12 @@
           <div class="text-red-500 text-sm" v-if="form.errors.roles">{{ form.errors.roles }}</div>
         </div>
 
-        <!-- Submit Button -->
-        <div>
-          <button
-            type="submit"
-            class="px-4 py-2 bg-indigo-800 hover:bg-indigo-700 text-white rounded transition-all shadow-md"
-            :disabled="form.processing"
-          >
-            Save
-          </button>
-        </div>
+          <div class="flex justify-end pt-4">
+              <SecondaryButton :disabled="form.processing" type="submit">
+                  <span v-if="form.processing" class="animate-pulse">Saving...</span>
+                  <span v-else>Save</span>
+              </SecondaryButton>
+          </div>
 
         <div v-if="form.errors.message" class="text-red-500 text-sm font-medium">
           {{ form.errors.message }}
@@ -84,17 +96,5 @@
 </template>
 
 <style scoped>
-  .card {
-    @apply dark:bg-[#0e0f11] bg-gradient-to-br from-gray-900 to-indigo-900 text-indigo-200 rounded p-4 max-w-4xl mx-auto shadow-md transition-all;
-    scrollbar-width: thin;
-    scrollbar-color: #4f46e5 #1f2937;
-  }
 
-  .card-body {
-    @apply space-y-4;
-  }
-
-  input[type='checkbox'] {
-    accent-color: #4f46e5;
-  }
 </style>

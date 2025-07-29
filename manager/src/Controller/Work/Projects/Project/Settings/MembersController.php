@@ -164,6 +164,7 @@ class MembersController extends AbstractController
                 'departments' => $departmentFetcher->listOfProject($project->getId()->getValue()),
                 'membership' => [
                     'id' => $membership->getMember()->getId()->getValue(),
+                    'name' => $membership->getMember()->getName()->getFull(),
                     'departments' => array_map(
                         fn ($d) => $d->getId()->getValue(),
                         $membership->getDepartments()

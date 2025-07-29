@@ -26,8 +26,9 @@
     sort: String,
     direction: String,
     pagination: Object,
+      meta: Object,
   })
-
+  console.log('asd')
   const text = ref(props.filters.text || '')
   const type = ref(props.filters.type || '')
   const status = ref(props.filters.status || '')
@@ -125,9 +126,9 @@
     <RolesTabs />
     <TaskFilters
       :filters="props.filters"
-      :types="props.type"
-      :statuses="props.statuses"
-      :priorities="props.priority"
+      :types="props.meta.types"
+      :statuses="props.meta.statuses"
+      :priorities="props.meta.priorities"
       :members="props.members"
       :project="props.project"
       @submit="handleSubmit"

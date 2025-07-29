@@ -1,100 +1,120 @@
 <script setup>
-  import { computed } from 'vue'
-  import { useForm } from '@inertiajs/inertia-vue3'
-  import AppLayout from '@/Layouts/AppLayout.vue'
+import { computed } from 'vue'
+import { useForm } from '@inertiajs/inertia-vue3'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
+import Breadcrumbs from "@/Components/ui/Breadcrumbs.vue";
 
-  const props = defineProps({
+const props = defineProps({
     project: Object,
     roles: Object,
     departments: Object,
     members: Object,
-  })
+})
 
-  const form = useForm({
+const form = useForm({
     member: '',
     departments: [],
     roles: [],
-  })
+})
 
-  const groupedMembers = computed(() => {
+const groupedMembers = computed(() => {
     const groups = {}
     for (const member of props.members) {
-      if (!groups[member.group]) groups[member.group] = []
-      groups[member.group].push(member)
+        if (!groups[member.group]) groups[member.group] = []
+        groups[member.group].push(member)
     }
     return Object.entries(groups).map(([label, members]) => ({ label, members }))
-  })
+})
 
-  const submit = () => {
+const submit = () => {
     form.post(`/work/projects/${props.project.id}/settings/members/assign`, {
-      preserveScroll: true,
+        preserveScroll: true,
     })
-  }
+}
 </script>
 
 <template>
-  <AppLayout>
-    <template #header>
-      <h1>Assign Member — {{ project.name }}</h1>
-    </template>
+    <AppLayout>
+        <template #header>
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Assign Member — {{ project.name }}</h1>
+        </template>
+        <Breadcrumbs
+            :items="[
+        { label: 'Home', href: '/' },
+        { label: 'Work', href: '/work' },
+        { label: 'Projects', href: '/work/projects' },
+        { label: project.name, href: `/work/projects/${project.id}` },
+        { label: 'Settings', href: `/work/projects/${project.id}/settings` },
+        { label: 'Members', href: `/work/projects/${project.id}/settings/members` },
+        { label: 'Assign' },
+      ]"
+        />
 
-    <form class="card" @submit.prevent="submit">
-      <div class="card-body space-y-6">
-        <!-- Member Select -->
-        <div>
-          <label class="block font-medium">Member</label>
-          <select v-model="form.member" class="form-select w-full">
-            <option value="">Select member...</option>
-            <template v-for="(group, index) in groupedMembers" :key="index">
-              <optgroup :label="group.label">
-                <option v-for="member in group.members" :key="member.id" :value="member.id">
-                  {{ member.name }}
-                </option>
-              </optgroup>
-            </template>
-          </select>
-          <div class="text-red-600 text-sm" v-if="form.errors.member">{{ form.errors.member }}</div>
-        </div>
 
-        <!-- Departments Checkboxes -->
-        <div>
-          <label class="block font-medium">Departments</label>
-          <div class="flex flex-col gap-1">
-            <label
-              v-for="(name, id) in departments"
-              :key="id"
-              class="inline-flex items-center gap-2"
-            >
-              <input type="checkbox" :value="id" v-model="form.departments" />
-              {{ name }}
-            </label>
-          </div>
-          <div class="text-red-600 text-sm" v-if="form.errors.departments">
-            {{ form.errors.departments }}
-          </div>
-        </div>
+        <form @submit.prevent="submit" class="max-w-3xl mx-auto space-y-6  p-6 ">
+            <!-- Member -->
+            <div>
+                <label class="block mb-1 text-sm font-medium text-indigo-300">Member</label>
+                <select
+                    v-model="form.member"
+                    class="p-2 w-full rounded-md border border-indigo-800 bg-gray-950 text-sm text-indigo-100 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors"
+                >
+                    <option class="bg-gray-950 text-indigo-100" value="">Select member...</option>
+                    <template v-for="(group, index) in groupedMembers" :key="index">
+                        <optgroup :label="group.label">
+                            <option class="bg-gray-950 text-indigo-100" v-for="member in group.members" :key="member.id" :value="member.id ">
+                                {{ member.name }}
+                            </option>
+                        </optgroup>
+                    </template>
+                </select>
+                <p v-if="form.errors.member" class="text-red-500 text-sm mt-1">{{ form.errors.member }}</p>
+            </div>
 
-        <!-- Roles Checkboxes -->
-        <div>
-          <label class="block font-medium">Roles</label>
-          <div class="flex flex-col gap-1">
-            <label v-for="(name, id) in roles" :key="id" class="inline-flex items-center gap-2">
-              <input type="checkbox" :value="id" v-model="form.roles" />
-              {{ name }}
-            </label>
-          </div>
-          <div class="text-red-600 text-sm" v-if="form.errors.roles">{{ form.errors.roles }}</div>
-        </div>
+            <!-- Departments -->
+            <div>
+                <label class="block mb-1 text-sm font-medium text-indigo-300">Departments</label>
+                <div class="space-y-2">
+                    <label
+                        v-for="(name, id) in departments"
+                        :key="id"
+                        class="flex items-center gap-2 text-gray-800 dark:text-gray-100"
+                    >
+                        <input type="checkbox" :value="id" v-model="form.departments" class="rounded text-indigo-600 dark:bg-gray-700" />
+                        {{ name }}
+                    </label>
+                </div>
+                <p v-if="form.errors.departments" class="text-red-500 text-sm mt-1">{{ form.errors.departments }}</p>
+            </div>
 
-        <!-- Submit Button -->
-        <div>
-          <button type="submit" class="btn btn-primary" :disabled="form.processing">Assign</button>
-        </div>
+            <!-- Roles -->
+            <div>
+                <label class="block mb-1 text-sm font-medium text-indigo-300">Roles</label>
+                <div class="space-y-2">
+                    <label
+                        v-for="(name, id) in roles"
+                        :key="id"
+                        class="flex items-center gap-2 text-gray-800 dark:text-gray-100"
+                    >
+                        <input type="checkbox" :value="id" v-model="form.roles" class="rounded text-indigo-600 dark:bg-gray-700" />
+                        {{ name }}
+                    </label>
+                </div>
+                <p v-if="form.errors.roles" class="text-red-500 text-sm mt-1">{{ form.errors.roles }}</p>
+            </div>
 
-        <div v-if="form.errors.message" class="text-red-700 font-medium">
-          {{ form.errors.message }}
-        </div>
-      </div>
-    </form>
-  </AppLayout>
+            <!-- Submit Button -->
+            <div class="flex justify-end pt-4">
+                <SecondaryButton :disabled="form.processing" type="submit">
+                    <span v-if="form.processing" class="animate-pulse">Assigning...</span>
+                    <span v-else>Assign</span>
+                </SecondaryButton>
+            </div>
+
+            <div v-if="form.errors.message" class="text-red-600 font-semibold mt-2">
+                {{ form.errors.message }}
+            </div>
+        </form>
+    </AppLayout>
 </template>

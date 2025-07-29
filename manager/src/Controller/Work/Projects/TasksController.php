@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controller\Work\Projects;
 
+use App\Builder\Work\Task\TaskMetaBuilder;
+use App\Controller\BaseController;
 use App\Controller\ErrorHandler;
 use App\Infrastructure\Inertia\InertiaService;
-use App\Model\Work\Entity\Projects\Task\Progress;
-use App\Model\Work\Entity\Projects\Task\Status;
+use App\Infrastructure\Pagination\PaginationViewFactory;
 use App\Model\Work\Entity\Projects\Task\Task;
-use App\Model\Work\Entity\Projects\Task\Type;
 use App\Model\Work\UseCase\Projects\Task\ChildOf;
 use App\Model\Work\UseCase\Projects\Task\Edit;
 use App\Model\Work\UseCase\Projects\Task\Executor;
@@ -24,6 +24,7 @@ use App\Model\Work\UseCase\Projects\Task\Status as UseCaseStatus;
 use App\Model\Work\UseCase\Projects\Task\Take;
 use App\Model\Work\UseCase\Projects\Task\TakeAndStart;
 use App\Model\Work\UseCase\Projects\Task\Type as UseCaseType;
+use App\Normalizer\TaskListNormalizer;
 use App\ReadModel\Work\Members\Member\MemberFetcher;
 use App\ReadModel\Work\Projects\Action\ActionFetcher;
 use App\ReadModel\Work\Projects\Action\Feed\Feed;
@@ -34,19 +35,19 @@ use App\ReadModel\Work\Projects\Task\TaskFetcher;
 use App\Security\Voter\Work\Projects\TaskAccess;
 use App\Service\Uploader\FileUploader;
 use App\Service\Work\Processor\Processor;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/work/projects/tasks', name: 'work.projects.tasks')]
-class TasksController extends AbstractController
+class TasksController extends BaseController
 {
     private const PER_PAGE = 10;
 
     public function __construct(
         private readonly ErrorHandler $errors,
         private readonly Processor $processor,
+        private readonly PaginationViewFactory $paginationFactory
     ) {
     }
 
@@ -56,6 +57,8 @@ class TasksController extends AbstractController
         TaskFetcher $taskFetcher,
         MemberFetcher $memberFetcher,
         InertiaService $inertia,
+        TaskListNormalizer  $taskListNormalizer,
+        TaskMetaBuilder $taskMetaBuilder,
     ): Response {
         $filter = $this->isGranted('ROLE_WORK_MANAGE_PROJECTS')
             ? Filter\Filter::all()
@@ -80,72 +83,14 @@ class TasksController extends AbstractController
         );
 
         return $inertia->render($request, 'Work/Projects/Tasks/Index', [
-            'tasks' => array_map(fn ($task) => [
-                'id' => $task['id'],
-                'name' => $task['name'],
-                'project_id' => $task['project_id'],
-                'project_name' => $task['project_name'],
-                'author_id' => $task['author_id'],
-                'author_name' => $task['author_name'],
-                'status' => $task['status'],
-                'priority' => $task['priority'],
-                'progress' => $task['progress'],
-                'date' => $task['date'],
-                'plan_date' => $task['plan_date'],
-                'executors' => array_map(fn ($exec) => [
-                    'task_id' => $exec['task_id'],
-                    'name' => $exec['name'],
-                ], $task['executors']),
-                'parent' => $task['parent'] ?? null,
-                'type' => $task['type'],
-                'root' => $task['parent'],
-            ], $pagination->getItems()),
+            'tasks' => $taskListNormalizer->normalize($pagination->getItems()),
             'members' => $this->mapMembers($memberFetcher->activeGroupedList()),
-            'pagination' => [
-                'currentPage' => $pagination->getCurrentPageNumber(),
-                'lastPage' => ceil($pagination->getTotalItemCount() / self::PER_PAGE),
-                'total' => $pagination->getTotalItemCount(),
-            ],
+            'pagination' => $this->paginationFactory->create($pagination, self::PER_PAGE),
             'filters' => $request->query->all(),
             'sort' => $request->query->get('sort', 't.date'),
             'direction' => $request->query->get('direction', 'asc'),
-            'statuses' => [
-                ['id' => Status::NEW, 'name' => 'NEW'],
-                ['id' => Status::WORKING, 'name' => 'WORKING'],
-                ['id' => Status::HELP, 'name' => 'HELP'],
-                ['id' => Status::CHECKING, 'name' => 'CHECKING'],
-                ['id' => Status::REJECTED, 'name' => 'REJECTED'],
-                ['id' => Status::DONE, 'name' => 'DONE'],
-            ],
-            'type' => [
-                ['id' => Type::NONE, 'name' => 'NONE'],
-                ['id' => Type::ERROR, 'name' => 'ERROR'],
-                ['id' => Type::FEATURE, 'name' => 'FEATURE'],
-            ],
-            'priority' => [
-                ['id' => 1, 'name' => 'LOW'],
-                ['id' => 2, 'name' => 'NORMAL'],
-                ['id' => 3, 'name' => 'FEATURE'],
-                ['id' => 4, 'name' => 'HIGH'],
-                ['id' => 5, 'name' => 'CRITICAL'],
-                ['id' => 6, 'name' => 'BLOCKER'],
-            ],
+            'meta' => $taskMetaBuilder->build(),
         ]);
-    }
-
-    private function mapMembers(array $list): array
-    {
-        $result = [];
-
-        foreach ($list as $item) {
-            $result[] = [
-                'id' => $item['id'],
-                'name' => $item['name'],
-                'group' => $item['group'],
-            ];
-        }
-
-        return $result;
     }
 
     #[Route('/me', name: '.me', methods: ['GET'])]
@@ -154,6 +99,8 @@ class TasksController extends AbstractController
         TaskFetcher $taskFetcher,
         MemberFetcher $memberFetcher,
         InertiaService $inertia,
+        TaskListNormalizer  $taskListNormalizer,
+        TaskMetaBuilder $taskMetaBuilder,
     ): Response {
         $filter = Filter\Filter::all();
 
@@ -176,55 +123,13 @@ class TasksController extends AbstractController
         );
 
         return $inertia->render($request, 'Work/Projects/Tasks/Index', [
-            'tasks' => array_map(fn ($task) => [
-                'id' => $task['id'],
-                'name' => $task['name'],
-                'project_id' => $task['project_id'],
-                'project_name' => $task['project_name'],
-                'author_id' => $task['author_id'],
-                'author_name' => $task['author_name'],
-                'status' => $task['status'],
-                'priority' => $task['priority'],
-                'progress' => $task['progress'],
-                'date' => $task['date'],
-                'plan_date' => $task['plan_date'],
-                'executors' => array_map(fn ($exec) => [
-                    'task_id' => $exec['task_id'],
-                    'name' => $exec['name'],
-                ], $task['executors']),
-                'parent' => $task['parent'] ?? null,
-                'type' => $task['type'],
-            ], $pagination->getItems()),
+            'tasks' => $taskListNormalizer->normalize($pagination->getItems()),
             'members' => $this->mapMembers($memberFetcher->activeGroupedList()),
-            'pagination' => [
-                'currentPage' => $pagination->getCurrentPageNumber(),
-                'lastPage' => ceil($pagination->getTotalItemCount() / 50),
-                'total' => $pagination->getTotalItemCount(),
-            ],
+            'pagination' => $this->paginationFactory->create($pagination, self::PER_PAGE),
             'filters' => $request->query->all(),
             'sort' => $request->query->get('sort', 't.date'),
             'direction' => $request->query->get('direction', 'asc'),
-            'statuses' => [
-                ['id' => Status::NEW, 'name' => 'NEW'],
-                ['id' => Status::WORKING, 'name' => 'WORKING'],
-                ['id' => Status::HELP, 'name' => 'HELP'],
-                ['id' => Status::CHECKING, 'name' => 'CHECKING'],
-                ['id' => Status::REJECTED, 'name' => 'REJECTED'],
-                ['id' => Status::DONE, 'name' => 'DONE'],
-            ],
-            'type' => [
-                ['id' => Type::NONE, 'name' => 'NONE'],
-                ['id' => Type::ERROR, 'name' => 'ERROR'],
-                ['id' => Type::FEATURE, 'name' => 'FEATURE'],
-            ],
-            'priority' => [
-                ['id' => 1, 'name' => 'LOW'],
-                ['id' => 2, 'name' => 'NORMAL'],
-                ['id' => 3, 'name' => 'FEATURE'],
-                ['id' => 4, 'name' => 'HIGH'],
-                ['id' => 5, 'name' => 'CRITICAL'],
-                ['id' => 6, 'name' => 'BLOCKER'],
-            ],
+            'meta' => $taskMetaBuilder->build(),
         ]);
     }
 
@@ -234,6 +139,8 @@ class TasksController extends AbstractController
         TaskFetcher $taskFetcher,
         MemberFetcher $memberFetcher,
         InertiaService $inertia,
+        TaskListNormalizer  $taskListNormalizer,
+        TaskMetaBuilder $taskMetaBuilder,
     ): Response {
         $filter = Filter\Filter::all();
 
@@ -256,55 +163,13 @@ class TasksController extends AbstractController
         );
 
         return $inertia->render($request, 'Work/Projects/Tasks/Index', [
-            'tasks' => array_map(fn ($task) => [
-                'id' => $task['id'],
-                'name' => $task['name'],
-                'project_id' => $task['project_id'],
-                'project_name' => $task['project_name'],
-                'author_id' => $task['author_id'],
-                'author_name' => $task['author_name'],
-                'status' => $task['status'],
-                'priority' => $task['priority'],
-                'progress' => $task['progress'],
-                'date' => $task['date'],
-                'plan_date' => $task['plan_date'],
-                'executors' => array_map(fn ($exec) => [
-                    'task_id' => $exec['task_id'],
-                    'name' => $exec['name'],
-                ], $task['executors']),
-                'parent' => $task['parent'] ?? null,
-                'type' => $task['type'],
-            ], $pagination->getItems()),
+            'tasks' => $taskListNormalizer->normalize($pagination->getItems()),
             'members' => $this->mapMembers($memberFetcher->activeGroupedList()),
-            'pagination' => [
-                'currentPage' => $pagination->getCurrentPageNumber(),
-                'lastPage' => ceil($pagination->getTotalItemCount() / 50),
-                'total' => $pagination->getTotalItemCount(),
-            ],
+            'pagination' => $this->paginationFactory->create($pagination, self::PER_PAGE),
             'filters' => $request->query->all(),
             'sort' => $request->query->get('sort', 't.date'),
             'direction' => $request->query->get('direction', 'asc'),
-            'statuses' => [
-                ['id' => Status::NEW, 'name' => 'NEW'],
-                ['id' => Status::WORKING, 'name' => 'WORKING'],
-                ['id' => Status::HELP, 'name' => 'HELP'],
-                ['id' => Status::CHECKING, 'name' => 'CHECKING'],
-                ['id' => Status::REJECTED, 'name' => 'REJECTED'],
-                ['id' => Status::DONE, 'name' => 'DONE'],
-            ],
-            'type' => [
-                ['id' => Type::NONE, 'name' => 'NONE'],
-                ['id' => Type::ERROR, 'name' => 'ERROR'],
-                ['id' => Type::FEATURE, 'name' => 'FEATURE'],
-            ],
-            'priority' => [
-                ['id' => 1, 'name' => 'LOW'],
-                ['id' => 2, 'name' => 'NORMAL'],
-                ['id' => 3, 'name' => 'FEATURE'],
-                ['id' => 4, 'name' => 'HIGH'],
-                ['id' => 5, 'name' => 'CRITICAL'],
-                ['id' => 6, 'name' => 'BLOCKER'],
-            ],
+            'meta' => $taskMetaBuilder->build(),
         ]);
     }
 
@@ -334,7 +199,6 @@ class TasksController extends AbstractController
 
         try {
             $handler->handle($command);
-
             return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
         } catch (\DomainException $e) {
             $this->errors->handle($e);
@@ -515,7 +379,6 @@ class TasksController extends AbstractController
     ): Response {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
-        // ⚠️ Тут ти сам ручками витягуєш Member
         $member = $members->find($member_id);
 
         if (!$member) {
@@ -730,6 +593,7 @@ class TasksController extends AbstractController
         ActionFetcher $actionFetcher,
         MemberFetcher $members,
         InertiaService $inertia,
+        TaskMetaBuilder $taskMetaBuilder,
     ): Response {
         $this->denyAccessUnlessGranted(TaskAccess::VIEW, $task);
 
@@ -836,39 +700,7 @@ class TasksController extends AbstractController
                 'set_revoked_executor_name' => $action['set_revoked_executor_name'],
                 'set_project_name' => $action['set_project_name'],
             ], $actionFetcher->allForTask($task->getId()->getValue())),
-
-            'statuses' => [
-                ['id' => Status::NEW, 'name' => 'NEW'],
-                ['id' => Status::WORKING, 'name' => 'WORKING'],
-                ['id' => Status::HELP, 'name' => 'HELP'],
-                ['id' => Status::CHECKING, 'name' => 'CHECKING'],
-                ['id' => Status::REJECTED, 'name' => 'REJECTED'],
-                ['id' => Status::DONE, 'name' => 'DONE'],
-            ],
-            'types' => [
-                ['id' => Type::NONE, 'name' => 'NONE'],
-                ['id' => Type::ERROR, 'name' => 'ERROR'],
-                ['id' => Type::BUG, 'name' => 'BUG'],
-                ['id' => Type::FEATURE, 'name' => 'FEATURE'],
-                ['id' => Type::TASK, 'name' => 'TASK'],
-                ['id' => Type::SUPPORT, 'name' => 'SUPPORT'],
-            ],
-
-            'priorities' => [
-                ['id' => 1, 'name' => 'LOW'],
-                ['id' => 2, 'name' => 'NORMAL'],
-                ['id' => 3, 'name' => 'FEATURE'],
-                ['id' => 4, 'name' => 'HIGH'],
-                ['id' => 5, 'name' => 'CRITICAL'],
-                ['id' => 6, 'name' => 'BLOCKER'],
-            ],
-            'progress' => [
-                ['id' => Progress::PROGRESS_0, 'name' => Progress::PROGRESS_0],
-                ['id' => Progress::PROGRESS_25, 'name' => Progress::PROGRESS_25],
-                ['id' => Progress::PROGRESS_50, 'name' => Progress::PROGRESS_50],
-                ['id' => Progress::PROGRESS_75, 'name' => Progress::PROGRESS_75],
-                ['id' => Progress::PROGRESS_100, 'name' => Progress::PROGRESS_100],
-            ],
+            'meta' => $taskMetaBuilder->build(),
         ]);
     }
 
@@ -981,4 +813,21 @@ class TasksController extends AbstractController
             ], 400);
         }
     }
+
+
+    private function mapMembers(array $list): array
+    {
+        $result = [];
+
+        foreach ($list as $item) {
+            $result[] = [
+                'id' => $item['id'],
+                'name' => $item['name'],
+                'group' => $item['group'],
+            ];
+        }
+
+        return $result;
+    }
+
 }

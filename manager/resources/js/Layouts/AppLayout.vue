@@ -17,7 +17,6 @@ import {toast} from "vue3-toastify";
 
 const { init, subscribe, unsubscribe, disconnect } = useCentrifugo()
 
-const counterText = ref('')
 const privateMessages = ref([])
 const userId = page.props.value.auth.user.id
 onMounted(async () => {
@@ -78,7 +77,6 @@ onBeforeUnmount(() => {
   <div
     class="grid grid-rows-[auto_1fr] grid-cols-[auto_1fr] h-screen font-sans bg-[#f4f6f8] dark:bg-[#0e0f11] text-gray-900 dark:text-gray-100"
   >
-    <!-- Sidebar -->
     <aside
       class="bg-gradient-to-br from-indigo-900 to-indigo-700 text-white w-72 transition-all duration-500 ease-in-out col-start-1 row-span-2 dark:from-gray-900 dark:to-gray-800 z-20"
       :class="{ '-ml-72': !sidebarOpen, 'shadow-2xl': sidebarOpen }"
@@ -225,17 +223,11 @@ onBeforeUnmount(() => {
             {{ flash.success }}
           </div>
           <div
-            class="mx-auto p-3 rounded-lg bg-white text-gray-800 shadow-md shadow-gray-200/50 dark:bg-gradient-to-br dark:from-indigo-900 dark:via-gray-900 dark:to-[#0e0f11] dark:text-indigo-200 dark:shadow-indigo-900/40 transition-all duration-300 ease-in-out"
+            class="mx-auto p-3 rounded-lg bg-white text-gray-800 shadow-md shadow-gray-200/50 dark:bg-gradient-to-br
+             dark:from-indigo-900 dark:via-gray-900 dark:to-[#0e0f11] dark:text-indigo-200
+             dark:shadow-indigo-900/40 transition-all duration-300 ease-in-out min-h-[400px]"
             role="main"
           >
-              <div>
-                  <h1>Messages:</h1>
-                  <div id="counter">{{ counterText }}</div>
-                  <h2>Private Messages:</h2>
-                  <ul>
-                      <li v-for="(msg, idx) in privateMessages" :key="idx">{{ msg.text }}</li>
-                  </ul>
-              </div>
             <slot />
           </div>
         </div>
