@@ -4,6 +4,7 @@
   import { computed, ref, watch } from 'vue'
   import AppLayout from '@/Layouts/AppLayout.vue'
   import { roleBadgeClass, statusBadgeClass } from '@/Helpers/helpers.js'
+  import Breadcrumbs from "@/Components/ui/Breadcrumbs.vue";
 
   const props = defineProps({
     users: Array,
@@ -108,9 +109,16 @@
 
 <template>
   <AppLayout title="Users">
+      <Breadcrumbs
+          :items="[
+            { label: 'Home', href: '/' },
+            { label: 'Users' },
+          ]"
+      />
     <div class="space-y-4">
       <div class="flex justify-between items-center">
         <h1 class="text-2xl font-bold">Users</h1>
+
         <Link :href="'/users/create'" class="btn btn-primary">Create</Link>
       </div>
 
