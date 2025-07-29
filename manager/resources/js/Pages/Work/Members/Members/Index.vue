@@ -4,6 +4,7 @@
   import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
   import AppLayout from '@/Layouts/AppLayout.vue'
   import { statusBadgeClass } from '../../../../Helpers/helpers.js'
+  import Breadcrumbs from "@/Components/ui/Breadcrumbs.vue";
 
   const props = defineProps({
     members: Array,
@@ -100,22 +101,20 @@
 <template>
   <AppLayout>
     <Head title="Members" />
+      <Breadcrumbs
+          :items="[
+        { label: 'Home', href: '/' },
+        { label: 'Work', href: '/work' },
+        { label: 'Members' }
+      ]"
+      />
 
-    <!-- Breadcrumb -->
-    <nav class="text-sm text-white/60 mb-6" aria-label="Breadcrumb">
-      <ol class="flex space-x-2">
-        <li><Link href="/" class="hover:text-indigo-300">Home</Link><span>/</span></li>
-        <li><Link href="/work" class="hover:text-indigo-300">Work</Link><span>/</span></li>
-        <li class="text-white font-semibold">Members</li>
-      </ol>
-    </nav>
 
     <GroupsTabs />
 
-    <!-- Filters -->
     <form
       @submit.prevent="submitFilters"
-      class="bg-gradient-to-br from-gray-900 to-[#0e0f11] p-4 rounded-2xl shadow-md mb-8 grid grid-cols-1 md:grid-cols-5 gap-4 text-white/80"
+      class=" mt-5 bg-gradient-to-br from-gray-900 to-[#0e0f11] p-4 rounded-2xl shadow-md mb-8 grid grid-cols-1 md:grid-cols-5 gap-4 text-white/80"
     >
       <input v-model="name" placeholder="Name" class="input-dark" />
       <input v-model="email" placeholder="Email" class="input-dark" />

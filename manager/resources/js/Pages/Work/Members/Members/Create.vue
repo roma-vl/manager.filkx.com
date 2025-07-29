@@ -5,6 +5,7 @@
   import TextInput from '../../../../Components/TextInput.vue'
   import SelectInput from '../../../../Components/SelectInput.vue'
   import AppLayout from '../../../../Layouts/AppLayout.vue'
+  import Breadcrumbs from "@/Components/ui/Breadcrumbs.vue";
   const props = defineProps({
     user: Object,
     errors: Object,
@@ -27,10 +28,16 @@
   <AppLayout>
     <div>
       <h1 class="text-2xl font-bold mb-4">Додати учасника</h1>
-
-      <form @submit.prevent="submit" class="space-y-6 max-w-xl">
+        <Breadcrumbs
+            :items="[
+        { label: 'Home', href: '/' },
+        { label: 'Work', href: '/work' },
+        { label: 'Members', href: '/work/members' },
+        { label: 'Create' }
+      ]"
+        />
+      <form @submit.prevent="submit" class="max-w-3xl mx-auto space-y-6  p-6 h-[500px]">
         <div>
-          <InputLabel for="group" value="Група" />
           <SelectInput
             v-model="form.group"
             name="group"
