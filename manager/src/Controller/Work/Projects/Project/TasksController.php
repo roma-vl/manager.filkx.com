@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Controller\Work\Projects\Project;
 
 use App\Controller\ErrorHandler;
+use App\DTO\Work\Task\TaskMetaView;
 use App\Infrastructure\Inertia\InertiaService;
+use App\Mapper\Work\TaskMapper;
 use App\Model\Work\Entity\Projects\Project\Project;
 use App\Model\Work\Entity\Projects\Task\Status;
 use App\Model\Work\Entity\Projects\Task\Type;
@@ -13,11 +15,13 @@ use App\Model\Work\UseCase\Projects\Task\Create;
 use App\ReadModel\Work\Members\Member\MemberFetcher;
 use App\ReadModel\Work\Projects\Task\Filter;
 use App\ReadModel\Work\Projects\Task\TaskFetcher;
+use App\ReadModel\Work\Projects\Task\TaskMetaProvider;
 use App\Security\Voter\Work\Projects\ProjectAccess;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/work/projects/{id}/tasks', name: 'work.projects.project.tasks')]
 class TasksController extends AbstractController
@@ -27,7 +31,10 @@ class TasksController extends AbstractController
     private TaskFetcher $tasks;
     private ErrorHandler $errors;
 
-    public function __construct(TaskFetcher $tasks, ErrorHandler $errors)
+    public function __construct(
+        TaskFetcher $tasks,
+        ErrorHandler $errors,
+        private SerializerInterface $serializer)
     {
         $this->tasks = $tasks;
         $this->errors = $errors;
@@ -39,6 +46,7 @@ class TasksController extends AbstractController
         Request $request,
         MemberFetcher $memberFetcher,
         InertiaService $inertia,
+        TaskMetaProvider $taskMetaProvider,
     ): Response {
         $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
 
@@ -61,31 +69,22 @@ class TasksController extends AbstractController
             $request->query->get('direction')
         );
 
+        $tasks = array_map(fn ($task) => TaskMapper::map($task), $pagination->getItems());
+        $normalizedTasks = $this->serializer->normalize($tasks, null, ['groups' => ['task:list']]);
+
+        $meta = new TaskMetaView(); // DTO
+        $props = $taskMetaProvider->get();
+
+        $meta->statuses = $props['statuses'];
+        $meta->types = $props['types'];
+        $meta->priorities = $props['priorities'];
+
         return $inertia->render($request, 'Work/Projects/Project/Tasks/Index', [
             'project' => [
                 'id' => $project->getId()->getValue(),
                 'name' => $project->getName(),
             ],
-            'tasks' => array_map(fn ($task) => [
-                'id' => $task['id'],
-                'name' => $task['name'],
-                'project_id' => $task['project_id'],
-                'project_name' => $task['project_name'],
-                'author_id' => $task['author_id'],
-                'author_name' => $task['author_name'],
-                'status' => $task['status'],
-                'priority' => $task['priority'],
-                'progress' => $task['progress'],
-                'date' => $task['date'],
-                'plan_date' => $task['plan_date'],
-                'executors' => array_map(fn ($exec) => [
-                    'task_id' => $exec['task_id'],
-                    'name' => $exec['name'],
-                ], $task['executors']),
-                'parent' => $task['parent'] ?? null,
-                'type' => $task['type'],
-                'root' => $task['parent'],
-            ], $pagination->getItems()),
+            'tasks' => $normalizedTasks,
             'members' => $this->mapMembers($memberFetcher->activeGroupedList()),
             'pagination' => [
                 'currentPage' => $pagination->getCurrentPageNumber(),
@@ -95,27 +94,7 @@ class TasksController extends AbstractController
             'filters' => $request->query->all(),
             'sort' => $request->query->get('sort', 't.id'),
             'direction' => $request->query->get('direction', 'asc'),
-            'statuses' => [
-                ['id' => Status::NEW, 'name' => 'NEW'],
-                ['id' => Status::WORKING, 'name' => 'WORKING'],
-                ['id' => Status::HELP, 'name' => 'HELP'],
-                ['id' => Status::CHECKING, 'name' => 'CHECKING'],
-                ['id' => Status::REJECTED, 'name' => 'REJECTED'],
-                ['id' => Status::DONE, 'name' => 'DONE'],
-            ],
-            'type' => [
-                ['id' => Type::NONE, 'name' => 'NONE'],
-                ['id' => Type::ERROR, 'name' => 'ERROR'],
-                ['id' => Type::FEATURE, 'name' => 'FEATURE'],
-            ],
-            'priority' => [
-                ['id' => 1, 'name' => 'LOW'],
-                ['id' => 2, 'name' => 'NORMAL'],
-                ['id' => 3, 'name' => 'FEATURE'],
-                ['id' => 4, 'name' => 'HIGH'],
-                ['id' => 5, 'name' => 'CRITICAL'],
-                ['id' => 6, 'name' => 'BLOCKER'],
-            ],
+            'meta' => $this->serializer->normalize($meta, null, ['groups' => ['task:list']]),
         ]);
     }
 
@@ -141,6 +120,7 @@ class TasksController extends AbstractController
         TaskFetcher $taskFetcher,
         MemberFetcher $memberFetcher,
         InertiaService $inertia,
+        TaskMetaProvider $taskMetaProvider,
     ): Response {
         $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
 
@@ -153,31 +133,22 @@ class TasksController extends AbstractController
             $request->query->get('sort', 't.id'),
             $request->query->get('direction', 'asc')
         );
+        $tasks = array_map(fn ($task) => TaskMapper::map($task), $pagination->getItems());
+        $normalizedTasks = $this->serializer->normalize($tasks, null, ['groups' => ['task:list']]);
+
+        $meta = new TaskMetaView(); // DTO
+        $props = $taskMetaProvider->get();
+
+        $meta->statuses = $props['statuses'];
+        $meta->types = $props['types'];
+        $meta->priorities = $props['priorities'];
 
         return $inertia->render($request, 'Work/Projects/Project/Tasks/Index', [
             'project' => [
                 'id' => $project->getId()->getValue(),
                 'name' => $project->getName(),
             ],
-            'tasks' => array_map(fn ($task) => [
-                'id' => $task['id'],
-                'name' => $task['name'],
-                'project_id' => $task['project_id'],
-                'project_name' => $task['project_name'],
-                'author_id' => $task['author_id'],
-                'author_name' => $task['author_name'],
-                'status' => $task['status'],
-                'priority' => $task['priority'],
-                'progress' => $task['progress'],
-                'date' => $task['date'],
-                'plan_date' => $task['plan_date'],
-                'executors' => array_map(fn ($exec) => [
-                    'task_id' => $exec['task_id'],
-                    'name' => $exec['name'],
-                ], $task['executors']),
-                'parent' => $task['parent'] ?? null,
-                'type' => $task['type'],
-            ], $pagination->getItems()),
+            'tasks' => $normalizedTasks,
             'members' => $this->mapMembers($memberFetcher->activeGroupedList()),
             'pagination' => [
                 'currentPage' => $pagination->getCurrentPageNumber(),
@@ -187,27 +158,7 @@ class TasksController extends AbstractController
             'filters' => $request->query->all(),
             'sort' => $request->query->get('sort', 't.date'),
             'direction' => $request->query->get('direction', 'asc'),
-            'statuses' => [
-                ['id' => Status::NEW, 'name' => 'NEW'],
-                ['id' => Status::WORKING, 'name' => 'WORKING'],
-                ['id' => Status::HELP, 'name' => 'HELP'],
-                ['id' => Status::CHECKING, 'name' => 'CHECKING'],
-                ['id' => Status::REJECTED, 'name' => 'REJECTED'],
-                ['id' => Status::DONE, 'name' => 'DONE'],
-            ],
-            'type' => [
-                ['id' => Type::NONE, 'name' => 'NONE'],
-                ['id' => Type::ERROR, 'name' => 'ERROR'],
-                ['id' => Type::FEATURE, 'name' => 'FEATURE'],
-            ],
-            'priority' => [
-                ['id' => 1, 'name' => 'LOW'],
-                ['id' => 2, 'name' => 'NORMAL'],
-                ['id' => 3, 'name' => 'FEATURE'],
-                ['id' => 4, 'name' => 'HIGH'],
-                ['id' => 5, 'name' => 'CRITICAL'],
-                ['id' => 6, 'name' => 'BLOCKER'],
-            ],
+            'meta' => $this->serializer->normalize($meta, null, ['groups' => ['task:list']]),
         ]);
     }
 
@@ -218,6 +169,7 @@ class TasksController extends AbstractController
         TaskFetcher $taskFetcher,
         MemberFetcher $memberFetcher,
         InertiaService $inertia,
+        TaskMetaProvider $taskMetaProvider,
     ): Response {
         $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
 
@@ -231,30 +183,22 @@ class TasksController extends AbstractController
             $request->query->get('direction', 'asc')
         );
 
+        $tasks = array_map(fn ($task) => TaskMapper::map($task), $pagination->getItems());
+        $normalizedTasks = $this->serializer->normalize($tasks, null, ['groups' => ['task:list']]);
+
+        $meta = new TaskMetaView(); // DTO
+        $props = $taskMetaProvider->get();
+
+        $meta->statuses = $props['statuses'];
+        $meta->types = $props['types'];
+        $meta->priorities = $props['priorities'];
+
         return $inertia->render($request, 'Work/Projects/Project/Tasks/Index', [
             'project' => [
                 'id' => $project->getId()->getValue(),
                 'name' => $project->getName(),
             ],
-            'tasks' => array_map(fn ($task) => [
-                'id' => $task['id'],
-                'name' => $task['name'],
-                'project_id' => $task['project_id'],
-                'project_name' => $task['project_name'],
-                'author_id' => $task['author_id'],
-                'author_name' => $task['author_name'],
-                'status' => $task['status'],
-                'priority' => $task['priority'],
-                'progress' => $task['progress'],
-                'date' => $task['date'],
-                'plan_date' => $task['plan_date'],
-                'executors' => array_map(fn ($exec) => [
-                    'task_id' => $exec['task_id'],
-                    'name' => $exec['name'],
-                ], $task['executors']),
-                'parent' => $task['parent'] ?? null,
-                'type' => $task['type'],
-            ], $pagination->getItems()),
+            'tasks' => $normalizedTasks,
             'members' => $this->mapMembers($memberFetcher->activeGroupedList()),
             'pagination' => [
                 'currentPage' => $pagination->getCurrentPageNumber(),
@@ -264,27 +208,7 @@ class TasksController extends AbstractController
             'filters' => $request->query->all(),
             'sort' => $request->query->get('sort', 't.date'),
             'direction' => $request->query->get('direction', 'asc'),
-            'statuses' => [
-                ['id' => Status::NEW, 'name' => 'NEW'],
-                ['id' => Status::WORKING, 'name' => 'WORKING'],
-                ['id' => Status::HELP, 'name' => 'HELP'],
-                ['id' => Status::CHECKING, 'name' => 'CHECKING'],
-                ['id' => Status::REJECTED, 'name' => 'REJECTED'],
-                ['id' => Status::DONE, 'name' => 'DONE'],
-            ],
-            'type' => [
-                ['id' => Type::NONE, 'name' => 'NONE'],
-                ['id' => Type::ERROR, 'name' => 'ERROR'],
-                ['id' => Type::FEATURE, 'name' => 'FEATURE'],
-            ],
-            'priority' => [
-                ['id' => 1, 'name' => 'LOW'],
-                ['id' => 2, 'name' => 'NORMAL'],
-                ['id' => 3, 'name' => 'FEATURE'],
-                ['id' => 4, 'name' => 'HIGH'],
-                ['id' => 5, 'name' => 'CRITICAL'],
-                ['id' => 6, 'name' => 'BLOCKER'],
-            ],
+            'meta' => $this->serializer->normalize($meta, null, ['groups' => ['task:list']]),
         ]);
     }
 

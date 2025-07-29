@@ -21,14 +21,15 @@
     members: Object,
     filters: Object,
     tasks: Array,
-    statuses: Array,
-    type: Array,
-    priority: Array,
+    // statuses: Array,
+    // type: Array,
+    // priority: Array,
     sort: String,
     direction: String,
     pagination: Object,
+    meta: Object,
   })
-
+  console.log(111)
   const text = ref(props.filters.text || '')
   const type = ref(props.filters.type || '')
   const status = ref(props.filters.status || '')
@@ -138,9 +139,9 @@
 
     <TaskFilters
       :filters="props.filters"
-      :types="props.type"
-      :statuses="props.statuses"
-      :priorities="props.priority"
+      :types="props.meta.types"
+      :statuses="props.meta.statuses"
+      :priorities="props.meta.priorities"
       :members="props.members"
       :project="props.project"
       @submit="handleSubmit"
