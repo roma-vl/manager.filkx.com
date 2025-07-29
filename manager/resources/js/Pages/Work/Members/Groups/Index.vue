@@ -4,6 +4,7 @@
   import AppLayout from '@/Layouts/AppLayout.vue'
   import axios from 'axios'
   import { ref } from 'vue'
+  import Breadcrumbs from "@/Components/ui/Breadcrumbs.vue";
 
   defineProps({
     groups: Array,
@@ -31,17 +32,14 @@
 <template>
   <AppLayout>
     <Head title="Groups" />
-
-    <nav class="text-sm text-indigo-200 mb-6" aria-label="Breadcrumb">
-      <ol class="flex space-x-2">
-        <li><Link href="/" class="hover:text-indigo-400">Home</Link><span>/</span></li>
-        <li><Link href="/work" class="hover:text-indigo-400">Work</Link><span>/</span></li>
-        <li>
-          <Link href="/work/members" class="hover:text-indigo-400">Members</Link><span>/</span>
-        </li>
-        <li class="text-white/80 font-semibold">Groups</li>
-      </ol>
-    </nav>
+      <Breadcrumbs
+          :items="[
+        { label: 'Home', href: '/' },
+        { label: 'Work', href: '/work' },
+        { label: 'Members', href: '/work/members' },
+        { label: 'Groups' }
+      ]"
+      />
 
     <GroupsTabs />
 
