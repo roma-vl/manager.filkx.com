@@ -223,7 +223,9 @@ onBeforeUnmount(() => {
             {{ flash.success }}
           </div>
           <div
-            class="mx-auto p-3 rounded-lg bg-white text-gray-800 shadow-md shadow-gray-200/50 dark:bg-gradient-to-br dark:from-indigo-900 dark:via-gray-900 dark:to-[#0e0f11] dark:text-indigo-200 dark:shadow-indigo-900/40 transition-all duration-300 ease-in-out"
+            class="mx-auto p-3 rounded-lg bg-white text-gray-800 shadow-md shadow-gray-200/50 dark:bg-gradient-to-br
+             dark:from-indigo-900 dark:via-gray-900 dark:to-[#0e0f11] dark:text-indigo-200
+             dark:shadow-indigo-900/40 transition-all duration-300 ease-in-out min-h-[400px]"
             role="main"
           >
             <slot />
