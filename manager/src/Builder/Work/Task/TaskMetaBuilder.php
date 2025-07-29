@@ -19,6 +19,7 @@ class TaskMetaBuilder
         $meta->statuses = $props['statuses'];
         $meta->types = $props['types'];
         $meta->priorities = $props['priorities'];
+        $meta->progress = $props['progress'];
 
         return $meta;
     }

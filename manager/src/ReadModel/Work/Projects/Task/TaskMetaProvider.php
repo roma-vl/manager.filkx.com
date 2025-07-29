@@ -2,6 +2,7 @@
 
 namespace App\ReadModel\Work\Projects\Task;
 
+use App\Model\Work\Entity\Projects\Task\Progress;
 use App\Model\Work\Entity\Projects\Task\Status;
 use App\Model\Work\Entity\Projects\Task\Type;
 use App\ReadModel\Props\PropsProviderInterface;
@@ -31,7 +32,14 @@ final readonly class TaskMetaProvider implements PropsProviderInterface
                 ['id' => 4, 'name' => 'HIGH'],
                 ['id' => 5, 'name' => 'CRITICAL'],
                 ['id' => 6, 'name' => 'BLOCKER'],
-            ]
+            ],
+            'progress' => [
+                ['id' => Progress::PROGRESS_0, 'name' => Progress::PROGRESS_0],
+                ['id' => Progress::PROGRESS_25, 'name' => Progress::PROGRESS_25],
+                ['id' => Progress::PROGRESS_50, 'name' => Progress::PROGRESS_50],
+                ['id' => Progress::PROGRESS_75, 'name' => Progress::PROGRESS_75],
+                ['id' => Progress::PROGRESS_100, 'name' => Progress::PROGRESS_100],
+            ],
         ];
     }
 

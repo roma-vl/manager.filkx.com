@@ -5,30 +5,26 @@ declare(strict_types=1);
 namespace App\Controller\Work\Projects\Project;
 
 use App\Builder\Work\Task\TaskMetaBuilder;
+use App\Controller\BaseController;
 use App\Controller\ErrorHandler;
-use App\DTO\Work\Task\TaskMetaView;
 use App\Infrastructure\Inertia\InertiaService;
 use App\Infrastructure\Pagination\PaginationViewFactory;
-use App\Mapper\Work\TaskMapper;
 use App\Model\Work\Entity\Projects\Project\Project;
-use App\Model\Work\Entity\Projects\Task\Status;
 use App\Model\Work\Entity\Projects\Task\Type;
 use App\Model\Work\UseCase\Projects\Task\Create;
 use App\Normalizer\TaskListNormalizer;
 use App\ReadModel\Work\Members\Member\MemberFetcher;
 use App\ReadModel\Work\Projects\Task\Filter;
 use App\ReadModel\Work\Projects\Task\TaskFetcher;
-use App\ReadModel\Work\Projects\Task\TaskMetaProvider;
 use App\Security\Voter\Work\Projects\ProjectAccess;
 use Doctrine\DBAL\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/work/projects/{id}/tasks', name: 'work.projects.project.tasks')]
-class TasksController extends AbstractController
+class TasksController extends BaseController
 {
     private const PER_PAGE = 10;
 

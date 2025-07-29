@@ -14,4 +14,7 @@ final class TaskMetaView
 
     #[Groups(['task:list'])]
     public array $priorities = [];
+
+    #[Groups(['task:list'])]
+    public array $progress = [];
 }

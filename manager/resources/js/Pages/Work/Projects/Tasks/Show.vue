@@ -25,6 +25,7 @@
     priorities: Array,
     progress: Array,
     feed: Object,
+      meta: Object,
   })
 
 
@@ -293,7 +294,7 @@
                       <ChangeStatusDropdown
                         :task-id="task.id"
                         :current-status="task.status"
-                        :statuses="statuses"
+                        :statuses="meta.statuses"
                       />
                     </td>
                   </tr>
@@ -304,7 +305,7 @@
                       <ChangeTypeDropdown
                         :task-id="task.id"
                         :current-type="task.type"
-                        :types="types"
+                        :types="meta.types"
                       />
                     </td>
                   </tr>
@@ -315,7 +316,7 @@
                       <ChangePriorityDropdown
                         :task-id="task.id"
                         :current-priority="task.priority"
-                        :priorities="priorities"
+                        :priorities="meta.priorities"
                       />
                     </td>
                   </tr>
@@ -325,7 +326,7 @@
                       <ChangeProgressBar
                         :task-id="task.id"
                         :current-progress="task.progress"
-                        :progress="progress"
+                        :progress="meta.progress"
                       />
                     </td>
                   </tr>
