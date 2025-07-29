@@ -7,6 +7,7 @@
   import TextInput from '@/Components/TextInput.vue'
   import { Link } from '@inertiajs/inertia-vue3'
   import SecondaryButton from '@/Components/SecondaryButton.vue'
+  import Breadcrumbs from "@/Components/ui/Breadcrumbs.vue";
 
   const props = defineProps({
     project: Object,
@@ -25,35 +26,17 @@
 
 <template>
   <AppLayout>
-    <!-- Breadcrumbs -->
-    <nav class="text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
-      <ol class="flex items-center space-x-2">
-        <li><Link href="/" class="hover:text-primary">Home</Link><span>/</span></li>
-        <li><Link href="/work" class="hover:text-primary">Work</Link><span>/</span></li>
-        <li>
-          <Link href="/work/projects" class="hover:text-primary">Projects</Link><span>/</span>
-        </li>
-        <li>
-          <Link :href="`/work/projects/${project.id}`" class="hover:text-primary">{{
-            project.name
-          }}</Link
-          ><span>/</span>
-        </li>
-        <li>
-          <Link :href="`/work/projects/${project.id}/settings`" class="hover:text-primary"
-            >Settings</Link
-          ><span>/</span>
-        </li>
-        <li>
-          <Link
-            :href="`/work/projects/${project.id}/settings/departments`"
-            class="hover:text-primary"
-            >Departments</Link
-          ><span>/</span>
-        </li>
-        <li class="text-foreground font-semibold">Create</li>
-      </ol>
-    </nav>
+      <Breadcrumbs
+          :items="[
+        { label: 'Home', href: '/' },
+        { label: 'Work', href: '/work' },
+        { label: 'Projects', href: '/work/projects' },
+        { label: project.name, href: `/work/projects/${project.id}` },
+        { label: 'Settings', href: `/work/projects/${project.id}/settings` },
+        { label: 'Departments', href: `/work/projects/${project.id}/settings/departments` },
+        { label: 'Edit' },
+      ]"
+      />
 
     <!-- Tabs -->
     <ProjectTabs :project-id="project.id" />
