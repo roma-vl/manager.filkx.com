@@ -1,14 +1,123 @@
-version: '3'
+version: '3.9'
+
 services:
   manager-nginx:
-    image: ${REGISTRY_ADDRESS}/manager-nginx:${IMAGE_TAG}
+    build:
+      context: ./manager/docker/production
+      dockerfile: nginx.docker
     restart: always
     depends_on:
       - manager-php-fpm
+    volumes:
+      - ./manager:/app:ro
     ports:
-      - "80:80"
+      - "${NGINX_EXPOSE_PORT:-8080}:80"
+    networks:
+      - manager
+
   manager-php-fpm:
-    image: ${REGISTRY_ADDRESS}/manager-php-fpm:${IMAGE_TAG}
+    build:
+      context: ./manager/docker/production
+      dockerfile: php-fpm.docker
     restart: always
+    volumes:
+      - ./manager:/app:ro
+    environment:
+      APP_ENV: ${APP_ENV}
+      APP_DEBUG: ${APP_DEBUG}
+      APP_SECRET: ${APP_SECRET}
+    env_file:
+      - ./manager/.env.prod
+    networks:
+      - manager
+
   manager-php-cli:
-    image: ${REGISTRY_ADDRESS}/manager-php-cli:${IMAGE_TAG}
+    build:
+      context: ./manager/docker/production
+      dockerfile: php-cli.docker
+    restart: always
+    volumes:
+      - ./manager:/app
+      - composer:/root/.composer/cache
+    environment:
+      APP_ENV: ${APP_ENV}
+      APP_DEBUG: ${APP_DEBUG}
+      APP_SECRET: ${APP_SECRET}
+    env_file:
+      - ./manager/.env.prod
+    working_dir: /app
+    networks:
+      - manager
+
+  manager-messenger-worker:
+    build:
+      context: ./manager/docker/production
+      dockerfile: php-cli.docker
+    depends_on:
+      - manager-postgres
+    command: php bin/console messenger:consume async
+    restart: always
+    volumes:
+      - ./manager:/app
+      - composer:/root/.composer/cache
+    environment:
+      APP_ENV: ${APP_ENV}
+      APP_DEBUG: ${APP_DEBUG}
+      MAILER_DSN: ${MAILER_DSN}
+    env_file:
+      - ./manager/.env.prod
+    networks:
+      - manager
+
+  manager-postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${DATABASE_EXPOSE_PORT:-5432}:${DATABASE_PORT:-5432}"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - manager
+  manager-redis:
+    image: redis:latest
+    ports:
+      - '${FORWARD_REDIS_PORT:-6379}:6379'
+    restart: always
+    volumes:
+      - manager-redis:/data
+    command:
+      - 'redis-server'
+      - '--databases 2'
+      - '--save 900 1'
+      - '--save 300 10'
+      - '--save 60 10000'
+      - '--requirepass secret'
+    networks:
+      - manager
+  centrifugo:
+    container_name: centrifugo
+    image: centrifugo/centrifugo:v6
+    restart: always
+    networks:
+      - manager
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - ./centrifugo/docker/development/centrifugo/config.json:/centrifugo/config.json
+    ports:
+      - "8083:8000"
+      - "${CENTRIFUGO_EXPOSE_PORT:-8083}:8000"
+    command: centrifugo -c config.json
+volumes:
+  composer:
+  pgdata:
+  manager-redis:
+
+networks:
+  manager:

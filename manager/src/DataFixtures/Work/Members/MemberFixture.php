@@ -19,6 +19,7 @@ class MemberFixture extends Fixture implements DependentFixtureInterface
 {
     public const REFERENCE_ADMIN = 'work_member_admin';
     public const REFERENCE_USER = 'work_member_user';
+    public const REFERENCE_USER_ME = 'work_member_user_me';
 
     public function load(ObjectManager $manager): void
     {
@@ -45,6 +46,7 @@ class MemberFixture extends Fixture implements DependentFixtureInterface
         $memberMe = $this->createMember($userMe, $customers);
         $manager->persist($memberMe);
         $this->setReference(self::REFERENCE_USER, $member);
+        $this->setReference(self::REFERENCE_USER_ME, $memberMe);
 
         $manager->flush();
     }

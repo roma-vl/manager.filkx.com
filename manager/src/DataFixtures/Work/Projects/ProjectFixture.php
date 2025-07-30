@@ -23,6 +23,7 @@ class ProjectFixture extends Fixture implements DependentFixtureInterface
     {
         $admin = $this->getReference(MemberFixture::REFERENCE_ADMIN, Member::class);
         $user = $this->getReference(MemberFixture::REFERENCE_USER, Member::class);
+        $userMe = $this->getReference(MemberFixture::REFERENCE_USER_ME, Member::class);
 
         $manage = $this->getReference(RoleFixture::REFERENCE_MANAGER, Role::class);
         $guest = $this->getReference(RoleFixture::REFERENCE_GUEST, Role::class);
@@ -33,6 +34,7 @@ class ProjectFixture extends Fixture implements DependentFixtureInterface
         $active->addDepartment($marketing = DepartmentId::next(), 'Marketing');
         $active->addMember($admin, [$development], [$manage]);
         $active->addMember($user, [$marketing], [$guest]);
+        $active->addMember($userMe, [$marketing], [$manage]);
 
         $manager->persist($active);
         $this->setReference(self::REFERENCE_FIRST, $active);
