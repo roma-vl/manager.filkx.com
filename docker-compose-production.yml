@@ -3,8 +3,8 @@ version: '3.9'
 services:
   manager-nginx:
     build:
-      context: ./manager/docker/production
-      dockerfile: nginx.docker
+      context: ./manager
+      dockerfile: docker/production/php-fpm.docker
     restart: always
     depends_on:
       - manager-php-fpm
@@ -17,8 +17,8 @@ services:
 
   manager-php-fpm:
     build:
-      context: ./manager/docker/production
-      dockerfile: php-fpm.docker
+      context: ./manager
+      dockerfile: docker/production/php-fpm.docker
     restart: always
     volumes:
       - ./manager:/app:ro
@@ -33,8 +33,8 @@ services:
 
   manager-php-cli:
     build:
-      context: ./manager/docker/production
-      dockerfile: php-cli.docker
+      context: ./manager
+      dockerfile: docker/production/php-cli.docker
     restart: always
     volumes:
       - ./manager:/app
@@ -51,8 +51,8 @@ services:
 
   manager-messenger-worker:
     build:
-      context: ./manager/docker/production
-      dockerfile: php-cli.docker
+      context: ./manager
+      dockerfile: docker/production/php-cli.docker
     depends_on:
       - manager-postgres
     command: php bin/console messenger:consume async
