@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'work_projects_task_changes')]
-final class Change
+class Change
 {
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: Task::class, inversedBy: 'changes')]
