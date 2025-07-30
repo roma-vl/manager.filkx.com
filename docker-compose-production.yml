@@ -86,8 +86,8 @@ services:
       - manager
   manager-redis:
     image: redis:latest
-    ports:
-      - '${FORWARD_REDIS_PORT:-6378}:6379'
+#    ports:
+#      - '${FORWARD_REDIS_PORT:-6378}:6379'
     restart: always
     volumes:
       - manager-redis:/data
@@ -113,7 +113,6 @@ services:
     volumes:
       - ./centrifugo/docker/development/centrifugo/config.json:/centrifugo/config.json
     ports:
-      - "8083:8000"
       - "${CENTRIFUGO_EXPOSE_PORT:-8083}:8000"
     command: centrifugo -c config.json
 volumes:
