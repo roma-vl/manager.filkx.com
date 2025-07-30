@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 #[ORM\Table(name: 'work_projects_task_files')]
 #[ORM\Index(columns: ['date'])]
-final class File
+class File
 {
     #[ORM\Id]
     #[ORM\Column(type: 'work_projects_task_file_id')]

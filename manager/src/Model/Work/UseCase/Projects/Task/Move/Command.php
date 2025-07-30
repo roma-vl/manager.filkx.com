@@ -7,7 +7,7 @@ namespace App\Model\Work\UseCase\Projects\Task\Move;
 use App\Model\Work\Entity\Projects\Task\Task;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class Command
+class Command
 {
     #[Assert\NotBlank]
     public string $actor;

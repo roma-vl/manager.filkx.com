@@ -13,7 +13,7 @@ use App\Model\Work\Entity\Projects\Task\Type;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Embeddable]
-final class Set
+class Set
 {
     #[ORM\Column(type: 'work_projects_project_id', nullable: true)]
     private ?ProjectId $projectId = null;

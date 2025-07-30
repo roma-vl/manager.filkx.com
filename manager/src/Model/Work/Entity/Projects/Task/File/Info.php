@@ -7,7 +7,7 @@ namespace App\Model\Work\Entity\Projects\Task\File;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Embeddable]
-final class Info
+class Info
 {
     #[ORM\Column(type: 'string')]
     private string $path;
