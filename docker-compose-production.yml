@@ -21,13 +21,15 @@ services:
       dockerfile: docker/production/php-fpm.docker
     restart: always
     volumes:
-      - ./manager:/app:ro
+      - ./manager:/app
+      - composer:/root/.composer/cache
     environment:
       APP_ENV: ${APP_ENV}
       APP_DEBUG: ${APP_DEBUG}
       APP_SECRET: ${APP_SECRET}
     env_file:
       - ./manager/.env.prod
+    working_dir: /app
     networks:
       - manager
 
