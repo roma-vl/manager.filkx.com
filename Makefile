@@ -6,9 +6,8 @@ test: manager-test
 test-coverage: manager-test-coverage
 test-unit: manager-test-unit
 test-unit-coverage: manager-test-unit-coverage
-
 docker-up:
-	docker-compose up -d
+	docker-compose --env-file manager/.env up -d
 
 docker-down:
 	docker-compose down --remove-orphans
@@ -77,8 +76,8 @@ format:
 perm:
 	docker-compose run --rm manager-php-cli sh -c "\
 		mkdir -p /app/var/storage/default && \
-		chown -R www-data:www-data /app/var/storage/default && \
-		chmod -R 775 /app/var/storage/default && \
+		chown -R www-data:www-data /app/var/storage && \
+		chmod -R 775 /app/var/storage && \
 		ln -snf /app/var/storage/default /app/public/storage \
 	"
 

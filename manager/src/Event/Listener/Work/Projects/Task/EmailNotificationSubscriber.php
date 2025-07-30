@@ -8,6 +8,7 @@ use App\Model\Work\Entity\Members\Member\MemberRepository;
 use App\Model\Work\Entity\Projects\Task\Event\TaskExecutorAssigned;
 use App\Model\Work\Entity\Projects\Task\TaskRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mime\Address;
@@ -30,6 +31,9 @@ readonly class EmailNotificationSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     */
     public function onTaskExecutorAssignedExecutor(TaskExecutorAssigned $event): void
     {
         if ($event->executorId->isEqual($event->actorId)) {
@@ -45,7 +49,7 @@ readonly class EmailNotificationSubscriber implements EventSubscriberInterface
         }
 
         $email = (new TemplatedEmail())
-            ->from(new Address('no-reply@yourapp.com', 'Task Manager'))
+            ->from(new Address('noreply@filkx.com', 'Task Manager'))
             ->to(new Address($executor->getEmail()->getValue(), $executor->getName()->getFull()))
             ->subject('Task Executor Assignment')
             ->htmlTemplate('mail/work/projects/task/executor-assigned-executor.html.twig')
@@ -57,6 +61,9 @@ readonly class EmailNotificationSubscriber implements EventSubscriberInterface
         $this->mailer->send($email);
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     */
     public function onTaskExecutorAssignedAuthor(TaskExecutorAssigned $event): void
     {
         $task = $this->tasks->get($event->taskId);
@@ -68,7 +75,7 @@ readonly class EmailNotificationSubscriber implements EventSubscriberInterface
         }
 
         $email = (new TemplatedEmail())
-            ->from(new Address('no-reply@yourapp.com', 'Task Manager'))
+            ->from(new Address('noreply@filkx.com', 'Task Manager'))
             ->to(new Address($author->getEmail()->getValue(), $author->getName()->getFull()))
             ->subject('Your Task Executor Assignment')
             ->htmlTemplate('mail/work/projects/task/executor-assigned-author.html.twig')

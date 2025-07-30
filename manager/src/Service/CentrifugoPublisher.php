@@ -16,7 +16,7 @@ class CentrifugoPublisher
 
     public function publish(string $channel, array $data): void
     {
-        $response = $this->client->request('POST', 'http://centrifugo:8000/api/publish', [
+        $response = $this->client->request('POST', $_ENV['CENTRIFUGO_API_PUBLISH_URL'], [
             'headers' => [
                 'Authorization' => 'apikey ' . $this->apiKey,
                 'Content-Type' => 'application/json',
@@ -31,6 +31,4 @@ class CentrifugoPublisher
             throw new \RuntimeException('Failed to publish to Centrifugo');
         }
     }
-
-
 }
