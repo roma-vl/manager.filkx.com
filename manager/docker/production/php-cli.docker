@@ -8,10 +8,11 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 
 WORKDIR /app
 
-COPY ./composer.json ./composer.lock ./
+COPY ./ ./
 
 RUN composer install --no-dev --prefer-dist --optimize-autoloader
 
+# --- Фінальний образ ---
 FROM php:8.4-cli
 
 RUN docker-php-ext-install opcache
@@ -21,4 +22,4 @@ COPY ./docker/production/php/default.ini /usr/local/etc/php/conf.d/default.ini
 WORKDIR /app
 
 COPY --from=builder /app ./
-COPY ./ ./
+
