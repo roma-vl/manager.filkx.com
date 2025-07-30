@@ -1,6 +1,6 @@
 <script setup>
   import { Link } from '@inertiajs/inertia-vue3'
-  import { computed, reactive } from '../../../../assets/vendor/@vue/reactivity/reactivity.index.js'
+  import {computed, reactive} from "vue";
 
   const props = defineProps({
     pagination: {
