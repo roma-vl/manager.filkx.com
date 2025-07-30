@@ -4,7 +4,7 @@ services:
   manager-nginx:
     build:
       context: ./manager
-      dockerfile: docker/production/php-fpm.docker
+      dockerfile: docker/production/nginx.docker
     restart: always
     depends_on:
       - manager-php-fpm
