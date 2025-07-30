@@ -1,30 +1,30 @@
 <script setup>
-  import { ref } from 'vue'
+import { ref } from 'vue'
 
-  const props = defineProps({
-    modelValue: {
-      type: Array,
-      default: () => [],
-    },
-  })
+const props = defineProps({
+  modelValue: {
+    type: Array,
+    default: () => [],
+  },
+})
 
-  const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue'])
 
-  const input = ref('')
+const input = ref('')
 
-  const addTag = () => {
-    const trimmed = input.value.trim()
-    if (trimmed && !props.modelValue.includes(trimmed)) {
-      emit('update:modelValue', [...props.modelValue, trimmed])
-      input.value = ''
-    }
+const addTag = () => {
+  const trimmed = input.value.trim()
+  if (trimmed && !props.modelValue.includes(trimmed)) {
+    emit('update:modelValue', [...props.modelValue, trimmed])
+    input.value = ''
   }
+}
 
-  const removeTag = index => {
-    const updated = [...props.modelValue]
-    updated.splice(index, 1)
-    emit('update:modelValue', updated)
-  }
+const removeTag = index => {
+  const updated = [...props.modelValue]
+  updated.splice(index, 1)
+  emit('update:modelValue', updated)
+}
 </script>
 
 <template>

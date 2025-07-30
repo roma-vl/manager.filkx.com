@@ -1,33 +1,25 @@
 <script setup>
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import { useForm } from '@inertiajs/inertia-vue3'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import { useForm } from '@inertiajs/inertia-vue3'
 
-  const props = defineProps({
-    role: Object,
-    permissions: Array,
-    errors: Object,
-  })
+const props = defineProps({
+  role: Object,
+  permissions: Array,
+  errors: Object,
+})
 
-  const breadcrumb = [
-    { title: 'Home', url: '/' },
-    { title: 'Work', url: '/work' },
-    { title: 'Projects', url: '/work/projects' },
-    { title: 'Roles', url: '/work/projects/roles' },
-    { title: 'Create', url: null },
-  ]
+const form = useForm({
+  name: props.role.name,
+  permissions: props.role.permissions,
+})
 
-  const form = useForm({
-    name: props.role.name,
-    permissions: props.role.permissions,
-  })
+if (props.errors) {
+  form.setError(props.errors)
+}
 
-  if (props.errors) {
-    form.setError(props.errors)
-  }
-
-  function submit() {
-    form.post(`/work/projects/roles/${props.role.id}/edit`)
-  }
+function submit() {
+  form.post(`/work/projects/roles/${props.role.id}/edit`)
+}
 </script>
 
 <template>
@@ -45,8 +37,8 @@
         <div class="mb-4">
           <label for="name" class="block font-semibold mb-1">Назва ролі</label>
           <input
-            v-model="form.name"
             id="name"
+            v-model="form.name"
             type="text"
             class="input"
             :class="{ 'border-red-500': form.errors.name }"
@@ -65,9 +57,9 @@
               class="flex items-center space-x-2"
             >
               <input
+                v-model="form.permissions"
                 type="checkbox"
                 :value="permission"
-                v-model="form.permissions"
                 class="checkbox"
               />
               <span>{{ permission }}</span>

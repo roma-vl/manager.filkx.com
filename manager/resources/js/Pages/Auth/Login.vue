@@ -1,48 +1,44 @@
 <script setup>
-  import axios from 'axios'
+import { useForm, usePage } from '@inertiajs/inertia-vue3'
+import { computed, ref, watch } from 'vue'
 
-  import { useForm, usePage } from '@inertiajs/inertia-vue3'
-  import { computed, ref, watch } from 'vue'
+const page = usePage()
+const flash = computed(() => page.props.value.flash || {})
+const showFlash = ref(false)
+// const user = computed(() => page.props.value.auth?.user)
+// const permissions = computed(() => page.props.value.auth?.permissions || [])
+const props = defineProps({
+  lastUsername: String,
+  csrfToken: String,
+})
 
-  const page = usePage()
-  const flash = computed(() => page.props.value.flash || {})
-  const showFlash = ref(false)
-  const user = computed(() => page.props.value.auth?.user)
-  const permissions = computed(() => page.props.value.auth?.permissions || [])
-  const props = defineProps({
-    lastUsername: String,
-    csrfToken: String,
-  })
+watch(
+  flash,
+  newVal => {
+    if (newVal.error || newVal.success) {
+      showFlash.value = true
+      setTimeout(() => {
+        showFlash.value = false
+      }, 5000)
+    }
+  },
+  { immediate: true },
+)
 
-  // Показуємо flash-повідомлення на 5 секунд
-  watch(
-    flash,
-    newVal => {
-      if (newVal.error || newVal.success) {
-        showFlash.value = true
-        setTimeout(() => {
-          showFlash.value = false
-        }, 5000)
-      }
+const form = useForm({
+  _csrf_token: props.csrfToken,
+  email: props.lastUsername || '',
+  password: '',
+  _remember_me: false,
+})
+function submit() {
+  form.post('/login', {
+    preserveScroll: true,
+    onError: () => {
+      form._password = ''
     },
-    { immediate: true }
-  )
-
-  const form = useForm({
-    _csrf_token: props.csrfToken,
-    email: props.lastUsername || '',
-    password: '',
-    _remember_me: false,
   })
-  function submit() {
-    form.post('/login', {
-      preserveScroll: true,
-      onError: () => {
-        // Очищаємо пароль при помилці
-        form._password = ''
-      },
-    })
-  }
+}
 </script>
 
 <template>
@@ -58,14 +54,14 @@
         {{ flash.success }}
       </div>
 
-      <form @submit.prevent="submit" novalidate>
+      <form novalidate @submit.prevent="submit">
         <!--        <input type="hidden" name="_csrf_token" :value="form._csrf_token" />-->
 
         <label class="block mb-2 font-semibold" for="email">Email</label>
         <input
           id="email"
-          type="email"
           v-model="form.email"
+          type="email"
           required
           class="w-full mb-4 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-600"
           placeholder="Email"
@@ -74,15 +70,15 @@
         <label class="block mb-2 font-semibold" for="password">Password</label>
         <input
           id="password"
-          type="password"
           v-model="form.password"
+          type="password"
           required
           class="w-full mb-4 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-600"
           placeholder="Password"
         />
 
         <div class="mb-4 flex items-center">
-          <input id="remember_me" type="checkbox" v-model="form._remember_me" class="mr-2" />
+          <input id="remember_me" v-model="form._remember_me" type="checkbox" class="mr-2" />
           <label for="remember_me" class="text-sm text-gray-700">Remember me</label>
         </div>
 

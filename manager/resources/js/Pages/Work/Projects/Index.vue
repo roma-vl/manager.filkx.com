@@ -8,12 +8,12 @@ import { statusBadgeClass } from '../../../Helpers/helpers.js'
 import Breadcrumbs from '../../../Components/ui/Breadcrumbs.vue'
 
 const props = defineProps({
-    projects: Array,
-    filters: Object,
-    statuses: Array,
-    sort: String,
-    direction: String,
-    pagination: Object,
+  projects: Array,
+  filters: Object,
+  statuses: Array,
+  sort: String,
+  direction: String,
+  pagination: Object,
 })
 
 const name = ref(props.filters.name || '')
@@ -22,67 +22,67 @@ const sort = ref(props.sort || 'name')
 const direction = ref(props.direction || 'asc')
 
 function toggleSort(field) {
-    if (sort.value === field) {
-        direction.value = direction.value === 'asc' ? 'desc' : 'asc'
-    } else {
-        sort.value = field
-        direction.value = 'asc'
-    }
-    submitFilters()
+  if (sort.value === field) {
+    direction.value = direction.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    sort.value = field
+    direction.value = 'asc'
+  }
+  submitFilters()
 }
 
 function submitFilters(page = 1) {
-    const query = new URLSearchParams({
-        name: name.value,
-        status: status.value,
-        sort: sort.value,
-        direction: direction.value,
-        page: page,
-    }).toString()
-    window.location.href = `/work/projects?${query}`
+  const query = new URLSearchParams({
+    name: name.value,
+    status: status.value,
+    sort: sort.value,
+    direction: direction.value,
+    page: page,
+  }).toString()
+  window.location.href = `/work/projects?${query}`
 }
 
 function resetFilters() {
-    name.value = ''
-    status.value = ''
-    submitFilters()
+  name.value = ''
+  status.value = ''
+  submitFilters()
 }
 
 function paginationLink(page) {
-    const query = new URLSearchParams({
-        name: name.value,
-        status: status.value,
-        sort: sort.value,
-        direction: direction.value,
-        page,
-    }).toString()
-    return `/work/projects?${query}`
+  const query = new URLSearchParams({
+    name: name.value,
+    status: status.value,
+    sort: sort.value,
+    direction: direction.value,
+    page,
+  }).toString()
+  return `/work/projects?${query}`
 }
 
 const paginationRange = computed(() => {
-    const current = props.pagination.currentPage
-    const last = props.pagination.lastPage
-    const delta = 2
-    const range = []
+  const current = props.pagination.currentPage
+  const last = props.pagination.lastPage
+  const delta = 2
+  const range = []
 
-    for (let i = Math.max(1, current - delta); i <= Math.min(last, current + delta); i++) {
-        range.push(i)
-    }
+  for (let i = Math.max(1, current - delta); i <= Math.min(last, current + delta); i++) {
+    range.push(i)
+  }
 
-    const result = []
-    if (range[0] > 1) {
-        result.push(1)
-        if (range[0] > 2) result.push('...')
-    }
+  const result = []
+  if (range[0] > 1) {
+    result.push(1)
+    if (range[0] > 2) result.push('...')
+  }
 
-    result.push(...range)
+  result.push(...range)
 
-    if (range[range.length - 1] < last) {
-        if (range[range.length - 1] < last - 1) result.push('...')
-        result.push(last)
-    }
+  if (range[range.length - 1] < last) {
+    if (range[range.length - 1] < last - 1) result.push('...')
+    result.push(last)
+  }
 
-    return result
+  return result
 })
 </script>
 <template>
@@ -109,8 +109,8 @@ const paginationRange = computed(() => {
     </div>
 
     <form
-      @submit.prevent="submitFilters()"
       class="bg-gradient-to-br from-gray-900 to-indigo-900 text-white/90 p-4 rounded-xl shadow-md grid grid-cols-1 md:grid-cols-4 gap-4"
+      @submit.prevent="submitFilters()"
     >
       <input
         v-model="name"
@@ -135,8 +135,8 @@ const paginationRange = computed(() => {
         </button>
         <button
           type="button"
-          @click="resetFilters"
           class="border border-indigo-600 text-white px-4 py-2 rounded w-full hover:bg-indigo-700 transition"
+          @click="resetFilters"
         >
           ♻️ Reset
         </button>
@@ -148,14 +148,14 @@ const paginationRange = computed(() => {
         <thead class="bg-indigo-950 text-indigo-300 uppercase text-xs tracking-wider">
           <tr>
             <th
-              @click="toggleSort('name')"
               class="px-6 py-3 cursor-pointer hover:text-indigo-400 transition"
+              @click="toggleSort('name')"
             >
               Name <span v-if="sort === 'name'">{{ direction === 'asc' ? '↑' : '↓' }}</span>
             </th>
             <th
-              @click="toggleSort('status')"
               class="px-6 py-3 cursor-pointer hover:text-indigo-400 transition"
+              @click="toggleSort('status')"
             >
               Status <span v-if="sort === 'status'">{{ direction === 'asc' ? '↑' : '↓' }}</span>
             </th>
@@ -184,8 +184,9 @@ const paginationRange = computed(() => {
         v-if="pagination.currentPage > 1"
         :href="paginationLink(pagination.currentPage - 1)"
         class="px-3 py-1 border border-indigo-600 rounded hover:bg-indigo-800 transition"
-        >← Prev</Link
       >
+        ← Prev
+      </Link>
 
       <template v-for="page in paginationRange" :key="page">
         <span v-if="page === '...'" class="px-3 py-1">…</span>
@@ -203,8 +204,9 @@ const paginationRange = computed(() => {
         v-if="pagination.currentPage < pagination.lastPage"
         :href="paginationLink(pagination.currentPage + 1)"
         class="px-3 py-1 border border-indigo-600 rounded hover:bg-indigo-800 transition"
-        >Next →</Link
       >
+        Next →
+      </Link>
     </div>
   </AppLayout>
 </template>

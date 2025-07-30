@@ -1,45 +1,45 @@
 <script setup>
-  import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
-  import { Head, Link } from '@inertiajs/inertia-vue3'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import axios from 'axios'
-  import { ref } from 'vue'
-  import Breadcrumbs from "@/Components/ui/Breadcrumbs.vue";
+import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
+import { Head, Link } from '@inertiajs/inertia-vue3'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import axios from 'axios'
+import { ref } from 'vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
 
-  defineProps({
-    groups: Array,
-    csrf: String,
-  })
+defineProps({
+  groups: Array,
+  csrf: String,
+})
 
-  const deleting = ref(null)
+const deleting = ref(null)
 
-  async function confirmDelete(id) {
-    if (!confirm('Are you sure?')) return
-    deleting.value = id
+async function confirmDelete(id) {
+  if (!confirm('Are you sure?')) return
+  deleting.value = id
 
-    try {
-      await axios.post(`/work/members/groups/${id}/delete`)
-      location.reload()
-    } catch (error) {
-      console.error('Delete error:', error)
-      alert('Failed to delete group')
-    } finally {
-      deleting.value = null
-    }
+  try {
+    await axios.post(`/work/members/groups/${id}/delete`)
+    location.reload()
+  } catch (error) {
+    console.error('Delete error:', error)
+    alert('Failed to delete group')
+  } finally {
+    deleting.value = null
   }
+}
 </script>
 
 <template>
   <AppLayout>
     <Head title="Groups" />
-      <Breadcrumbs
-          :items="[
+    <Breadcrumbs
+      :items="[
         { label: 'Home', href: '/' },
         { label: 'Work', href: '/work' },
         { label: 'Members', href: '/work/members' },
         { label: 'Groups' }
       ]"
-      />
+    />
 
     <GroupsTabs />
 
@@ -84,9 +84,9 @@
                 ✏️ Edit
               </Link>
               <button
-                @click.prevent="confirmDelete(group.id)"
                 :disabled="deleting === group.id"
                 class="px-3 py-1.5 bg-red-700 hover:bg-red-600 text-white text-sm rounded-md shadow transition disabled:opacity-50 disabled:cursor-not-allowed"
+                @click.prevent="confirmDelete(group.id)"
               >
                 <span v-if="deleting === group.id">⏳ Deleting...</span>
                 <span v-else>🗑️ Delete</span>

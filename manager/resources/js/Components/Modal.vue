@@ -1,78 +1,78 @@
 <script setup>
-  import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 
-  const props = defineProps({
-    show: {
-      type: Boolean,
-      default: false,
-    },
-    maxWidth: {
-      type: String,
-      default: '2xl',
-    },
-    closeable: {
-      type: Boolean,
-      default: true,
-    },
-  })
+const props = defineProps({
+  show: {
+    type: Boolean,
+    default: false,
+  },
+  maxWidth: {
+    type: String,
+    default: '2xl',
+  },
+  closeable: {
+    type: Boolean,
+    default: true,
+  },
+})
 
-  const emit = defineEmits(['close'])
-  const dialog = ref()
-  const showSlot = ref(props.show)
+const emit = defineEmits(['close'])
+const dialog = ref()
+const showSlot = ref(props.show)
 
-  watch(
-    () => props.show,
-    () => {
-      if (props.show) {
-        document.body.style.overflow = 'hidden'
-        showSlot.value = true
+watch(
+  () => props.show,
+  () => {
+    if (props.show) {
+      document.body.style.overflow = 'hidden'
+      showSlot.value = true
 
-        dialog.value?.showModal()
-      } else {
-        document.body.style.overflow = ''
+      dialog.value?.showModal()
+    } else {
+      document.body.style.overflow = ''
 
-        setTimeout(() => {
-          dialog.value?.close()
-          showSlot.value = false
-        }, 200)
-      }
+      setTimeout(() => {
+        dialog.value?.close()
+        showSlot.value = false
+      }, 200)
     }
-  )
+  },
+)
 
-  const close = () => {
-    if (props.closeable) {
-      emit('close')
+const close = () => {
+  if (props.closeable) {
+    emit('close')
+  }
+}
+
+const closeOnEscape = e => {
+  if (e.key === 'Escape') {
+    e.preventDefault()
+
+    if (props.show) {
+      close()
     }
   }
+}
 
-  const closeOnEscape = e => {
-    if (e.key === 'Escape') {
-      e.preventDefault()
+onMounted(() => document.addEventListener('keydown', closeOnEscape))
 
-      if (props.show) {
-        close()
-      }
-    }
-  }
+onUnmounted(() => {
+  document.removeEventListener('keydown', closeOnEscape)
 
-  onMounted(() => document.addEventListener('keydown', closeOnEscape))
+  document.body.style.overflow = ''
+})
 
-  onUnmounted(() => {
-    document.removeEventListener('keydown', closeOnEscape)
-
-    document.body.style.overflow = ''
-  })
-
-  const maxWidthClass = computed(() => {
-    return {
-      sm: 'sm:max-w-sm',
-      md: 'sm:max-w-md',
-      lg: 'sm:max-w-lg',
-      xl: 'sm:max-w-xl',
-      '2xl': 'sm:max-w-2xl',
-      '5xl': 'sm:max-w-5xl',
-    }[props.maxWidth]
-  })
+const maxWidthClass = computed(() => {
+  return {
+    sm: 'sm:max-w-sm',
+    md: 'sm:max-w-md',
+    lg: 'sm:max-w-lg',
+    xl: 'sm:max-w-xl',
+    '2xl': 'sm:max-w-2xl',
+    '5xl': 'sm:max-w-5xl',
+  }[props.maxWidth]
+})
 </script>
 
 <template>

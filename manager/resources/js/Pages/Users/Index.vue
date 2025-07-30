@@ -1,120 +1,120 @@
 <script setup>
-  import { Link } from '@inertiajs/inertia-vue3'
+import { Link } from '@inertiajs/inertia-vue3'
 
-  import { computed, ref, watch } from 'vue'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import { roleBadgeClass, statusBadgeClass } from '@/Helpers/helpers.js'
-  import Breadcrumbs from "@/Components/ui/Breadcrumbs.vue";
+import { computed, ref, watch } from 'vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import { roleBadgeClass, statusBadgeClass } from '@/Helpers/helpers.js'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
 
-  const props = defineProps({
-    users: Array,
-    pagination: Object,
-    filters: {
-      type: Object,
-      default: () => ({ name: '', email: '', role: '', status: '' }),
-    },
-    sort: String,
-    direction: String,
-  })
+const props = defineProps({
+  users: Array,
+  pagination: Object,
+  filters: {
+    type: Object,
+    default: () => ({ name: '', email: '', role: '', status: '' }),
+  },
+  sort: String,
+  direction: String,
+})
 
-  const name = ref(props.filters.name || '')
-  const email = ref(props.filters.email || '')
-  const role = ref(props.filters.role || '')
-  const status = ref(props.filters.status || '')
-  const sort = ref(props.sort || 'date')
-  const direction = ref(props.direction || 'desc')
+const name = ref(props.filters.name || '')
+const email = ref(props.filters.email || '')
+const role = ref(props.filters.role || '')
+const status = ref(props.filters.status || '')
+const sort = ref(props.sort || 'date')
+const direction = ref(props.direction || 'desc')
 
-  function toggleSort(field) {
-    if (sort.value === field) {
-      direction.value = direction.value === 'asc' ? 'desc' : 'asc'
-    } else {
-      sort.value = field
-      direction.value = 'asc'
-    }
-
-    submitFilters()
+function toggleSort(field) {
+  if (sort.value === field) {
+    direction.value = direction.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    sort.value = field
+    direction.value = 'asc'
   }
 
-  function submitFilters(page = 1) {
-    const query = new URLSearchParams({
-      name: name.value,
-      email: email.value,
-      role: role.value,
-      status: status.value,
-      sort: sort.value,
-      direction: direction.value,
-      page: page,
-    }).toString()
+  submitFilters()
+}
 
-    window.location.href = `/users?${query}`
+function submitFilters(page = 1) {
+  const query = new URLSearchParams({
+    name: name.value,
+    email: email.value,
+    role: role.value,
+    status: status.value,
+    sort: sort.value,
+    direction: direction.value,
+    page: page,
+  }).toString()
+
+  window.location.href = `/users?${query}`
+}
+
+function resetFilters() {
+  name.value = ''
+  email.value = ''
+  role.value = ''
+  status.value = ''
+  submitFilters()
+}
+
+watch(role, () => submitFilters())
+watch(status, () => submitFilters())
+
+function paginationLink(page) {
+  const query = new URLSearchParams({
+    name: name.value,
+    email: email.value,
+    role: role.value,
+    status: status.value,
+    page: page,
+  }).toString()
+
+  return `/users?${query}`
+}
+
+const paginationRange = computed(() => {
+  const current = props.pagination.currentPage
+  const last = props.pagination.lastPage
+  const delta = 2
+  const range = []
+  const rangeWithDots = []
+
+  for (let i = Math.max(1, current - delta); i <= Math.min(last, current + delta); i++) {
+    range.push(i)
   }
 
-  function resetFilters() {
-    name.value = ''
-    email.value = ''
-    role.value = ''
-    status.value = ''
-    submitFilters()
+  if (range[0] > 2) {
+    rangeWithDots.push(1)
+    rangeWithDots.push('...')
+  } else {
+    for (let i = 1; i < range[0]; i++) {
+      rangeWithDots.push(i)
+    }
   }
 
-  watch(role, () => submitFilters())
-  watch(status, () => submitFilters())
+  rangeWithDots.push(...range)
 
-  function paginationLink(page) {
-    const query = new URLSearchParams({
-      name: name.value,
-      email: email.value,
-      role: role.value,
-      status: status.value,
-      page: page,
-    }).toString()
-
-    return `/users?${query}`
+  if (range[range.length - 1] < last - 1) {
+    rangeWithDots.push('...')
+    rangeWithDots.push(last)
+  } else {
+    for (let i = range[range.length - 1] + 1; i <= last; i++) {
+      rangeWithDots.push(i)
+    }
   }
 
-  const paginationRange = computed(() => {
-    const current = props.pagination.currentPage
-    const last = props.pagination.lastPage
-    const delta = 2
-    const range = []
-    const rangeWithDots = []
-
-    for (let i = Math.max(1, current - delta); i <= Math.min(last, current + delta); i++) {
-      range.push(i)
-    }
-
-    if (range[0] > 2) {
-      rangeWithDots.push(1)
-      rangeWithDots.push('...')
-    } else {
-      for (let i = 1; i < range[0]; i++) {
-        rangeWithDots.push(i)
-      }
-    }
-
-    rangeWithDots.push(...range)
-
-    if (range[range.length - 1] < last - 1) {
-      rangeWithDots.push('...')
-      rangeWithDots.push(last)
-    } else {
-      for (let i = range[range.length - 1] + 1; i <= last; i++) {
-        rangeWithDots.push(i)
-      }
-    }
-
-    return rangeWithDots
-  })
+  return rangeWithDots
+})
 </script>
 
 <template>
   <AppLayout title="Users">
-      <Breadcrumbs
-          :items="[
-            { label: 'Home', href: '/' },
-            { label: 'Users' },
-          ]"
-      />
+    <Breadcrumbs
+      :items="[
+        { label: 'Home', href: '/' },
+        { label: 'Users' },
+      ]"
+    />
     <div class="space-y-4">
       <div class="flex justify-between items-center">
         <h1 class="text-2xl font-bold">Users</h1>
@@ -124,8 +124,8 @@
 
       <!-- Filters -->
       <form
-        @submit.prevent="submitFilters"
         class="grid grid-cols-1 md:grid-cols-5 gap-4 bg-white p-4 shadow rounded"
+        @submit.prevent="submitFilters"
       >
         <input v-model="name" placeholder="Name" class="form-input" />
         <input v-model="email" placeholder="Email" class="form-input" />
@@ -143,7 +143,7 @@
         </select>
         <div class="flex gap-2">
           <button type="submit" class="btn btn-primary w-full">Filter</button>
-          <button type="button" @click="resetFilters" class="btn btn-outline w-full">Reset</button>
+          <button type="button" class="btn btn-outline w-full" @click="resetFilters">Reset</button>
         </div>
       </form>
 
@@ -179,9 +179,11 @@
             <tr v-for="user in users" :key="user.id" class="hover:bg-gray-50">
               <td class="p-2">{{ user.date }}</td>
               <td class="p-2">
-                <Link :href="`/users/${user.id}`" class="text-blue-600 hover:underline">{{
-                  user.name
-                }}</Link>
+                <Link :href="`/users/${user.id}`" class="text-blue-600 hover:underline">
+                  {{
+                    user.name
+                  }}
+                </Link>
               </td>
               <td class="p-2">{{ user.email }}</td>
               <td class="p-2">

@@ -1,6 +1,6 @@
 <template>
   <div class="relative ml-4">
-    <button @click="open = !open" class="flex items-center space-x-2 focus:outline-none group">
+    <button class="flex items-center space-x-2 focus:outline-none group" @click="open = !open">
       <!--      <div class="relative">-->
       <!--        <img-->
       <!--          class="h-8 w-8 rounded-full object-cover"-->
@@ -29,8 +29,8 @@
     >
       <div
         v-show="open"
-        @click.away="open = false"
         class="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+        @click="open = false"
       >
         <div class="py-1">
           <div class="px-4 py-2 border-b">
@@ -56,7 +56,7 @@
             Settings
           </Link>
 
-          <div class="border-t border-gray-100"></div>
+          <div class="border-t border-gray-100" />
 
           <Link
             href="/logout"
@@ -72,14 +72,14 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
-  import { Link } from '@inertiajs/inertia-vue3'
-  import {
-    ChevronDownIcon,
-    UserIcon,
-    Cog6ToothIcon as CogIcon,
-    ArrowLeftOnRectangleIcon as LogoutIcon,
-  } from '@heroicons/vue/24/outline'
+import { ref } from 'vue'
+import { Link } from '@inertiajs/inertia-vue3'
+import {
+  ChevronDownIcon,
+  UserIcon,
+  Cog6ToothIcon as CogIcon,
+  ArrowLeftOnRectangleIcon as LogoutIcon,
+} from '@heroicons/vue/24/outline'
 
-  const open = ref(false)
+const open = ref(false)
 </script>

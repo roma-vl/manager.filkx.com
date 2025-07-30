@@ -1,25 +1,25 @@
 <script setup>
-  import { useForm } from '@inertiajs/inertia-vue3'
-  import InputLabel from '@/Components/InputLabel.vue'
-  import InputError from '@/Components/InputError.vue'
-  import TextInput from '@/Components/TextInput.vue'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
-  import SecondaryButton from '@/Components/SecondaryButton.vue'
-  import { Link } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/inertia-vue3'
+import InputLabel from '@/Components/InputLabel.vue'
+import InputError from '@/Components/InputError.vue'
+import TextInput from '@/Components/TextInput.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
+import { Link } from '@inertiajs/inertia-vue3'
 
-  const props = defineProps({
-    project: Object,
-  })
+const props = defineProps({
+  project: Object,
+})
 
-  const form = useForm({
-    name: props.project.name || '',
-    sort: props.project.sort || '',
-  })
+const form = useForm({
+  name: props.project.name || '',
+  sort: props.project.sort || '',
+})
 
-  function submit() {
-    form.post(`/work/projects/${props.project.id}/settings/edit`)
-  }
+function submit() {
+  form.post(`/work/projects/${props.project.id}/settings/edit`)
+}
 </script>
 
 <template>
@@ -32,9 +32,11 @@
           <Link href="/work/projects" class="hover:text-primary">Projects</Link><span>/</span>
         </li>
         <li>
-          <Link :href="`/work/projects/${project.id}`" class="hover:text-primary">{{
-            project.name
-          }}</Link>
+          <Link :href="`/work/projects/${project.id}`" class="hover:text-primary">
+            {{
+              project.name
+            }}
+          </Link>
           <span>/</span>
         </li>
         <li class="text-foreground font-semibold">Edit</li>
@@ -43,7 +45,7 @@
 
     <ProjectTabs :project-id="project.id" />
 
-    <form @submit.prevent="submit" class="">
+    <form class="" @submit.prevent="submit">
       <div>
         <InputLabel for="name" value="Назва проєкту" />
         <TextInput id="name" v-model="form.name" class="mt-1 block w-full" />
@@ -52,7 +54,7 @@
 
       <div>
         <InputLabel for="sort" value="Сортування" />
-        <TextInput id="sort" type="number" v-model="form.sort" class="mt-1 block w-full" />
+        <TextInput id="sort" v-model="form.sort" type="number" class="mt-1 block w-full" />
         <InputError :message="form.errors.sort" class="mt-2" />
       </div>
 

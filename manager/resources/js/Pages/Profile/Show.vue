@@ -1,78 +1,74 @@
 <script setup>
-  import { computed, reactive, ref, watchEffect } from 'vue'
-  import { useForm, usePage } from '@inertiajs/inertia-vue3'
-  import AppLayout from '../../Layouts/AppLayout.vue'
-  import {roleBadgeClass, statusBadgeClass} from "@/Helpers/helpers.js";
+import { computed, reactive, watchEffect } from 'vue'
+import { useForm, usePage } from '@inertiajs/inertia-vue3'
+import AppLayout from '../../Layouts/AppLayout.vue'
+import {roleBadgeClass, statusBadgeClass} from '@/Helpers/helpers.js'
 
-  const page = usePage()
-  const user = computed(() => page.props.value.auth?.user)
+const page = usePage()
+const user = computed(() => page.props.value.auth?.user)
 
-  const props = defineProps({
-    user: Object,
-  })
+const editing = reactive({
+  name: false,
+  email: false,
+})
 
-  const editing = reactive({
-    name: false,
-    email: false,
-  })
+const form = useForm({
+  first: '',
+  last: '',
+  email: '',
+})
 
-  const form = useForm({
-    first: '',
-    last: '',
-    email: '',
-  })
-
-  watchEffect(() => {
-    if (props.user) {
-      form.first = props.user.first_name
-      form.last = props.user.last_name
-      form.email = props.user.email
-    }
-  })
-
-  function startEdit(field) {
-    editing[field] = true
+watchEffect(() => {
+  if (user.value) {
+    form.first = user.value.first_name
+    form.last = user.value.last_name
+    form.email = user.value.email
   }
+})
 
-  function cancelEdit(field) {
-    if (field === 'name') {
-      form.first = props.user.first_name
-      form.last = props.user.last_name
-    } else {
-      form[field] = props.user[field]
-    }
-    editing[field] = false
-  }
+function startEdit(field) {
+  editing[field] = true
+}
 
-  function saveField(field) {
-    if (field === 'name') {
-      form.post('/profile/name', {
-        preserveScroll: true,
-        onSuccess: () => {
-          editing.name = false
-        },
-      })
-    } else if (field === 'email') {
-      form.post('/profile/email', {
-        preserveScroll: true,
-        onSuccess: () => {
-          editing.email = false
-        },
-      })
-    }
+function cancelEdit(field) {
+  if (field === 'name') {
+    form.first = user.value.first_name
+    form.last = user.value.last_name
+  } else {
+    form[field] = user[field]
   }
+  editing[field] = false
+}
+
+function saveField(field) {
+  if (field === 'name') {
+    form.post('/profile/name', {
+      preserveScroll: true,
+      onSuccess: () => {
+        editing.name = false
+      },
+    })
+  } else if (field === 'email') {
+    form.post('/profile/email', {
+      preserveScroll: true,
+      onSuccess: () => {
+        editing.email = false
+      },
+    })
+  }
+}
 </script>
 
 <template>
   <AppLayout>
     <div class="space-y-6">
-      <div class="bg-white p-6 rounded shadow" v-if="props.user">
+      <div v-if="user" class="bg-white p-6 rounded shadow">
         <h2 class="text-xl font-bold mb-4">Profile</h2>
         <table class="table-auto w-full border">
           <tbody>
             <tr>
               <th class="text-left p-2 border">ID</th>
-              <td class="p-2 border">{{ props.user.id }}</td>
+              <td class="p-2 border">{{ user.id }}</td>
             </tr>
             <tr>
               <th class="text-left p-2 border">Name</th>
@@ -92,16 +88,16 @@
                     placeholder="Last Name"
                   />
                   <p v-if="form.errors.last" class="text-red-600 text-sm">{{ form.errors.last }}</p>
-                  <button @click="saveField('name')" class="text-green-600 hover:text-green-800">
+                  <button class="text-green-600 hover:text-green-800" @click="saveField('name')">
                     💾
                   </button>
-                  <button @click="cancelEdit('name')" class="text-gray-600 hover:text-gray-800">
+                  <button class="text-gray-600 hover:text-gray-800" @click="cancelEdit('name')">
                     ✖
                   </button>
                 </template>
                 <template v-else>
-                  <span class="flex-1">{{ props.user.first_name }} {{ props.user.last_name }}</span>
-                  <button @click="startEdit('name')" class="text-blue-600 hover:text-blue-800">
+                  <span class="flex-1">{{ user.first_name }} {{ user.last_name }}</span>
+                  <button class="text-blue-600 hover:text-blue-800" @click="startEdit('name')">
                     ✏️
                   </button>
                 </template>
@@ -111,20 +107,20 @@
               <th class="text-left p-2 border">Email</th>
               <td class="p-2 border flex items-center gap-2">
                 <template v-if="editing.email">
-                  <input v-model="props.user.email" class="border p-1 rounded w-full" />
+                  <input v-model="user.email" class="border p-1 rounded w-full" />
                   <p v-if="form.errors.email" class="text-red-600 text-sm">
                     {{ form.errors.email }}
                   </p>
-                  <button @click="saveField('email')" class="text-green-600 hover:text-green-800">
+                  <button class="text-green-600 hover:text-green-800" @click="saveField('email')">
                     💾
                   </button>
-                  <button @click="cancelEdit('email')" class="text-gray-600 hover:text-gray-800">
+                  <button class="text-gray-600 hover:text-gray-800" @click="cancelEdit('email')">
                     ✖
                   </button>
                 </template>
                 <template v-else>
                   <span class="flex-1">{{ user.email }}</span>
-                  <button @click="startEdit('email')" class="text-blue-600 hover:text-blue-800">
+                  <button class="text-blue-600 hover:text-blue-800" @click="startEdit('email')">
                     ✏️
                   </button>
                 </template>
@@ -133,16 +129,16 @@
 
             <tr>
               <th class="text-left p-2 border">Created</th>
-              <td class="p-2 border">{{ props.user.created_at }}</td>
+              <td class="p-2 border">{{ user.created_at }}</td>
             </tr>
             <tr>
               <th class="text-left p-2 border">Role</th>
               <td class="p-2 border">
                 <span
                   class="inline-block px-3 py-1 rounded-full text-sm font-semibold"
-                  :class="roleBadgeClass(props.user.roles[0])"
+                  :class="roleBadgeClass(user.roles[0])"
                 >
-                  {{ props.user.roles[0] }}
+                  {{ user.roles[0] }}
                 </span>
               </td>
             </tr>
@@ -151,9 +147,9 @@
               <td class="p-2 border">
                 <span
                   class="inline-block px-3 py-1 rounded-full text-sm font-semibold"
-                  :class="statusBadgeClass(props.user.status)"
+                  :class="statusBadgeClass(user.status)"
                 >
-                  {{ props.user.status }}
+                  {{ user.status }}
                 </span>
               </td>
             </tr>
@@ -163,7 +159,7 @@
 
       <div class="bg-white p-6 rounded shadow">
         <h2 class="text-xl font-bold mb-4">Networks</h2>
-        <div v-if="props.user?.networks?.length">
+        <div v-if="user?.networks?.length">
           <table class="table-auto w-full border mb-4">
             <thead>
               <tr>

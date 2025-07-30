@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix resources/js",
+    "lint": "eslint --config .eslintrc.cjs --ext .js,.vue --fix resources/js",
     "format": "prettier --write resources/js/**/*.{js,vue}"
   },
   "husky": {
@@ -49,6 +49,7 @@
     "vue3-toastify": "^0.2.8"
   },
   "devDependencies": {
+    "@eslint/js": "^9.32.0",
     "@hotwired/stimulus": "^3.0.0",
     "@hotwired/turbo": "^7.1.1 || ^8.0",
     "@symfony/stimulus-bridge": "^3.2.0 || ^4.0.0",
@@ -58,10 +59,11 @@
     "@vitejs/plugin-vue": "^6.0.0",
     "@vue/eslint-config-prettier": "^10.2.0",
     "autoprefixer": "^10.4.21",
-    "eslint": "^9.31.0",
-    "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-prettier": "^5.5.1",
-    "eslint-plugin-vue": "^10.3.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.3",
+    "eslint-plugin-vue": "^9.33.0",
+    "eslint-teamcity": "^4.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
     "postcss": "^8.5.6",

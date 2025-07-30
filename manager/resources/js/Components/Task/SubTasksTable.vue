@@ -1,17 +1,17 @@
 <script setup>
-  import {
-    formatPriority,
-    formatStatus,
-    formatType,
-    priorityBadgeClass,
-    typeBadgeClass,
-  } from '../../Helpers/tasks.helper.js'
-  import { statusBadgeClass } from '../../Helpers/helpers.js'
+import {
+  formatPriority,
+  formatStatus,
+  formatType,
+  priorityBadgeClass,
+  typeBadgeClass,
+} from '../../Helpers/tasks.helper.js'
+import { statusBadgeClass } from '../../Helpers/helpers.js'
 
-  const props = defineProps({
-    children: Array,
-    projectId: [String, Number],
-  })
+const props = defineProps({
+  children: Array,
+  projectId: [String, Number],
+})
 </script>
 
 <template>
@@ -93,7 +93,7 @@
     </thead>
     <tbody>
       <tr
-        v-for="task in children"
+        v-for="task in props.children"
         :key="task.id"
         class="hover:bg-indigo-900 transition-colors"
         tabindex="0"
@@ -112,7 +112,7 @@
         </td>
         <td class="p-2 text-sm">
           <span v-if="task.parent" class="mr-1">
-            <i class="fas fa-angle-double-right"></i>
+            <i class="fas fa-angle-double-right" />
           </span>
           <a
             :href="`/work/projects/tasks/${task.id}`"
@@ -172,7 +172,7 @@
             <div
               class="bg-indigo-500 h-4 rounded-full transition-all duration-500 ease-in-out"
               :style="{ width: (task.progress ?? 0) + '%' }"
-            ></div>
+            />
             <div
               class="absolute inset-0 flex items-center justify-center text-xs font-semibold text-indigo-100 select-none"
             >

@@ -12,65 +12,65 @@ const flash = computed(() => page.props.value.flash || {})
 const roles = page.props.value.auth.roles
 const canManageUsers = roles?.includes('ROLE_MANAGE_USERS')
 const showFlash = ref(false)
-import {useCentrifugo} from "@/services/useCentrifugo.js";
-import {toast} from "vue3-toastify";
+import {useCentrifugo} from '@/services/useCentrifugo.js'
+import {toast} from 'vue3-toastify'
 
 const { init, subscribe, unsubscribe, disconnect } = useCentrifugo()
 
 const privateMessages = ref([])
 const userId = page.props.value.auth.user.id
 onMounted(async () => {
-    await init()
+  await init()
 
-    subscribe('chat:general', {
-        publication(ctx) {
-            toast.info(ctx.data.text)
-        },
-    })
+  subscribe('chat:general', {
+    publication(ctx) {
+      toast.info(ctx.data.text)
+    },
+  })
 
-    subscribe(`user:${userId}`, {
-        publication(ctx) {
-            privateMessages.value.push(ctx.data)
-            toast.info(ctx.data.text)
-        },
-    })
+  subscribe(`user:${userId}`, {
+    publication(ctx) {
+      privateMessages.value.push(ctx.data)
+      toast.info(ctx.data.text)
+    },
+  })
 })
 
 onBeforeUnmount(() => {
-    unsubscribe('chat:general')
-    unsubscribe(`user:${userId}`)
-    disconnect()
+  unsubscribe('chat:general')
+  unsubscribe(`user:${userId}`)
+  disconnect()
 })
 
-  watch(
-    flash,
-    newVal => {
-      if (newVal.error || newVal.success) {
-        showFlash.value = true
-        setTimeout(() => (showFlash.value = false), 5000)
-      }
-    },
-    {}
-  )
-  onMounted(() => {
-    if (flash.value.success || flash.value.error) {
+watch(
+  flash,
+  newVal => {
+    if (newVal.error || newVal.success) {
       showFlash.value = true
       setTimeout(() => (showFlash.value = false), 5000)
     }
-  })
-
-  const toggleSidebar = () => {
-    sidebarOpen.value = !sidebarOpen.value
+  },
+  {},
+)
+onMounted(() => {
+  if (flash.value.success || flash.value.error) {
+    showFlash.value = true
+    setTimeout(() => (showFlash.value = false), 5000)
   }
+})
 
-  watch(
-    () => page.url,
-    () => {
-      if (window.innerWidth < 1024) {
-        sidebarOpen.value = false
-      }
+const toggleSidebar = () => {
+  sidebarOpen.value = !sidebarOpen.value
+}
+
+watch(
+  () => page.url,
+  () => {
+    if (window.innerWidth < 1024) {
+      sidebarOpen.value = false
     }
-  )
+  },
+)
 </script>
 
 <template>
@@ -87,12 +87,13 @@ onBeforeUnmount(() => {
         <Link
           :href="'/'"
           class="font-extrabold text-xl tracking-widest text-white hover:text-indigo-300"
-          >Filkx Task</Link
         >
+          Filkx Task
+        </Link>
         <button
-          @click="toggleSidebar"
           class="text-indigo-300 hover:text-white focus:outline-none lg:hidden"
           aria-label="Toggle sidebar"
+          @click="toggleSidebar"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -113,45 +114,47 @@ onBeforeUnmount(() => {
 
       <nav class="p-4 space-y-6 overflow-y-auto h-[calc(100vh-64px)] custom-scroll">
         <div>
-          <NavItem icon="dashboard" to="/dashboard" :active="$page.url.startsWith('/dashboard')"
-            >Dashboard</NavItem
-          >
+          <NavItem icon="dashboard" to="/dashboard" :active="$page.url.startsWith('/dashboard')">
+            Dashboard
+          </NavItem>
         </div>
         <div>
           <h3 class="px-3 mb-2 text-xs font-semibold uppercase tracking-wide text-indigo-200">
             Projects & Tasks
           </h3>
-          <NavItem icon="folder" to="/work/projects" :active="$page.url === '/work/projects'"
-            >Projects</NavItem
-          >
+          <NavItem icon="folder" to="/work/projects" :active="$page.url === '/work/projects'">
+            Projects
+          </NavItem>
           <NavItem
             icon="check-circle"
             to="/work/projects/tasks"
             :active="$page.url.startsWith('/work/projects/tasks')"
-            >Tasks</NavItem
           >
+            Tasks
+          </NavItem>
           <NavItem
             icon="users"
             to="/work/members/groups"
             :active="$page.url.startsWith('/work/members')"
-            >Team</NavItem
           >
+            Team
+          </NavItem>
         </div>
         <div v-if="canManageUsers">
           <h3 class="px-3 mb-2 text-xs font-semibold uppercase tracking-wide text-indigo-200">
             Control Users
           </h3>
-          <NavItem icon="folder" to="/users" :active="$page.url.startsWith('/users')"
-            >Users</NavItem
-          >
+          <NavItem icon="folder" to="/users" :active="$page.url.startsWith('/users')">
+            Users
+          </NavItem>
         </div>
         <div>
           <h3 class="px-3 mb-2 text-xs font-semibold uppercase tracking-wide text-indigo-200">
             Settings
           </h3>
-          <NavItem icon="cog" to="/settings" :active="$page.url.startsWith('/settings')"
-            >Settings</NavItem
-          >
+          <NavItem icon="cog" to="/settings" :active="$page.url.startsWith('/settings')">
+            Settings
+          </NavItem>
         </div>
       </nav>
     </aside>
@@ -161,9 +164,9 @@ onBeforeUnmount(() => {
       <div class="flex items-center justify-between h-16 px-6">
         <div class="flex items-center">
           <button
-            @click="toggleSidebar"
             class="text-gray-500 dark:text-gray-300 mr-4 focus:outline-none lg:hidden"
             aria-label="Toggle sidebar"
+            @click="toggleSidebar"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -208,39 +211,42 @@ onBeforeUnmount(() => {
 
     <!-- Main -->
     <main class="col-start-2 row-start-2 overflow-y-auto p-6">
-      <Transition name="fade" mode="out-in">
-        <div class="max-w-7xl mx-auto">
+      <div class="max-w-7xl mx-auto">
+        <Transition name="fade" mode="out-in">
           <div
             v-if="showFlash && flash.error"
             class="mb-4 p-3 rounded bg-red-500/10 text-red-700 dark:text-red-300"
           >
             {{ flash.error }}
           </div>
+        </Transition>
+        <Transition name="fade" mode="out-in">
           <div
             v-if="showFlash && flash.success"
             class="mb-4 p-3 rounded bg-green-500/10 text-green-700 dark:text-green-300"
           >
             {{ flash.success }}
           </div>
-          <div
-            class="mx-auto p-3 rounded-lg bg-white text-gray-800 shadow-md shadow-gray-200/50 dark:bg-gradient-to-br
-             dark:from-indigo-900 dark:via-gray-900 dark:to-[#0e0f11] dark:text-indigo-200
-             dark:shadow-indigo-900/40 transition-all duration-300 ease-in-out min-h-[400px]"
-            role="main"
-          >
-            <slot />
-          </div>
+        </Transition>
+        <div
+          class="mx-auto p-3 rounded-lg bg-white text-gray-800 shadow-md shadow-gray-200/50 dark:bg-gradient-to-br
+        dark:from-indigo-900 dark:via-gray-900 dark:to-[#0e0f11] dark:text-indigo-200
+        dark:shadow-indigo-900/40 transition-all duration-300 ease-in-out min-h-[400px]"
+          role="main"
+        >
+          <slot />
         </div>
-      </Transition>
+      </div>
     </main>
+
 
     <!-- Overlay -->
     <Transition name="fade">
       <div
         v-if="sidebarOpen"
-        @click="sidebarOpen = false"
         class="fixed inset-0 z-10 bg-black/50 lg:hidden"
-      ></div>
+        @click="sidebarOpen = false"
+      />
     </Transition>
   </div>
 </template>

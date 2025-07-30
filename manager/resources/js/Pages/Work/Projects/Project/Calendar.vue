@@ -1,121 +1,120 @@
 <script setup>
-  import { onMounted, ref, watch } from 'vue'
-  import axios from 'axios'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import RolesTabs from '@/Components/Work/Projects/Project/Roles/RolesTabs.vue'
-  import { Head } from '@inertiajs/inertia-vue3'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import ProjectTabs from "@/Components/Work/Projects/ProjectTabs.vue";
+import { onMounted, ref, watch } from 'vue'
+import axios from 'axios'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import { Head } from '@inertiajs/inertia-vue3'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
 
-  const props = defineProps({
-    dates: Array,
-    now: String,
-    result: Object,
-    project: Object,
-    year: Number,
-    month: Number,
-    years: Array,
-    next: String,
-    prev: String,
-  })
+const props = defineProps({
+  dates: Array,
+  now: String,
+  result: Object,
+  project: Object,
+  year: Number,
+  month: Number,
+  years: Array,
+  next: String,
+  prev: String,
+})
 
-  const selectedYear = ref(props.year)
-  const selectedMonth = ref(props.month)
+const selectedYear = ref(props.year)
+const selectedMonth = ref(props.month)
 
-  const dates = ref(props.dates)
-  const now = ref(props.now)
-  const result = ref(props.result)
-  const next = ref(props.next)
-  const prev = ref(props.prev)
+const dates = ref(props.dates)
+const now = ref(props.now)
+const result = ref(props.result)
+const next = ref(props.next)
+const prev = ref(props.prev)
 
-  function chunk(array, size) {
-    const chunks = []
-    for (let i = 0; i < array?.length; i += size) {
-      chunks.push(array.slice(i, i + size))
-    }
-    return chunks
+function chunk(array, size) {
+  const chunks = []
+  for (let i = 0; i < array?.length; i += size) {
+    chunks.push(array.slice(i, i + size))
   }
+  return chunks
+}
 
-  function formatDate(dateStr) {
-    const date = new Date(dateStr)
-    return date.getDate().toString().padStart(2, '0')
+function formatDate(dateStr) {
+  const date = new Date(dateStr)
+  return date.getDate().toString().padStart(2, '0')
+}
+
+async function fetchCalendar(year, month) {
+  try {
+    const response = await axios.get(`/work/projects/${props.project.id}/calendar`, {
+      params: { year, month },
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+    })
+
+    const data = response.data
+
+    dates.value = data.dates
+    now.value = data.now
+    result.value = data.result
+
+    // Оновлюємо prev і next з кореня відповіді
+    prev.value = data.prev
+    next.value = data.next
+
+    selectedYear.value = year
+    selectedMonth.value = month
+  } catch (error) {
+    console.error('Failed to load calendar data:', error)
   }
+}
 
-  async function fetchCalendar(year, month) {
-    try {
-      const response = await axios.get(`/work/projects/${props.project.id}/calendar`, {
-        params: { year, month },
-        headers: { 'X-Requested-With': 'XMLHttpRequest' },
-      })
-
-      const data = response.data
-
-      dates.value = data.dates
-      now.value = data.now
-      result.value = data.result
-
-      // Оновлюємо prev і next з кореня відповіді
-      prev.value = data.prev
-      next.value = data.next
-
-      selectedYear.value = year
-      selectedMonth.value = month
-    } catch (error) {
-      console.error('Failed to load calendar data:', error)
-    }
-  }
-
-  onMounted(() => {
-    const urlParams = new URLSearchParams(window.location.search)
-    const y = parseInt(urlParams.get('year'))
-    const m = parseInt(urlParams.get('month'))
-    if (y && m) {
-      selectedYear.value = y
-      selectedMonth.value = m
-      fetchCalendar(y, m)
-    } else {
-      fetchCalendar(selectedYear.value, selectedMonth.value)
-    }
-  })
-
-  watch([selectedYear, selectedMonth], ([newYear, newMonth], [oldYear, oldMonth]) => {
-    if (newYear !== oldYear || newMonth !== oldMonth) {
-      const newUrl = new URL(window.location.href)
-      newUrl.searchParams.set('year', newYear)
-      newUrl.searchParams.set('month', newMonth)
-      window.history.pushState({}, '', newUrl.toString())
-
-      fetchCalendar(newYear, newMonth)
-    }
-  })
-
-  function goToPrev() {
-    let y = selectedYear.value
-    let m = selectedMonth.value - 1
-    if (m < 1) {
-      m = 12
-      y -= 1
-    }
+onMounted(() => {
+  const urlParams = new URLSearchParams(window.location.search)
+  const y = parseInt(urlParams.get('year'))
+  const m = parseInt(urlParams.get('month'))
+  if (y && m) {
     selectedYear.value = y
     selectedMonth.value = m
+    fetchCalendar(y, m)
+  } else {
+    fetchCalendar(selectedYear.value, selectedMonth.value)
   }
+})
 
-  function goToNext() {
-    let y = selectedYear.value
-    let m = selectedMonth.value + 1
-    if (m > 12) {
-      m = 1
-      y += 1
-    }
-    selectedYear.value = y
-    selectedMonth.value = m
-  }
+watch([selectedYear, selectedMonth], ([newYear, newMonth], [oldYear, oldMonth]) => {
+  if (newYear !== oldYear || newMonth !== oldMonth) {
+    const newUrl = new URL(window.location.href)
+    newUrl.searchParams.set('year', newYear)
+    newUrl.searchParams.set('month', newMonth)
+    window.history.pushState({}, '', newUrl.toString())
 
-  function goToNow() {
-    const today = new Date()
-    selectedYear.value = today.getFullYear()
-    selectedMonth.value = today.getMonth() + 1
+    fetchCalendar(newYear, newMonth)
   }
+})
+
+function goToPrev() {
+  let y = selectedYear.value
+  let m = selectedMonth.value - 1
+  if (m < 1) {
+    m = 12
+    y -= 1
+  }
+  selectedYear.value = y
+  selectedMonth.value = m
+}
+
+function goToNext() {
+  let y = selectedYear.value
+  let m = selectedMonth.value + 1
+  if (m > 12) {
+    m = 1
+    y += 1
+  }
+  selectedYear.value = y
+  selectedMonth.value = m
+}
+
+function goToNow() {
+  const today = new Date()
+  selectedYear.value = today.getFullYear()
+  selectedMonth.value = today.getMonth() + 1
+}
 </script>
 
 <template>
@@ -130,7 +129,7 @@
           { label: 'Projects' },
         ]"
       />
-        <ProjectTabs :project-id="project.id" />
+      <ProjectTabs :project-id="project.id" />
       <div class="flex flex-wrap gap-3 items-center mb-6">
         <select
           v-model="selectedYear"
@@ -149,31 +148,31 @@
         </select>
 
         <button
-          @click="fetchCalendar(selectedYear, selectedMonth)"
           class="btn btn-outline border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition rounded-md px-4 py-2"
+          @click="fetchCalendar(selectedYear, selectedMonth)"
         >
           Показати
         </button>
 
         <button
-          @click="goToNow"
           class="btn btn-outline border border-gray-500 text-gray-700 hover:bg-gray-700 hover:text-white transition rounded-md px-4 py-2 dark:border-gray-400 dark:text-gray-300 dark:hover:bg-gray-600"
+          @click="goToNow"
         >
           Зараз
         </button>
 
         <div class="ml-auto flex gap-2">
           <button
-            @click="goToPrev"
             class="btn btn-outline border border-gray-400 text-gray-600 hover:bg-gray-200 transition rounded-md px-3 py-1 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
             aria-label="Попередній місяць"
+            @click="goToPrev"
           >
             ⬅
           </button>
           <button
-            @click="goToNext"
             class="btn btn-outline border border-gray-400 text-gray-600 hover:bg-gray-200 transition rounded-md px-3 py-1 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
             aria-label="Наступний місяць"
+            @click="goToNext"
           >
             ➡
           </button>

@@ -1,12 +1,12 @@
 <script setup>
-  import { Link, usePage } from '@inertiajs/inertia-vue3'
-  import { computed } from 'vue'
+import { Link, usePage } from '@inertiajs/inertia-vue3'
+import { computed } from 'vue'
 
-  const page = usePage()
+const page = usePage()
 
-  const currentUrl = computed(() => page.url.value)
+const currentUrl = computed(() => page.url.value)
 
-  const isExactPath = path => currentUrl.value === path
+const isExactPath = path => currentUrl.value === path
 </script>
 
 <template>

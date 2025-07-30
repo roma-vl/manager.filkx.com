@@ -1,48 +1,47 @@
 <script setup>
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import { Link, usePage } from '@inertiajs/inertia-vue3'
-  import axios from 'axios'
-  import { computed } from 'vue'
-  import { roleBadgeClass, statusBadgeClass } from '../../Helpers/helpers.js'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import { Link, usePage } from '@inertiajs/inertia-vue3'
+import axios from 'axios'
+import { computed } from 'vue'
+import { roleBadgeClass, statusBadgeClass } from '../../Helpers/helpers.js'
 
-  const props = defineProps({
-    user: Object,
-    member: Object,
-  })
-  const user = computed(() => usePage().props.value.auth?.user)
-  const me = props.user.id === user.value.id
-  const allNetworks = ['facebook', 'google']
+const props = defineProps({
+  member: Object,
+})
+const user = computed(() => usePage().props.value.auth?.user)
+const me = props.user.id === user.value.id
+const allNetworks = ['facebook', 'google']
 
-  const connectedNetworks = computed(() => {
-    return props.user.networks.reduce((acc, net) => {
-      acc[net.network] = net
-      return acc
-    }, {})
-  })
+const connectedNetworks = computed(() => {
+  return props.user.networks.reduce((acc, net) => {
+    acc[net.network] = net
+    return acc
+  }, {})
+})
 
-  function unlink(network) {
-    if (confirm(`Ви впевнені, що хочете відв'язати ${network}?`)) {
-      axios
-        .post(`/auth/${network}/detach`)
-        .then(() => location.reload())
-        .catch(err => {
-          console.error(err)
-          alert('Помилка при відв’язці мережі')
-        })
-    }
+function unlink(network) {
+  if (confirm(`Ви впевнені, що хочете відв'язати ${network}?`)) {
+    axios
+      .post(`/auth/${network}/detach`)
+      .then(() => location.reload())
+      .catch(err => {
+        console.error(err)
+        alert('Помилка при відв’язці мережі')
+      })
   }
+}
 
-  function confirmAction(action) {
-    if (confirm(`Are you sure you want to ${action} this user?`)) {
-      axios
-        .post(`/users/${props.user.id}/${action}`)
-        .then(() => location.reload())
-        .catch(error => {
-          console.error(error)
-          alert('Error during action')
-        })
-    }
+function confirmAction(action) {
+  if (confirm(`Are you sure you want to ${action} this user?`)) {
+    axios
+      .post(`/users/${props.user.id}/${action}`)
+      .then(() => location.reload())
+      .catch(error => {
+        console.error(error)
+        alert('Error during action')
+      })
   }
+}
 </script>
 
 <template>
@@ -57,8 +56,8 @@
         <div class="flex flex-wrap gap-2">
           <div v-if="props.member">
             <Link
-              :href="`/work/members/${props.user.id}`"
               v-if="!me"
+              :href="`/work/members/${props.user.id}`"
               class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
             >
               ✏View Member
@@ -66,24 +65,24 @@
           </div>
           <div v-else>
             <Link
-              :href="`/work/members/create/${props.user.id}`"
               v-if="!me"
+              :href="`/work/members/create/${props.user.id}`"
               class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
             >
               ✏️ Create Member
             </Link>
           </div>
           <Link
-            :href="`/users/${props.user.id}/edit`"
             v-if="!me"
+            :href="`/users/${props.user.id}/edit`"
             class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
           >
             ✏️ Edit
           </Link>
 
           <Link
-            :href="`/users/${props.user.id}/role`"
             v-if="!me"
+            :href="`/users/${props.user.id}/role`"
             class="inline-flex items-center bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
           >
             🛡️ Change Role
@@ -91,24 +90,24 @@
 
           <button
             v-if="props.user.wait && !me"
-            @click="confirmAction('confirm')"
             class="bg-green-600 hover:bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
+            @click="confirmAction('confirm')"
           >
             ✅ Confirm
           </button>
 
           <button
             v-if="props.user.active && !me"
-            @click="confirmAction('block')"
             class="bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
+            @click="confirmAction('block')"
           >
             🚫 Block
           </button>
 
           <button
             v-if="props.user.blocked && !me"
-            @click="confirmAction('activate')"
             class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
+            @click="confirmAction('activate')"
           >
             🔓 Activate
           </button>
@@ -189,8 +188,8 @@
               <td class="px-4 py-2 text-right">
                 <button
                   v-if="connectedNetworks[network]"
-                  @click="unlink(network)"
                   class="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded text-sm transition"
+                  @click="unlink(network)"
                 >
                   🔌 Unlink
                 </button>

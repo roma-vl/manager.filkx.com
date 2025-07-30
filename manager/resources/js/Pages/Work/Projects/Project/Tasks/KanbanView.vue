@@ -1,36 +1,34 @@
 <script setup>
-  import { computed } from 'vue'
+const props = defineProps({
+  tasks: Array,
+  statuses: Array,
+})
 
-  const props = defineProps({
-    tasks: Array,
-    statuses: Array,
-  })
+const tasksByStatus = statusId => {
+  return props.tasks.filter(task => task.status === statusId)
+}
 
-  const tasksByStatus = statusId => {
-    return props.tasks.filter(task => task.status === statusId)
+const formatType = type => {
+  const map = {
+    bug: '🐞',
+    feature: '✨',
+    task: '📋',
   }
+  return map[type] ?? ''
+}
 
-  const formatType = type => {
-    const map = {
-      bug: '🐞',
-      feature: '✨',
-      task: '📋',
-    }
-    return map[type] ?? ''
+const priorityClass = priority => {
+  switch (priority) {
+  case 'low':
+    return 'bg-green-500'
+  case 'medium':
+    return 'bg-yellow-500'
+  case 'high':
+    return 'bg-red-500'
+  default:
+    return 'bg-gray-400'
   }
-
-  const priorityClass = priority => {
-    switch (priority) {
-      case 'low':
-        return 'bg-green-500'
-      case 'medium':
-        return 'bg-yellow-500'
-      case 'high':
-        return 'bg-red-500'
-      default:
-        return 'bg-gray-400'
-    }
-  }
+}
 </script>
 
 <template>
@@ -53,7 +51,7 @@
           <span class="text-sm font-semibold text-indigo-300 truncate">
             {{ formatType(task.type) }} {{ task.name }}
           </span>
-          <span :class="['w-2 h-2 rounded-full', priorityClass(task.priority)]"></span>
+          <span :class="['w-2 h-2 rounded-full', priorityClass(task.priority)]" />
         </div>
         <p class="text-xs text-gray-400 truncate">
           #{{ task.id }} • {{ task.project?.name ?? 'Без проєкту' }}

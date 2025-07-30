@@ -1,25 +1,25 @@
 <script setup>
-  import { Head, useForm, Link } from '@inertiajs/inertia-vue3'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import InputLabel from '@/Components/InputLabel.vue'
-  import InputError from '@/Components/InputError.vue'
-  import TextInput from '@/Components/TextInput.vue'
-  import SecondaryButton from '@/Components/SecondaryButton.vue'
+import { Head, useForm, Link } from '@inertiajs/inertia-vue3'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import InputLabel from '@/Components/InputLabel.vue'
+import InputError from '@/Components/InputError.vue'
+import TextInput from '@/Components/TextInput.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
 
-  const props = defineProps({
-    project: Object,
-  })
+const props = defineProps({
+  project: Object,
+})
 
 
-  const form = useForm({
-    name: '',
-    sort: props.project.sort,
-    status: 'active',
-  })
+const form = useForm({
+  name: '',
+  sort: props.project.sort,
+  status: 'active',
+})
 
-  function submit() {
-    form.post('/work/projects/create')
-  }
+function submit() {
+  form.post('/work/projects/create')
+}
 </script>
 
 <template>
@@ -34,14 +34,13 @@
           <Link href="/work" class="hover:text-blue-600">Work</Link><span class="mx-2">/</span>
         </li>
         <li>
-          <Link href="/work/projects" class="hover:text-blue-600">Projects</Link
-          ><span class="mx-2">/</span>
+          <Link href="/work/projects" class="hover:text-blue-600">Projects</Link><span class="mx-2">/</span>
         </li>
         <li class="text-gray-700 font-semibold" aria-current="page">Create</li>
       </ol>
     </nav>
 
-    <form @submit.prevent="submit" novalidate>
+    <form novalidate @submit.prevent="submit">
       <!-- Назва -->
       <div>
         <InputLabel for="name" :value="'Name'" />

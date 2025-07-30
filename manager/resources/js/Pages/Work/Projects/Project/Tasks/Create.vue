@@ -1,71 +1,71 @@
 <script setup>
-  import { reactive, ref } from 'vue'
-  import { useRouter } from 'vue-router' // або Inertia router
-  import { Inertia } from '@inertiajs/inertia'
-  import AppLayout from '../../../../../Layouts/AppLayout.vue'
-  import Breadcrumbs from '../../../../../Components/ui/Breadcrumbs.vue'
-  import ProjectTabs from '../../../../../Components/Work/Projects/ProjectTabs.vue'
+import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router' // або Inertia router
+import { Inertia } from '@inertiajs/inertia'
+import AppLayout from '../../../../../Layouts/AppLayout.vue'
+import Breadcrumbs from '../../../../../Components/ui/Breadcrumbs.vue'
+import ProjectTabs from '../../../../../Components/Work/Projects/ProjectTabs.vue'
 
-  const props = defineProps({
-    project: Object,
-    defaults: Object,
-    types: Array,
-    priorities: Array,
-  })
+const props = defineProps({
+  project: Object,
+  defaults: Object,
+  types: Array,
+  priorities: Array,
+})
 
-  const router = useRouter()
-  const error = ref(null)
+const router = useRouter()
+const error = ref(null)
 
-  const form = reactive({
-    names: props.defaults.names.length ? [...props.defaults.names] : [''],
-    content: props.defaults.content ?? '',
-    parent: props.defaults.parent ?? null,
-    plan: props.defaults.plan ?? '',
-    type: props.defaults.type,
-    priority: props.defaults.priority,
-  })
+const form = reactive({
+  names: props.defaults.names.length ? [...props.defaults.names] : [''],
+  content: props.defaults.content ?? '',
+  parent: props.defaults.parent ?? null,
+  plan: props.defaults.plan ?? '',
+  type: props.defaults.type,
+  priority: props.defaults.priority,
+})
 
-  function addName() {
-    form.names.push('')
+function addName() {
+  form.names.push('')
+}
+
+function removeName(index) {
+  form.names.splice(index, 1)
+}
+
+function submit() {
+  error.value = null
+
+  // Валідація мінімальна: перевірка, що є хоч одна назва
+  if (!form.names.some(name => name.trim().length > 0)) {
+    error.value = 'Мінімум одна назва потрібна'
+    return
   }
 
-  function removeName(index) {
-    form.names.splice(index, 1)
-  }
-
-  function submit() {
-    error.value = null
-
-    // Валідація мінімальна: перевірка, що є хоч одна назва
-    if (!form.names.some(name => name.trim().length > 0)) {
-      error.value = 'Мінімум одна назва потрібна'
-      return
-    }
-
-    // Відправляємо POST через Inertia
-    Inertia.post(
-      `/work/projects/${props.project.id}/tasks/create`,
-      {
-        names: form.names,
-        content: form.content,
-        parent: form.parent,
-        plan: form.plan,
-        type: form.type,
-        priority: form.priority,
+  // Відправляємо POST через Inertia
+  Inertia.post(
+    `/work/projects/${props.project.id}/tasks/create`,
+    {
+      names: form.names,
+      content: form.content,
+      parent: form.parent,
+      plan: form.plan,
+      type: form.type,
+      priority: form.priority,
+    },
+    {
+      onSuccess: () => {
+        router.push({
+          name: 'work.projects.project.tasks',
+          params: { project_id: props.project.id },
+        })
       },
-      {
-        onSuccess: () => {
-          router.push({
-            name: 'work.projects.project.tasks',
-            params: { project_id: props.project.id },
-          })
-        },
-        onError: errors => {
-          error.value = errors.error || 'Сталася помилка'
-        },
-      }
-    )
-  }
+      onError: errors => {
+        error.value = errors.error || 'Сталася помилка'
+      },
+    },
+  )
+}
 </script>
 
 <template>
@@ -82,13 +82,11 @@
 
     <ProjectTabs :project-id="project.id" />
     <form
-      @submit.prevent="submit"
       class="max-w-3xl mx-auto space-y-6 bg-gradient-to-br from-indigo-950 via-gray-900 to-[#0e0f11] p-6 rounded-lg shadow-lg shadow-indigo-900/40 text-indigo-200"
+      @submit.prevent="submit"
     >
       <div>
-        <label class="block mb-1 text-sm font-medium text-indigo-300"
-          >Назви задач (назви можуть бути декілька):</label
-        >
+        <label class="block mb-1 text-sm font-medium text-indigo-300">Назви задач (назви можуть бути декілька):</label>
         <div
           v-for="(name, index) in form.names"
           :key="index"
@@ -104,17 +102,17 @@
           />
           <button
             type="button"
-            @click="removeName(index)"
             aria-label="Видалити назву"
             class="text-xs text-red-400 hover:text-red-300 transition-colors"
+            @click="removeName(index)"
           >
             ✕
           </button>
         </div>
         <button
           type="button"
-          @click="addName"
           class="text-sm px-3 py-1.5 rounded-md bg-indigo-800 hover:bg-indigo-700 text-white transition-colors"
+          @click="addName"
         >
           ➕ Додати назву
         </button>
@@ -132,9 +130,7 @@
       </div>
 
       <div>
-        <label class="block mb-1 text-sm font-medium text-indigo-300"
-          >Батьківська задача (ID)</label
-        >
+        <label class="block mb-1 text-sm font-medium text-indigo-300">Батьківська задача (ID)</label>
         <input
           v-model.number="form.parent"
           type="number"

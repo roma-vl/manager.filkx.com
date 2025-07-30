@@ -1,28 +1,28 @@
 <script setup>
-  import { useForm } from '@inertiajs/inertia-vue3'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import SecondaryButton from "@/Components/SecondaryButton.vue";
-  import Breadcrumbs from "@/Components/ui/Breadcrumbs.vue";
+import { useForm } from '@inertiajs/inertia-vue3'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
 
-  const props = defineProps({
-    project: Object,
-    membership: Object,
-    roles: Object,
-    departments: Object,
+const props = defineProps({
+  project: Object,
+  membership: Object,
+  roles: Object,
+  departments: Object,
+})
+
+console.log(props.membership)
+
+const form = useForm({
+  departments: props.membership?.departments ?? [],
+  roles: props.membership?.roles ?? [],
+})
+
+const submit = () => {
+  form.post(`/work/projects/${props.project.id}/settings/members/${props.membership.id}/edit`, {
+    preserveScroll: true,
   })
-
-  console.log(props.membership);
-
-  const form = useForm({
-    departments: props.membership?.departments ?? [],
-    roles: props.membership?.roles ?? [],
-  })
-
-  const submit = () => {
-    form.post(`/work/projects/${props.project.id}/settings/members/${props.membership.id}/edit`, {
-      preserveScroll: true,
-    })
-  }
+}
 </script>
 
 <template>
@@ -31,8 +31,8 @@
       <h1>Edit Member — {{ project.name }}</h1>
     </template>
 
-      <Breadcrumbs
-          :items="[
+    <Breadcrumbs
+      :items="[
         { label: 'Home', href: '/' },
         { label: 'Work', href: '/work' },
         { label: 'Projects', href: '/work/projects' },
@@ -42,7 +42,7 @@
         { label: membership.name, href: `/work/projects/${project.id}/settings/members/${membership.id}` },
         { label: 'Edit' },
       ]"
-      />
+    />
 
     <form class="max-w-3xl mx-auto space-y-6  p-6 " @submit.prevent="submit">
       <div class="card-body space-y-6">
@@ -55,11 +55,11 @@
               :key="id"
               class="inline-flex items-center gap-2 text-white/80"
             >
-              <input type="checkbox" :value="id" v-model="form.departments" />
+              <input v-model="form.departments" type="checkbox" :value="id" />
               {{ name }}
             </label>
           </div>
-          <div class="text-red-500 text-sm" v-if="form.errors.departments">
+          <div v-if="form.errors.departments" class="text-red-500 text-sm">
             {{ form.errors.departments }}
           </div>
         </div>
@@ -73,19 +73,19 @@
               :key="id"
               class="inline-flex items-center gap-2 text-white/80"
             >
-              <input type="checkbox" :value="id" v-model="form.roles" />
+              <input v-model="form.roles" type="checkbox" :value="id" />
               {{ name }}
             </label>
           </div>
-          <div class="text-red-500 text-sm" v-if="form.errors.roles">{{ form.errors.roles }}</div>
+          <div v-if="form.errors.roles" class="text-red-500 text-sm">{{ form.errors.roles }}</div>
         </div>
 
-          <div class="flex justify-end pt-4">
-              <SecondaryButton :disabled="form.processing" type="submit">
-                  <span v-if="form.processing" class="animate-pulse">Saving...</span>
-                  <span v-else>Save</span>
-              </SecondaryButton>
-          </div>
+        <div class="flex justify-end pt-4">
+          <SecondaryButton :disabled="form.processing" type="submit">
+            <span v-if="form.processing" class="animate-pulse">Saving...</span>
+            <span v-else>Save</span>
+          </SecondaryButton>
+        </div>
 
         <div v-if="form.errors.message" class="text-red-500 text-sm font-medium">
           {{ form.errors.message }}

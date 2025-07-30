@@ -1,15 +1,14 @@
 <script setup>
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
-  import { usePage } from '@inertiajs/inertia-vue3'
-  import { Link } from '@inertiajs/inertia-vue3'
-  import RolesTabs from '../../../../Components/Work/Projects/Project/Roles/RolesTabs.vue'
-  import Breadcrumbs from '../../../../Components/ui/Breadcrumbs.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import { usePage } from '@inertiajs/inertia-vue3'
+import { Link } from '@inertiajs/inertia-vue3'
+import RolesTabs from '../../../../Components/Work/Projects/Project/Roles/RolesTabs.vue'
+import Breadcrumbs from '../../../../Components/ui/Breadcrumbs.vue'
 
-  const { props } = usePage()
-  const project = props.value.project
-  const roles = props.value.roles
-  const permissions = props.value.permissions
+const { props } = usePage()
+// const project = props.value.project
+const roles = props.value.roles
+const permissions = props.value.permissions
 </script>
 
 <template>

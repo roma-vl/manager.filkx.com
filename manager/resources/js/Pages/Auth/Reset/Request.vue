@@ -1,18 +1,15 @@
 <script setup>
-  import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/inertia-vue3'
 
-  const form = useForm({
-    email: '',
-  })
+const form = useForm({
+  email: '',
+})
 
-  function submit() {
-    form.post('/reset', {
-      preserveScroll: true,
-    })
-  }
-  const props = defineProps({
-    errors: Object,
+function submit() {
+  form.post('/reset', {
+    preserveScroll: true,
   })
+}
 </script>
 
 <template>

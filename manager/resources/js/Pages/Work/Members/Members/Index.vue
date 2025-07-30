@@ -1,120 +1,120 @@
 <script setup>
-  import { ref, computed } from 'vue'
-  import { Head, Link } from '@inertiajs/inertia-vue3'
-  import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import { statusBadgeClass } from '../../../../Helpers/helpers.js'
-  import Breadcrumbs from "@/Components/ui/Breadcrumbs.vue";
+import { ref, computed } from 'vue'
+import { Head, Link } from '@inertiajs/inertia-vue3'
+import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import { statusBadgeClass } from '../../../../Helpers/helpers.js'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
 
-  const props = defineProps({
-    members: Array,
-    filters: Object,
-    groups: Array,
-    statuses: Array,
-    sort: String,
-    direction: String,
-    pagination: Object,
-  })
+const props = defineProps({
+  members: Array,
+  filters: Object,
+  groups: Array,
+  statuses: Array,
+  sort: String,
+  direction: String,
+  pagination: Object,
+})
 
-  const name = ref(props.filters.name || '')
-  const email = ref(props.filters.email || '')
-  const group = ref(props.filters.group || '')
-  const status = ref(props.filters.status || '')
-  const sort = ref(props.sort || 'name')
-  const direction = ref(props.direction || 'asc')
+const name = ref(props.filters.name || '')
+const email = ref(props.filters.email || '')
+const group = ref(props.filters.group || '')
+const status = ref(props.filters.status || '')
+const sort = ref(props.sort || 'name')
+const direction = ref(props.direction || 'asc')
 
-  const directionIcon = computed(() => (direction.value === 'asc' ? '↑' : '↓'))
+const directionIcon = computed(() => (direction.value === 'asc' ? '↑' : '↓'))
 
-  function toggleSort(field) {
-    if (sort.value === field) {
-      direction.value = direction.value === 'asc' ? 'desc' : 'asc'
-    } else {
-      sort.value = field
-      direction.value = 'asc'
-    }
-    submitFilters()
+function toggleSort(field) {
+  if (sort.value === field) {
+    direction.value = direction.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    sort.value = field
+    direction.value = 'asc'
+  }
+  submitFilters()
+}
+
+function submitFilters(page = 1) {
+  const query = new URLSearchParams({
+    name: name.value,
+    email: email.value,
+    group: group.value,
+    status: status.value,
+    sort: sort.value,
+    direction: direction.value,
+    page,
+  }).toString()
+
+  window.location.href = `/work/members?${query}`
+}
+
+function resetFilters() {
+  name.value = ''
+  email.value = ''
+  group.value = ''
+  status.value = ''
+  submitFilters()
+}
+
+function paginationLink(page) {
+  const query = new URLSearchParams({
+    name: name.value,
+    email: email.value,
+    group: group.value,
+    status: status.value,
+    sort: sort.value,
+    direction: direction.value,
+    page,
+  }).toString()
+
+  return `/work/members?${query}`
+}
+
+const paginationRange = computed(() => {
+  const current = props.pagination.currentPage
+  const last = props.pagination.lastPage
+  const delta = 2
+  const range = []
+
+  for (let i = Math.max(1, current - delta); i <= Math.min(last, current + delta); i++) {
+    range.push(i)
   }
 
-  function submitFilters(page = 1) {
-    const query = new URLSearchParams({
-      name: name.value,
-      email: email.value,
-      group: group.value,
-      status: status.value,
-      sort: sort.value,
-      direction: direction.value,
-      page,
-    }).toString()
-
-    window.location.href = `/work/members?${query}`
+  const result = []
+  if (range[0] > 1) {
+    result.push(1)
+    if (range[0] > 2) result.push('...')
   }
 
-  function resetFilters() {
-    name.value = ''
-    email.value = ''
-    group.value = ''
-    status.value = ''
-    submitFilters()
+  result.push(...range)
+
+  if (range[range.length - 1] < last) {
+    if (range[range.length - 1] < last - 1) result.push('...')
+    result.push(last)
   }
 
-  function paginationLink(page) {
-    const query = new URLSearchParams({
-      name: name.value,
-      email: email.value,
-      group: group.value,
-      status: status.value,
-      sort: sort.value,
-      direction: direction.value,
-      page,
-    }).toString()
-
-    return `/work/members?${query}`
-  }
-
-  const paginationRange = computed(() => {
-    const current = props.pagination.currentPage
-    const last = props.pagination.lastPage
-    const delta = 2
-    const range = []
-
-    for (let i = Math.max(1, current - delta); i <= Math.min(last, current + delta); i++) {
-      range.push(i)
-    }
-
-    const result = []
-    if (range[0] > 1) {
-      result.push(1)
-      if (range[0] > 2) result.push('...')
-    }
-
-    result.push(...range)
-
-    if (range[range.length - 1] < last) {
-      if (range[range.length - 1] < last - 1) result.push('...')
-      result.push(last)
-    }
-
-    return result
-  })
+  return result
+})
 </script>
 
 <template>
   <AppLayout>
     <Head title="Members" />
-      <Breadcrumbs
-          :items="[
+    <Breadcrumbs
+      :items="[
         { label: 'Home', href: '/' },
         { label: 'Work', href: '/work' },
         { label: 'Members' }
       ]"
-      />
+    />
 
 
     <GroupsTabs />
 
     <form
-      @submit.prevent="submitFilters"
       class=" mt-5 bg-gradient-to-br from-gray-900 to-[#0e0f11] p-4 rounded-2xl shadow-md mb-8 grid grid-cols-1 md:grid-cols-5 gap-4 text-white/80"
+      @submit.prevent="submitFilters"
     >
       <input v-model="name" placeholder="Name" class="input-dark" />
       <input v-model="email" placeholder="Email" class="input-dark" />
@@ -128,7 +128,7 @@
       </select>
       <div class="flex gap-2">
         <button type="submit" class="btn-primary-dark w-full">Filter</button>
-        <button type="button" @click="resetFilters" class="btn-outline-dark w-full">Reset</button>
+        <button type="button" class="btn-outline-dark w-full" @click="resetFilters">Reset</button>
       </div>
     </form>
 
@@ -139,10 +139,10 @@
       <table class="min-w-full divide-y divide-gray-800">
         <thead class="bg-gray-800 text-left text-xs font-semibold text-white/70">
           <tr>
-            <th @click="toggleSort('name')" class="th-sort">
+            <th class="th-sort" @click="toggleSort('name')">
               Name <span v-if="sort === 'name'">{{ directionIcon }}</span>
             </th>
-            <th @click="toggleSort('email')" class="th-sort">
+            <th class="th-sort" @click="toggleSort('email')">
               Email <span v-if="sort === 'email'">{{ directionIcon }}</span>
             </th>
             <th class="px-6 py-3">Group</th>
@@ -181,8 +181,9 @@
         v-if="pagination.currentPage > 1"
         :href="paginationLink(pagination.currentPage - 1)"
         class="pagination-link"
-        >← Prev</Link
       >
+        ← Prev
+      </Link>
 
       <template v-for="page in paginationRange" :key="page">
         <span v-if="page === '...'" class="px-3 py-1 text-gray-500">…</span>
@@ -200,8 +201,9 @@
         v-if="pagination.currentPage < pagination.lastPage"
         :href="paginationLink(pagination.currentPage + 1)"
         class="pagination-link"
-        >Next →</Link
       >
+        Next →
+      </Link>
     </div>
   </AppLayout>
 </template>

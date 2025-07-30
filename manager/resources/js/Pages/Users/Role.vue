@@ -1,36 +1,36 @@
 <script setup>
-  import { useForm } from '@inertiajs/inertia-vue3'
-  import { ref } from 'vue'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import SelectField from '@/Components/SelectField.vue'
-  import InputError from '@/Components/InputError.vue'
-  import InputLabel from '@/Components/InputLabel.vue'
-  import SecondaryButton from '@/Components/SecondaryButton.vue'
+import { useForm } from '@inertiajs/inertia-vue3'
+import { ref } from 'vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import SelectField from '@/Components/SelectField.vue'
+import InputError from '@/Components/InputError.vue'
+import InputLabel from '@/Components/InputLabel.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
 
-  const props = defineProps({
-    user: Object,
-    availableRoles: Object,
-    flash: {
-      type: Object,
-      default: () => ({}),
+const props = defineProps({
+  user: Object,
+  availableRoles: Object,
+  flash: {
+    type: Object,
+    default: () => ({}),
+  },
+})
+
+const form = useForm({
+  role: props.user.roles[0] ?? '',
+})
+
+const flashError = ref(props.flash?.error ?? '')
+
+function submit() {
+  flashError.value = ''
+  form.post(`/users/${props.user.id}/role`, {
+    onError: errors => {
+      flashError.value = Object.values(errors.errors ?? {}).join('; ')
     },
+    preserveScroll: true,
   })
-
-  const form = useForm({
-    role: props.user.roles[0] ?? '',
-  })
-
-  const flashError = ref(props.flash?.error ?? '')
-
-  function submit() {
-    flashError.value = ''
-    form.post(`/users/${props.user.id}/role`, {
-      onError: errors => {
-        flashError.value = Object.values(errors.errors ?? {}).join('; ')
-      },
-      preserveScroll: true,
-    })
-  }
+}
 </script>
 
 <template>
@@ -40,13 +40,13 @@
         <span class="text-gray-500">Change role for:</span> {{ user.firstName }} {{ user.lastName }}
       </h3>
 
-      <form @submit.prevent="submit" class="space-y-4">
+      <form class="space-y-4" @submit.prevent="submit">
         <div>
           <InputLabel for="role" :value="'Role'" class="block text-sm font-medium text-gray-700" />
           <SelectField
             id="role"
-            name="role"
             v-model="form.role"
+            name="role"
             :options="availableRoles"
             required
             autofocus

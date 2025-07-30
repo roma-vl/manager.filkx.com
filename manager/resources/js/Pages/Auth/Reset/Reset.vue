@@ -1,18 +1,17 @@
 <script setup>
-  import { useForm, usePage } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/inertia-vue3'
 
-  const page = usePage()
-  const props = defineProps({
-    token: String,
-  })
+const props = defineProps({
+  token: String,
+})
 
-  const form = useForm({
-    password: '',
-  })
+const form = useForm({
+  password: '',
+})
 
-  function submit() {
-    form.post(`/reset/${props.token}`)
-  }
+function submit() {
+  form.post(`/reset/${props.token}`)
+}
 
 </script>
 

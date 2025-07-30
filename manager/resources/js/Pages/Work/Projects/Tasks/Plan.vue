@@ -1,44 +1,44 @@
 <script setup>
-  import { reactive, ref } from 'vue'
-  import { useRouter } from 'vue-router'
-  import { Inertia } from '@inertiajs/inertia'
-  import AppLayout from '../../../../Layouts/AppLayout.vue'
-  import Breadcrumbs from '../../../../Components/ui/Breadcrumbs.vue'
-  import Datepicker from '@vuepic/vue-datepicker'
-  import '@vuepic/vue-datepicker/dist/main.css'
+import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { Inertia } from '@inertiajs/inertia'
+import AppLayout from '../../../../Layouts/AppLayout.vue'
+import Breadcrumbs from '../../../../Components/ui/Breadcrumbs.vue'
+import Datepicker from '@vuepic/vue-datepicker'
+import '@vuepic/vue-datepicker/dist/main.css'
 
-  const props = defineProps({
-    task: Object,
-  })
+const props = defineProps({
+  task: Object,
+})
 
-  const router = useRouter()
-  const error = ref(null)
+const router = useRouter()
+const error = ref(null)
 
-  const form = reactive({
-    plan_date: props.task.plan_date ? new Date(props.task.plan_date) : null,
-  })
+const form = reactive({
+  plan_date: props.task.plan_date ? new Date(props.task.plan_date) : null,
+})
 
-  function submit() {
-    error.value = null
+function submit() {
+  error.value = null
 
-    Inertia.post(
-      `/work/projects/tasks/${props.task.id}/plan`,
-      {
-        plan_date: form.plan_date?.toISOString(), // 💡 передаємо ISO-формат для Symfony
+  Inertia.post(
+    `/work/projects/tasks/${props.task.id}/plan`,
+    {
+      plan_date: form.plan_date?.toISOString(), // 💡 передаємо ISO-формат для Symfony
+    },
+    {
+      onSuccess: () => {
+        router.push({
+          name: 'work.projects.project.tasks',
+          params: { project_id: props.project?.id },
+        })
       },
-      {
-        onSuccess: () => {
-          router.push({
-            name: 'work.projects.project.tasks',
-            params: { project_id: props.project?.id },
-          })
-        },
-        onError: errors => {
-          error.value = errors.error || 'Сталася помилка'
-        },
-      }
-    )
-  }
+      onError: errors => {
+        error.value = errors.error || 'Сталася помилка'
+      },
+    },
+  )
+}
 </script>
 
 <template>
@@ -54,8 +54,8 @@
     />
 
     <form
-      @submit.prevent="submit"
       class="max-w-3xl mx-auto space-y-6 bg-gradient-to-br from-indigo-950 via-gray-900 to-[#0e0f11] p-6 rounded-lg shadow-lg shadow-indigo-900/40 text-indigo-200"
+      @submit.prevent="submit"
     >
       <div>
         <label class="block mb-1 text-sm font-medium text-indigo-300">Plan date & time:</label>

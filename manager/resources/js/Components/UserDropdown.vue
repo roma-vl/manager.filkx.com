@@ -1,6 +1,6 @@
 <template>
   <div class="relative">
-    <button @click="open = !open" class="flex items-center space-x-2 focus:outline-none">
+    <button class="flex items-center space-x-2 focus:outline-none" @click="open = !open">
       <img class="h-8 w-8 rounded-full" :src="$page.props.auth.user.avatar" alt="User avatar" />
       <span class="text-sm font-medium text-white truncate">{{ $page.props.auth.user.name }}</span>
       <svg
@@ -20,16 +20,16 @@
     <Transition name="dropdown">
       <div
         v-show="open"
-        @click.away="open = false"
         class="absolute bottom-full left-0 w-48 mb-2 bg-white rounded-md shadow-lg z-50"
+        @click="open = false"
       >
         <div class="py-1">
-          <Link href="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            >Your Profile</Link
-          >
-          <Link href="/settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            >Settings</Link
-          >
+          <Link href="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+            Your Profile
+          </Link>
+          <Link href="/settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+            Settings
+          </Link>
           <Link
             href="/logout"
             method="post"
@@ -45,10 +45,10 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
-  import { Link } from '@inertiajs/inertia-vue3'
+import { ref } from 'vue'
+import { Link } from '@inertiajs/inertia-vue3'
 
-  const open = ref(false)
+const open = ref(false)
 </script>
 
 <style>

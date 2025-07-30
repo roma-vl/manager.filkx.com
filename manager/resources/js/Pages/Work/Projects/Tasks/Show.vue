@@ -1,75 +1,75 @@
 <script setup>
-  import { useForm, Link } from '@inertiajs/inertia-vue3'
-  import AppLayout from '../../../../Layouts/AppLayout.vue'
-  import { onBeforeUnmount, onMounted, ref } from 'vue'
-  import Breadcrumbs from '../../../../Components/ui/Breadcrumbs.vue'
-  import axios from 'axios'
-  import ChangeTypeDropdown from './Partials/ChangeTypeDropdown.vue'
-  import ChangeStatusDropdown from './Partials/ChangeStatusDropdown.vue'
-  import ChangePriorityDropdown from './Partials/ChangePriorityDropdown.vue'
-  import ChangeProgressBar from './Partials/ChangeProgressBar.vue'
-  import SubTasksTable from '../../../../Components/Task/SubTasksTable.vue'
-  import MarkdownRenderer from '../../../../Components/ui/MarkdownRenderer.vue'
-  import FilesList from '@/Components/Task/FilesList.vue'
-  import CommentList from '@/Components/Task/CommentList.vue'
-  import ActionRow from "@/Components/ActionRow.vue";
-  import CommentForm from "@/Components/Task/CommentForm.vue";
+import { useForm, Link } from '@inertiajs/inertia-vue3'
+import AppLayout from '../../../../Layouts/AppLayout.vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+import Breadcrumbs from '../../../../Components/ui/Breadcrumbs.vue'
+import axios from 'axios'
+import ChangeTypeDropdown from './Partials/ChangeTypeDropdown.vue'
+import ChangeStatusDropdown from './Partials/ChangeStatusDropdown.vue'
+import ChangePriorityDropdown from './Partials/ChangePriorityDropdown.vue'
+import ChangeProgressBar from './Partials/ChangeProgressBar.vue'
+import SubTasksTable from '../../../../Components/Task/SubTasksTable.vue'
+import MarkdownRenderer from '../../../../Components/ui/MarkdownRenderer.vue'
+import FilesList from '@/Components/Task/FilesList.vue'
+import CommentList from '@/Components/Task/CommentList.vue'
+import ActionRow from '@/Components/ActionRow.vue'
+import CommentForm from '@/Components/Task/CommentForm.vue'
 
-  const props = defineProps({
-    task: Object,
-    project: Object,
-    member: Object,
-    children: Array,
-    statuses: Array,
-    types: Array,
-    priorities: Array,
-    progress: Array,
-    feed: Object,
-      meta: Object,
+const props = defineProps({
+  task: Object,
+  project: Object,
+  member: Object,
+  children: Array,
+  statuses: Array,
+  types: Array,
+  priorities: Array,
+  progress: Array,
+  feed: Object,
+  meta: Object,
+})
+
+
+const openDropdown = ref(false)
+const form = useForm({})
+function toggleDropdown() {
+  openDropdown.value = !openDropdown.value
+}
+
+function closeDropdown(event) {
+  if (!event.target.closest('.dropdown-container')) {
+    openDropdown.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', closeDropdown)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', closeDropdown)
+})
+
+function confirmAndSubmit(url) {
+  if (!window.confirm('Are you sure?')) return
+  axios.post(url)
+}
+
+function revokeExecutor(memberId) {
+  if (!confirm('Are you sure?')) return
+
+  form.post(`/work/projects/tasks/${props.task.id}/revoke/${memberId}`, {
+    preserveScroll: true,
   })
+}
 
+function formatDate(date) {
+  return new Date(date).toLocaleString()
+}
 
-  const openDropdown = ref(false)
-  const form = useForm({})
-  function toggleDropdown() {
-    openDropdown.value = !openDropdown.value
-  }
-
-  function closeDropdown(event) {
-    if (!event.target.closest('.dropdown-container')) {
-      openDropdown.value = false
-    }
-  }
-
-  onMounted(() => {
-    document.addEventListener('click', closeDropdown)
-  })
-
-  onBeforeUnmount(() => {
-    document.removeEventListener('click', closeDropdown)
-  })
-
-  function confirmAndSubmit(url) {
-    if (!window.confirm('Are you sure?')) return
-    axios.post(url)
-  }
-
-  function revokeExecutor(memberId) {
-    if (!confirm('Are you sure?')) return
-
-    form.post(`/work/projects/tasks/${props.task.id}/revoke/${memberId}`, {
-      preserveScroll: true,
-    })
-  }
-
-  function formatDate(date) {
-      return new Date(date).toLocaleString()
-  }
-
-  function reloadComments() {
-      // можна замінити на Inertia reload або запит через fetch/AJAX
-      window.location.reload()
-  }
+function reloadComments() {
+  // можна замінити на Inertia reload або запит через fetch/AJAX
+  window.location.reload()
+}
 </script>
 
 <template>
@@ -142,7 +142,8 @@
       <Link
         :href="`/work/projects/tasks/${taskId}/files`"
         class="inline-flex items-center px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded shadow transition"
-        >Add File
+      >
+        Add File
       </Link>
 
       <Link
@@ -215,49 +216,52 @@
               <SubTasksTable :children="children" :project-id="project.id" />
             </div>
 
-          <div class="rounded-lg shadow-lg shadow-indigo-800/40 mt-5 ">
-              <div class="rounded-t-xl p-3 text-left text-sm font-semibold tracking-wide select-none
-            bg-indigo-800 sticky top-0 text-white">
-                  Attachments
+            <div class="rounded-lg shadow-lg shadow-indigo-800/40 mt-5 ">
+              <div
+                class="rounded-t-xl p-3 text-left text-sm font-semibold tracking-wide select-none
+            bg-indigo-800 sticky top-0 text-white"
+              >
+                Attachments
               </div>
               <div class="space-y-4 pt-2 p-2">
-                  <FilesList :files="task.files" :task-id="task.id" />
+                <FilesList :files="task.files" :task-id="task.id" />
               </div>
-          </div>
+            </div>
 
             <div class="rounded-lg shadow-lg shadow-indigo-800/40 mt-5 ">
-                <div class="rounded-t-xl p-3 text-left text-sm font-semibold tracking-wide select-none
-                bg-indigo-800 sticky top-0 text-white">
-                    Comments
-                </div>
-                <div class="space-y-4 pt-5 p-2">
+              <div
+                class="rounded-t-xl p-3 text-left text-sm font-semibold tracking-wide select-none
+                bg-indigo-800 sticky top-0 text-white"
+              >
+                Comments
+              </div>
+              <div class="space-y-4 pt-5 p-2">
                 <CommentForm :task-id="task.id" @comment:added="reloadComments" />
-                </div>
+              </div>
             </div>
 
 
-              <div class="rounded-lg shadow-lg shadow-indigo-800/40 mt-5">
-                  <div class="text-white rounded-t-xl p-3 text-left text-sm font-semibold tracking-wide select-none bg-indigo-800 sticky top-0">
-                      History
-                  </div>
-
-                  <div class="space-y-4 pt-5 p-2">
-                      <div
-                          v-for="(entry, index) in feed"
-                          :key="index"
-                          class="rounded-xl   p-4 shadow bg-white dark:bg-gray-900"
-                      >
-                          <div class="text-sm text-gray-500 dark:text-gray-400">
-                              {{ formatDate(entry.date) }}
-                          </div>
-
-                          <ActionRow v-if="entry.action" :action="entry.action" />
-
-                          <CommentList v-if="entry.comment" :comments="entry.comment" :task-id="task.id" />
-
-                      </div>
-                  </div>
+            <div class="rounded-lg shadow-lg shadow-indigo-800/40 mt-5">
+              <div class="text-white rounded-t-xl p-3 text-left text-sm font-semibold tracking-wide select-none bg-indigo-800 sticky top-0">
+                History
               </div>
+
+              <div class="space-y-4 pt-5 p-2">
+                <div
+                  v-for="(entry, index) in feed"
+                  :key="index"
+                  class="rounded-xl   p-4 shadow bg-white dark:bg-gray-900"
+                >
+                  <div class="text-sm text-gray-500 dark:text-gray-400">
+                    {{ formatDate(entry.date) }}
+                  </div>
+
+                  <ActionRow v-if="entry.action" :action="entry.action" />
+
+                  <CommentList v-if="entry.comment" :comments="entry.comment" :task-id="task.id" />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -424,9 +428,9 @@
                     <td class="p-2 text-sm flex items-center justify-between">
                       <span>{{ executor.name }}</span>
                       <button
-                        @click="revokeExecutor(executor.id)"
                         class="ml-2 text-red-400 hover:text-red-600 bg-indigo-800 hover:bg-indigo-700 font-medium px-1 rounded transition"
                         title="Revoke"
+                        @click="revokeExecutor(executor.id)"
                       >
                         ✕
                       </button>

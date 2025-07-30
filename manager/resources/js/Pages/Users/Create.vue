@@ -1,44 +1,44 @@
 <script setup>
-  import { reactive, ref } from 'vue'
-  import { useForm } from '@inertiajs/inertia-vue3'
-  import AppLayout from '../../Layouts/AppLayout.vue'
-  import InputLabel from '../../Components/InputLabel.vue'
-  import InputError from '../../Components/InputError.vue'
-  import TextInput from '../../Components/TextInput.vue'
-  import SecondaryButton from '../../Components/SecondaryButton.vue'
-  const props = defineProps({
-    flash: {
-      type: Object,
-      default: () => ({ error: [] }),
+import { reactive, ref } from 'vue'
+import { useForm } from '@inertiajs/inertia-vue3'
+import AppLayout from '../../Layouts/AppLayout.vue'
+import InputLabel from '../../Components/InputLabel.vue'
+import InputError from '../../Components/InputError.vue'
+import TextInput from '../../Components/TextInput.vue'
+import SecondaryButton from '../../Components/SecondaryButton.vue'
+const props = defineProps({
+  flash: {
+    type: Object,
+    default: () => ({ error: [] }),
+  },
+})
+
+const form = useForm({
+  email: '',
+  firstName: '',
+  lastName: '',
+})
+
+const errors = reactive({})
+
+const flashError = ref(props.flash?.error?.length ? props.flash.error[0] : '')
+
+function submit() {
+  errors.email = null
+  errors.firstName = null
+  errors.lastName = null
+  flashError.value = ''
+
+  form.post('/users/create', form, {
+    preserveScroll: true,
+    onError: errs => {
+
+      if (errs.errors) {
+        flashError.value = errs.errors.join('; ')
+      }
     },
   })
-
-  const form = useForm({
-    email: '',
-    firstName: '',
-    lastName: '',
-  })
-
-  const errors = reactive({})
-
-  const flashError = ref(props.flash?.error?.length ? props.flash.error[0] : '')
-
-  function submit() {
-    errors.email = null
-    errors.firstName = null
-    errors.lastName = null
-    flashError.value = ''
-
-    form.post('/users/create', form, {
-      preserveScroll: true,
-      onError: errs => {
-
-        if (errs.errors) {
-          flashError.value = errs.errors.join('; ')
-        }
-      },
-    })
-  }
+}
 </script>
 
 <template>

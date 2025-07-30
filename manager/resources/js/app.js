@@ -8,8 +8,8 @@ import 'vue3-toastify/dist/index.css'
 const originalFetch = window.fetch
 
 window.fetch = (input, init = {}) => {
-    init.credentials = 'include'
-    return originalFetch(input, init)
+  init.credentials = 'include'
+  return originalFetch(input, init)
 }
 
 axios.defaults.withCredentials = true
@@ -20,17 +20,17 @@ document.querySelector('meta[name="csrf-token"]')?.content
 const pages = import.meta.glob('./Pages/**/*.vue')
 
 createInertiaApp({
-    resolve: name => {
-        const importPage = pages[`./Pages/${name}.vue`]
-        if (!importPage) {
-            throw new Error(`Unknown page ${name}`)
-        }
-        return importPage()
-    },
-    setup({ el, App, props, plugin }) {
-        createApp({ render: () => h(App, props) })
-            .use(plugin)
-            .use(Vue3Toastify)
-            .mount(el)
-    },
+  resolve: name => {
+    const importPage = pages[`./Pages/${name}.vue`]
+    if (!importPage) {
+      throw new Error(`Unknown page ${name}`)
+    }
+    return importPage()
+  },
+  setup({ el, App, props, plugin }) {
+    createApp({ render: () => h(App, props) })
+      .use(plugin)
+      .use(Vue3Toastify)
+      .mount(el)
+  },
 })

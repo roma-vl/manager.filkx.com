@@ -1,41 +1,38 @@
 <script setup>
-  import { useForm, usePage } from '@inertiajs/inertia-vue3'
-  import { computed, ref, watch } from 'vue'
+import { useForm, usePage } from '@inertiajs/inertia-vue3'
+import { computed, ref, watch } from 'vue'
 
-  const page = usePage()
-  const flash = computed(() => page.props.value.flash || {})
-  const showFlash = ref(false)
-  const props = defineProps({
-    lastUsername: String,
-  })
-  watch(
-    flash,
-    newVal => {
-      if (newVal.error || newVal.success) {
-        showFlash.value = true
-        setTimeout(() => {
-          showFlash.value = false
-        }, 5000)
-      }
+const page = usePage()
+const flash = computed(() => page.props.value.flash || {})
+const showFlash = ref(false)
+watch(
+  flash,
+  newVal => {
+    if (newVal.error || newVal.success) {
+      showFlash.value = true
+      setTimeout(() => {
+        showFlash.value = false
+      }, 5000)
+    }
+  },
+  { immediate: true },
+)
+
+const form = useForm({
+  firstName: '',
+  lastName: '',
+  email: '',
+  password: '',
+})
+
+function submit() {
+  form.post('/signup', {
+    preserveScroll: true,
+    onError: () => {
+      form.password = ''
     },
-    { immediate: true }
-  )
-
-  const form = useForm({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
   })
-
-  function submit() {
-    form.post('/signup', {
-      preserveScroll: true,
-      onError: () => {
-        form.password = ''
-      },
-    })
-  }
+}
 </script>
 
 <template>
@@ -52,14 +49,14 @@
         {{ flash.success }}
       </div>
 
-      <form @submit.prevent="submit" novalidate>
+      <form novalidate @submit.prevent="submit">
         <!--                <input type="hidden" name="_csrf_token" :value="form._csrf_token" />-->
 
         <label class="block mb-2 font-semibold" for="firstName">First Name</label>
         <input
           id="firstName"
-          type="text"
           v-model="form.firstName"
+          type="text"
           required
           placeholder="First Name"
           class="w-full mb-4 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-600"
@@ -72,8 +69,8 @@
         <label class="block mb-2 font-semibold" for="lastName">Last Name</label>
         <input
           id="lastName"
-          type="text"
           v-model="form.lastName"
+          type="text"
           required
           placeholder="Last Name"
           class="w-full mb-4 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-600"
@@ -86,8 +83,8 @@
         <label class="block mb-2 font-semibold" for="email">Email</label>
         <input
           id="email"
-          type="email"
           v-model="form.email"
+          type="email"
           required
           placeholder="Email"
           class="w-full mb-4 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-600"
@@ -100,8 +97,8 @@
         <label class="block mb-2 font-semibold" for="password">Password</label>
         <input
           id="password"
-          type="password"
           v-model="form.password"
+          type="password"
           required
           placeholder="Password"
           class="w-full mb-6 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-600"

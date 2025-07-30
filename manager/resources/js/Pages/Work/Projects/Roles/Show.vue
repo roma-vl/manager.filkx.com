@@ -1,32 +1,32 @@
 <script setup>
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import { Link, usePage } from '@inertiajs/inertia-vue3'
-  import Breadcrumbs from "@/Components/ui/Breadcrumbs.vue";
+import AppLayout from '@/Layouts/AppLayout.vue'
+import { Link, usePage } from '@inertiajs/inertia-vue3'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
 
-  const { props } = usePage()
+const { props } = usePage()
 
-  const role = props.value.role
+const role = props.value.role
 </script>
 
 <template>
   <AppLayout>
-      <Breadcrumbs
-          :items="[
+    <Breadcrumbs
+      :items="[
         { label: 'Home', href: '/' },
         { label: 'Work', href: '/work' },
         { label: 'Projects', href: '/work/projects' },
         { label: 'Roles', href: '/work/projects/roles' },
         { label: role.name },
       ]"
-      />
+    />
 
     <div class="flex gap-2 mb-4 my-6 justify-end">
       <Link :href="`/work/projects/roles/${role.id}/edit`" class="btn btn-primary"> Edit </Link>
       <form
         :action="`/work/projects/roles/${role.id}/delete`"
         method="post"
-        @submit.prevent="confirmDelete"
         class="inline"
+        @submit.prevent="confirmDelete"
       >
         <button type="submit" class="btn btn-danger">Delete</button>
       </form>
@@ -63,13 +63,13 @@
 </template>
 
 <script>
-  function confirmDelete(event) {
-    if (!confirm('Are you sure?')) {
-      event.preventDefault()
-    } else {
-      event.target.submit()
-    }
+function confirmDelete(event) {
+  if (!confirm('Are you sure?')) {
+    event.preventDefault()
+  } else {
+    event.target.submit()
   }
+}
 </script>
 
 <style scoped>

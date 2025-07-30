@@ -1,20 +1,20 @@
 <script setup>
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import { usePage, Link, useForm } from '@inertiajs/inertia-vue3'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import { usePage, Link, useForm } from '@inertiajs/inertia-vue3'
 
-  const { props } = usePage()
-  const role = props.value.role
-  const permissions = props.value.permissions
-  const errors = props.value.errors || {}
+const { props } = usePage()
+const role = props.value.role
+const permissions = props.value.permissions
+// const errors = props.value.errors || {}
 
-  const form = useForm({
-    name: role.name || '',
-    permissions: role.permissions || [],
-  })
+const form = useForm({
+  name: role.name || '',
+  permissions: role.permissions || [],
+})
 
-  function submit() {
-    form.post(`/work/projects/roles/${role.id}/copy`)
-  }
+function submit() {
+  form.post(`/work/projects/roles/${role.id}/copy`)
+}
 </script>
 
 <template>
@@ -33,7 +33,7 @@
       </ol>
     </nav>
 
-    <form @submit.prevent="submit" class="max-w-xl bg-white p-6 rounded-xl shadow">
+    <form class="max-w-xl bg-white p-6 rounded-xl shadow" @submit.prevent="submit">
       <div class="mb-4">
         <label for="name" class="block font-semibold mb-1">New Role Name</label>
         <input id="name" v-model="form.name" type="text" class="w-full border rounded px-3 py-2" />
@@ -48,7 +48,7 @@
             :key="permission"
             class="inline-flex items-center space-x-2"
           >
-            <input type="checkbox" :value="permission" v-model="form.permissions" />
+            <input v-model="form.permissions" type="checkbox" :value="permission" />
             <span>{{ permission }}</span>
           </label>
         </div>
