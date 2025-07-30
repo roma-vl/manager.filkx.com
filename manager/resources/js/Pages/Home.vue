@@ -2,7 +2,7 @@
   import AppLayout from '../Layouts/AppLayout.vue'
 
   import { usePage } from '@inertiajs/inertia-vue3'
-  import { computed } from '../../../assets/vendor/@vue/reactivity/reactivity.index.js'
+  import {computed} from "vue";
 
   const page = usePage()
 
