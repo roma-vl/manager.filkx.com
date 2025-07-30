@@ -11,7 +11,7 @@ services:
     volumes:
       - ./manager:/app:ro
     ports:
-      - "${NGINX_EXPOSE_PORT:-8080}:80"
+      - "${NGINX_EXPOSE_PORT:-8083}:80"
     networks:
       - manager
 
@@ -87,7 +87,7 @@ services:
   manager-redis:
     image: redis:latest
     ports:
-      - '${FORWARD_REDIS_PORT:-6379}:6379'
+      - '${FORWARD_REDIS_PORT:-6378}:6379'
     restart: always
     volumes:
       - manager-redis:/data
