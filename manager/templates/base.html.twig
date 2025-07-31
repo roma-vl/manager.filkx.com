@@ -11,8 +11,8 @@
 {% if app.debug %}
     <script type="module" src="http://localhost:5173/build/js/app.js"></script>
 {% else %}
-    <link rel="stylesheet" href="{{ asset('build/css/app.css') }}">
-    <script type="module" src="{{ asset('build/js/app.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('build/assets/css/app.css') }}">
+    <script type="module" src="{{ asset('build/assets/js/app.js') }}"></script>
 {% endif %}
 
 {% block javascripts %}

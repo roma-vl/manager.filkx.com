@@ -46,6 +46,7 @@ services:
     env_file:
       - ./manager/.env.prod
     working_dir: /app
+    command: ["sleep", "infinity"]
     networks:
       - manager
 
