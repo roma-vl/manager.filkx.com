@@ -32,9 +32,14 @@ docker-compose -f "$DOCKER_COMPOSE_FILE" down
 echo "🚀 Запуск контейнерів..."
 docker-compose -f "$DOCKER_COMPOSE_FILE" up -d --build
 
-# 🔐 Права на var
-docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" php chown -R www-data:www-data var
-docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" php chmod -R 775 var
+# 🔐 Права та структура
+echo "🔐 Налаштування директорій кешу, логів, сховища..."
+docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" php sh -c "\
+    mkdir -p var/cache var/log var/storage/default && \
+    chown -R www-data:www-data var && \
+    chmod -R 775 var && \
+    ln -snf /app/var/storage/default /app/public/storage \
+"
 
 # ⚙️ Міграції
 echo "⚙️ Doctrine міграції..."
@@ -42,8 +47,8 @@ docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" php 
 
 # 🧹 Кешування
 echo "🧹 Очистка та кешування..."
-docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" php bin/console cache:clear
-docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" php bin/console cache:warmup
+docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" php bin/console cache:clear --env=prod
+docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" php bin/console cache:warmup --env=prod
 
 # 🔗 Перемикаємо current
 ln -sfn "$APP_DIR/$COLOR/current" "$APP_DIR/current"
