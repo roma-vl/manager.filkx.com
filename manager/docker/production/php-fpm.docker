@@ -14,7 +14,21 @@ RUN composer install --no-dev --prefer-dist --optimize-autoloader --no-scripts
 
 FROM php:8.4-fpm
 
-RUN docker-php-ext-install opcache
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    zlib1g-dev \
+    zip \
+    libzip-dev \
+    libicu-dev \
+    vim \
+    git \
+    curl \
+    unzip \
+    && docker-php-ext-configure zip \
+    && docker-php-ext-install zip pdo pdo_pgsql \
+    && docker-php-ext-install intl \
+    && docker-php-ext-install opcache
+
 
 COPY ./docker/production/php/default.ini /usr/local/etc/php/conf.d/default.ini
 
