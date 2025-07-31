@@ -105,7 +105,6 @@ services:
     depends_on:
       - manager-php-fpm
   centrifugo:
-    container_name: centrifugo
     image: centrifugo/centrifugo:v6
     restart: always
     networks:
