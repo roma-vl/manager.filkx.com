@@ -4,7 +4,7 @@ set -e
 COLOR=$1
 APP_DIR="/var/www/manager.filkx.com"
 RELEASE_DIR="$APP_DIR/$COLOR/current"
-DOCKER_COMPOSE_FILE="$RELEASE_DIR/docker-compose.yml"
+DOCKER_COMPOSE_FILE="$RELEASE_DIR/docker-compose-production.yml"
 WORKDIR_IN_CONTAINER="/var/www/html"
 
 # ✅ Перевірки
@@ -21,9 +21,8 @@ fi
 echo "🚀 Деплой Symfony у $COLOR середовище"
 cd "$RELEASE_DIR"
 
-# 🔗 Shared .env.local
-rm -f "$RELEASE_DIR/.env.prod"
-ln -sfn /var/www/manager.filkx.com/shared/.env.prod "$RELEASE_DIR/.env.prod"
+rm -f "$RELEASE_DIR/.env"
+ln -sfn /var/www/manager.filkx.com/shared/.env "$RELEASE_DIR/.env"
 
 # 🛑 Зупинка поточних контейнерів
 echo "🛑 Зупинка контейнерів..."
@@ -31,7 +30,7 @@ docker-compose -f "$DOCKER_COMPOSE_FILE" down
 
 # 🚀 Запуск контейнерів
 echo "🚀 Запуск контейнерів..."
-docker-compose -f "$DOCKER_COMPOSE_FILE" -f docker-compose-production.yml up -d --build
+docker-compose -f "$DOCKER_COMPOSE_FILE" up -d --build
 
 # 🔐 Права на var
 docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" php chown -R www-data:www-data var
