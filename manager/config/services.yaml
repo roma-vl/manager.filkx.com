@@ -50,6 +50,9 @@ services:
             $client: '@http_client'
             $centrifugoApiKey: '%env(CENTRIFUGO_API_KEY)%'
 
+    App\Twig\ViteAssetExtension:
+        tags: [ 'twig.extension' ]
+
 
 framework:
     router:

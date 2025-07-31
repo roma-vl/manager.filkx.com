@@ -1,9 +1,13 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import symfony from 'vite-plugin-symfony'
 import path from 'path'
 
 export default defineConfig({
-    plugins: [vue()],
+    plugins: [
+        vue(),
+        symfony()
+    ],
     optimizeDeps: {
         include: ['vue3-toastify'],
     },
@@ -15,10 +19,14 @@ export default defineConfig({
         strictPort: true,
     },
     build: {
+        manifest: true,
         outDir: '../public/build',
         emptyOutDir: true,
         rollupOptions: {
-            input: path.resolve(__dirname, 'resources/js/app.js'),
+            input: {
+                app: path.resolve(__dirname, 'resources/js/app.js'),
+                style: path.resolve(__dirname, 'resources/css/app.css'),
+            },
         },
     },
     resolve: {
