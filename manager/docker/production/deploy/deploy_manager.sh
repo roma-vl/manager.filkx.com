@@ -5,7 +5,7 @@ COLOR=$1
 APP_DIR="/var/www/manager.filkx.com"
 RELEASE_DIR="$APP_DIR/$COLOR/current"
 DOCKER_COMPOSE_FILE="$RELEASE_DIR/docker-compose-production.yml"
-WORKDIR_IN_CONTAINER="/var/www/html"
+WORKDIR_IN_CONTAINER="/app"
 
 # ✅ Перевірки
 if [[ "$COLOR" != "blue" && "$COLOR" != "green" ]]; then
