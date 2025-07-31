@@ -3,13 +3,15 @@ import AppLayout from '@/Layouts/AppLayout.vue'
 import { Link, usePage } from '@inertiajs/inertia-vue3'
 import axios from 'axios'
 import { computed } from 'vue'
-import { roleBadgeClass, statusBadgeClass } from '../../Helpers/helpers.js'
+import { roleBadgeClass, statusBadgeClass } from '@/Helpers/helpers.js'
 
 const props = defineProps({
   member: Object,
+  user: Object,
 })
-const user = computed(() => usePage().props.value.auth?.user)
-const me = props.user.id === user.value.id
+
+console.log(props.user)
+const me = props.member?.id === props.user?.id
 const allNetworks = ['facebook', 'google']
 
 const connectedNetworks = computed(() => {
@@ -50,14 +52,14 @@ function confirmAction(action) {
       <!-- Heading -->
       <div class="flex flex-wrap justify-between items-center gap-2">
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-          👤 {{ props.user.name.full }}
+          👤 {{ user.full_name }}
         </h1>
 
         <div class="flex flex-wrap gap-2">
           <div v-if="props.member">
             <Link
               v-if="!me"
-              :href="`/work/members/${props.user.id}`"
+              :href="`/work/members/${user.id}`"
               class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
             >
               ✏View Member
@@ -74,7 +76,7 @@ function confirmAction(action) {
           </div>
           <Link
             v-if="!me"
-            :href="`/users/${props.user.id}/edit`"
+            :href="`/users/${user.id}/edit`"
             class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
           >
             ✏️ Edit
@@ -82,14 +84,14 @@ function confirmAction(action) {
 
           <Link
             v-if="!me"
-            :href="`/users/${props.user.id}/role`"
+            :href="`/users/${user.id}/role`"
             class="inline-flex items-center bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
           >
             🛡️ Change Role
           </Link>
 
           <button
-            v-if="props.user.wait && !me"
+            v-if="user.wait && !me"
             class="bg-green-600 hover:bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
             @click="confirmAction('confirm')"
           >
@@ -97,7 +99,7 @@ function confirmAction(action) {
           </button>
 
           <button
-            v-if="props.user.active && !me"
+            v-if="user.active && !me"
             class="bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
             @click="confirmAction('block')"
           >
@@ -105,7 +107,7 @@ function confirmAction(action) {
           </button>
 
           <button
-            v-if="props.user.blocked && !me"
+            v-if="user.blocked && !me"
             class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
             @click="confirmAction('activate')"
           >
@@ -122,24 +124,24 @@ function confirmAction(action) {
         >
           <div>
             <dt class="font-medium">Full Name</dt>
-            <dd>{{ props.user.name.full }}</dd>
+            <dd>{{ user.full_name }}</dd>
           </div>
           <div>
             <dt class="font-medium">Email</dt>
-            <dd>{{ props.user.email }}</dd>
+            <dd>{{ user.email }}</dd>
           </div>
           <div>
             <dt class="font-medium">Created At</dt>
-            <dd>{{ props.user.date }}</dd>
+            <dd>{{ user.created_at }}</dd>
           </div>
           <div>
             <dt class="font-medium">Role</dt>
             <dd>
               <span
                 class="inline-block px-3 py-1 rounded-full text-xs font-semibold"
-                :class="roleBadgeClass(props.user.role)"
+                :class="roleBadgeClass(user.roles[0])"
               >
-                {{ props.user.role }}
+                {{ user.roles[0] }}
               </span>
             </dd>
           </div>
@@ -148,9 +150,9 @@ function confirmAction(action) {
             <dd>
               <span
                 class="inline-block px-3 py-1 rounded-full text-xs font-semibold"
-                :class="statusBadgeClass(props.user.status)"
+                :class="statusBadgeClass(user.status)"
               >
-                {{ props.user.status }}
+                {{ user.status }}
               </span>
             </dd>
           </div>

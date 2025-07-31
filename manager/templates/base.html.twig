@@ -6,7 +6,6 @@
     <meta name="csrf-token" content="{{ csrf_token('authenticate') }}">
 
     {% if app.debug %}
-         Виводимо тег для Vite dev серверу
         <script type="module" src="http://localhost:5173/@vite/client"></script>
         <script type="module" src="http://localhost:5173/build/js/app.js"></script>
     {% else %}
@@ -17,11 +16,6 @@
 </head>
 <body>
 <div id="app" data-page='{{ page|json_encode|e('html_attr') }}'></div>
-
-{#{% block javascripts %}#}
-{#            {{ vite_entry_script_tags('app') }}#}
-{#    {{ encore_entry_script_tags('app') }}#}
-{#{% endblock %}#}
 </body>
 </html>
 

@@ -263,7 +263,19 @@ class UsersController extends BaseController
         return $inertia->render($request, 'Users/Show',
             array_merge(
                 $this->userShowPropsProvider->getProps(['userId' => $user->getId()->getValue()]),
-                ['member' => $member]
+                ['member' => $member],
+                [ 'user' => [
+                    'id' => $user->getId()->getValue(),
+                    'full_name' => $user->getName()->getFull(),
+                    'email' => $user->getEmail()?->getValue(),
+                    'created_at' => $user->getDate()->format('Y-m-d H:i:s'),
+                    'roles' => $user->getRoles(),
+                    'status' => $user->getStatus(),
+                    'networks' => array_map(fn ($n) => [
+                        'network' => $n->getNetwork(),
+                        'identity' => $n->getIdentity(),
+                    ], $user->getNetworks()),
+                ],],
             )
         );
     }

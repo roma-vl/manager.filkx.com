@@ -31,7 +31,7 @@ security:
             form_login:
                 login_path: app_login
                 check_path: app_login
-                enable_csrf: false
+                enable_csrf: true
                 csrf_token_id: authenticate
                 csrf_parameter: _token
             #                csrf_token_manager: security.csrf.token_manager
