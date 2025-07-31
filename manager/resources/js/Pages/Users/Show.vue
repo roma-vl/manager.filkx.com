@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue'
-import { Link, usePage } from '@inertiajs/inertia-vue3'
+import { Link } from '@inertiajs/inertia-vue3'
 import axios from 'axios'
 import { computed } from 'vue'
 import { roleBadgeClass, statusBadgeClass } from '@/Helpers/helpers.js'
