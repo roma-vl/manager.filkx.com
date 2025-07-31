@@ -22,8 +22,8 @@ echo "🚀 Деплой Symfony у $COLOR середовище"
 cd "$RELEASE_DIR"
 
 # 🔗 Shared .env.local
-rm -f "$RELEASE_DIR/.env.local"
-ln -sfn /var/www/manager.filkx.com/shared/.env.local "$RELEASE_DIR/.env.local"
+rm -f "$RELEASE_DIR/.env.prod"
+ln -sfn /var/www/manager.filkx.com/shared/.env.prod "$RELEASE_DIR/.env.prod"
 
 # 🛑 Зупинка поточних контейнерів
 echo "🛑 Зупинка контейнерів..."
@@ -31,7 +31,7 @@ docker-compose -f "$DOCKER_COMPOSE_FILE" down
 
 # 🚀 Запуск контейнерів
 echo "🚀 Запуск контейнерів..."
-docker-compose -f "$DOCKER_COMPOSE_FILE" up -d
+docker-compose -f "$DOCKER_COMPOSE_FILE" -f docker-compose-production.yml up -d --build
 
 # 🔐 Права на var
 docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" php chown -R www-data:www-data var
