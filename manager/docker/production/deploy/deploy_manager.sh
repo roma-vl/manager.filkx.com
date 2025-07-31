@@ -32,23 +32,32 @@ docker-compose -f "$DOCKER_COMPOSE_FILE" down
 echo "🚀 Запуск контейнерів..."
 docker-compose -f "$DOCKER_COMPOSE_FILE" up -d --build
 
+# ⏳ Очікування запуску CLI-контейнера
+echo "⏳ Очікування запуску контейнера manager-php-cli..."
+until docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T manager-php-cli true 2>/dev/null; do
+  echo "⌛ Чекаємо... (manager-php-cli ще не готовий)"
+  sleep 1
+done
+
 # 🔐 Права та структура
 echo "🔐 Налаштування директорій кешу, логів, сховища..."
-docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" php sh -c "\
+docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" manager-php-cli sh -c "\
     mkdir -p var/cache var/log var/storage/default && \
     chown -R www-data:www-data var && \
     chmod -R 775 var && \
     ln -snf /app/var/storage/default /app/public/storage \
 "
 
+
 # ⚙️ Міграції
 echo "⚙️ Doctrine міграції..."
-docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" php bin/console doctrine:migrations:migrate --no-interaction
+docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" manager-php-cli php bin/console doctrine:migrations:migrate --no-interaction
 
 # 🧹 Кешування
 echo "🧹 Очистка та кешування..."
-docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" php bin/console cache:clear --env=prod
-docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" php bin/console cache:warmup --env=prod
+docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" manager-php-cli php bin/console cache:clear --env=prod
+docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" manager-php-cli php bin/console cache:warmup --env=prod
+
 
 # 🔗 Перемикаємо current
 ln -sfn "$APP_DIR/$COLOR/current" "$APP_DIR/current"
