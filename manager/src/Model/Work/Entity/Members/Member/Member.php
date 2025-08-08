@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Work\Entity\Members\Member;
 
+use App\Model\User\Entity\Account\Account;
 use App\Model\Work\Entity\Members\Group\Group;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -19,6 +20,10 @@ class Member
     #[ORM\JoinColumn(name: 'group_id', referencedColumnName: 'id', nullable: false)]
     private Group $group;
 
+    #[ORM\ManyToOne(targetEntity: Account::class)]
+    #[ORM\JoinColumn(name: 'account_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private Account $account;
+
     #[ORM\Embedded(class: Name::class)]
     private Name $name;
 
@@ -32,13 +37,14 @@ class Member
     #[ORM\Column(type: 'integer')]
     private int $version;
 
-    public function __construct(Id $id, Group $group, Name $name, Email $email)
+    public function __construct(Id $id, Group $group, Name $name, Email $email, Account $account)
     {
         $this->id = $id;
         $this->group = $group;
         $this->name = $name;
         $this->email = $email;
         $this->status = Status::active();
+        $this->account = $account;
     }
 
     public function edit(Name $name, Email $email): void

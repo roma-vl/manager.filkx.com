@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Security;
 
-use App\Model\User\Entity\User\User;
+use App\Model\User\Entity\Account\Account;
 use App\ReadModel\User\AuthView;
 use App\ReadModel\User\UserFetcher;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -17,37 +18,29 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class UserProvider implements UserProviderInterface
 {
-    private UserFetcher $users;
-
-    public function __construct(UserFetcher $users)
-    {
-        $this->users = $users;
-    }
+    public function __construct(
+        private readonly UserFetcher $users,
+        private readonly EntityManagerInterface $entityManager,
+    ) {}
 
     public function loadUserByUsername(string $username): UserInterface
     {
-        $user = $this->loadUser($username);
-
-        return self::identityByUser($user, $username);
+        return $this->loadUserByIdentifier($username);
     }
 
-    public function refreshUser(UserInterface $identity): UserInterface
+    public function refreshUser(UserInterface $user): UserInterface
     {
-        if (!$identity instanceof UserIdentity) {
-            throw new UnsupportedUserException('Invalid user class ' . $identity::class);
+        if (!$user instanceof UserIdentity) {
+            throw new UnsupportedUserException('Invalid user class ' . $user::class);
         }
 
-        $user = $this->loadUser($identity->getUsername());
-
-        return self::identityByUser($user, $identity->getUsername());
+        return $this->loadUserByIdentifier($user->getUsername());
     }
 
     public function supportsClass(string $class): bool
     {
         return $class === UserIdentity::class
-            || is_subclass_of($class, UserIdentity::class)
-            || $class === User::class
-            || is_subclass_of($class, User::class);
+            || is_subclass_of($class, UserIdentity::class);
     }
 
     private function loadUser(string $username): AuthView
@@ -65,8 +58,15 @@ class UserProvider implements UserProviderInterface
         throw new UserNotFoundException('User not found');
     }
 
-    private static function identityByUser(AuthView $user, string $username): UserIdentity
+    private function identityByUser(AuthView $user, string $username): UserIdentity
     {
+        $account = null;
+
+        if ($user->getAccountId()) {
+            $account = $this->entityManager->getRepository(Account::class)
+                ->find($user->getAccountId());
+        }
+
         return new UserIdentity(
             $user->id,
             $user->email ?: $username,
@@ -75,13 +75,13 @@ class UserProvider implements UserProviderInterface
             $user->role,
             $user->status,
             $user->date,
+            $account
         );
     }
 
     public function loadUserByIdentifier(string $identifier): UserIdentity
     {
         $user = $this->loadUser($identifier);
-
-        return self::identityByUser($user, $identifier);
+        return $this->identityByUser($user, $identifier);
     }
 }

@@ -53,16 +53,16 @@ class UsersController extends BaseController
             $request->query->get('direction', 'desc')
         );
 
+        $users = array_map(fn ($user) => [
+            'id' => $user['id']->getValue(),
+            'name' => $user['name'],
+            'email' => $user['email']?->getValue(), // <-- дістаємо саму адресу
+            'role' => $user['role']?->getName(),
+            'status' => $user['status'],
+            'date' => $user['date']?->format('Y-m-d'),
+        ],$pagination->getItems());
         return $inertia->render($request, 'Users/Index', [
-            'users' => array_map(fn ($user) => [
-                'id' => $user['id'],
-                'name' => $user['name'],
-                'email' => $user['email'],
-                'role' => $user['role'],
-                'status' => $user['status'],
-                'date' => (new \DateTimeImmutable($user['date']))->format('Y-m-d'),
-            ],
-                $pagination->getItems()),
+            'users' => $users,
             'pagination' => [
                 'currentPage' => $pagination->getCurrentPageNumber(),
                 'lastPage' => ceil($pagination->getTotalItemCount() / self::PER_PAGE),

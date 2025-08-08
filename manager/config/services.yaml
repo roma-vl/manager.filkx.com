@@ -61,6 +61,18 @@ services:
     App\Twig\ViteAssetExtension:
         tags: [ 'twig.extension' ]
 
+    App\Tenant\TenantContext: ~
+
+    App\Tenant\TenantRequestListener:
+        arguments:
+            - '@App\Tenant\TenantContext'
+            - '@doctrine.orm.entity_manager'
+            - '@security.helper'
+            - '@security.token_storage'
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 7 }
+
+
 
 framework:
     router:

@@ -8,6 +8,7 @@ use App\Model\User\Entity\User\User;
 use App\ReadModel\NotFoundException;
 use App\ReadModel\User\Filter\Filter;
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -19,10 +20,16 @@ class UserFetcher
     private PaginatorInterface $paginator;
     /** @var EntityRepository<User> */
     private EntityRepository $repository;
+    private EntityManagerInterface $em;
 
-    public function __construct(Connection $connection, EntityManagerInterface $em, PaginatorInterface $paginator)
+    public function __construct(
+        Connection $connection,
+        EntityManagerInterface $em,
+        PaginatorInterface $paginator
+    )
     {
         $this->connection = $connection;
+        $this->em = $em;
         $this->repository = $em->getRepository(User::class);
         $this->paginator = $paginator;
     }
@@ -52,7 +59,7 @@ class UserFetcher
     public function findForAuthByEmail(string $email): ?AuthView
     {
         $stmt = $this->connection->createQueryBuilder()
-            ->select('id', 'email', 'password_hash', "TRIM(CONCAT(name_first, ' ', name_last)) AS name", 'role', 'status', 'date')
+            ->select('id', 'email', 'password_hash', "TRIM(CONCAT(name_first, ' ', name_last)) AS name", 'role', 'status', 'date', 'account_id')
             ->from('user_users')
             ->where('email = :email')
             ->setParameter('email', $email)
@@ -72,6 +79,7 @@ class UserFetcher
         $authView->role = $result['role'];
         $authView->status = $result['status'];
         $authView->date = $result['date'];
+        $authView->account_id = $result['account_id'];
 
         return $authView;
     }
@@ -176,36 +184,95 @@ class UserFetcher
      */
     public function all(Filter $filter, int $page, int $size, string $sort, string $direction): PaginationInterface
     {
-        $qb = $this->connection->createQueryBuilder()
-            ->select('id', 'date', "TRIM(CONCAT(name_first, ' ', name_last)) AS name", 'email', 'role', 'status')
-            ->from('user_users');
+        $qb = $this->em->createQueryBuilder()
+            ->select(
+                'u.id',
+                'u.date',
+                "CONCAT(u.name.first, ' ', u.name.last) AS name",
+                'u.email',
+                'u.role',
+                'u.status'
+            )
+            ->from(User::class, 'u');
 
         if ($filter->name) {
-            $qb->andWhere($qb->expr()->like('LOWER(CONCAT(name_first, \' \', name_last))', ':name'));
+            $qb->andWhere($qb->expr()->like(
+                "LOWER(CONCAT(u.name.first, ' ', u.name.last))",
+                ':name'
+            ));
             $qb->setParameter('name', '%' . mb_strtolower($filter->name) . '%');
         }
 
         if ($filter->email) {
-            $qb->andWhere($qb->expr()->like('LOWER(email)', ':email'));
+            $qb->andWhere($qb->expr()->like('LOWER(u.email)', ':email'));
             $qb->setParameter('email', '%' . mb_strtolower($filter->email) . '%');
         }
 
         if ($filter->status) {
-            $qb->andWhere('status = :status');
+            $qb->andWhere('u.status = :status');
             $qb->setParameter('status', $filter->status);
         }
 
         if ($filter->role) {
-            $qb->andWhere('role = :role');
+            $qb->andWhere('u.role = :role');
             $qb->setParameter('role', $filter->role);
         }
 
-        if (!\in_array($sort, ['date', 'name', 'email', 'role', 'status'], true)) {
+        // Мапимо зрозумілі назви сортування на реальні поля з alias-ом
+        $sortMap = [
+            'date'   => 'u.date',
+            'name'   => "CONCAT(u.name.first, ' ', u.name.last)",
+            'email'  => 'u.email',
+            'role'   => 'u.role',
+            'status' => 'u.status',
+        ];
+
+        if (!isset($sortMap[$sort])) {
             throw new \UnexpectedValueException('Cannot sort by ' . $sort);
         }
 
-        $qb->orderBy($sort, $direction === 'desc' ? 'desc' : 'asc');
+        $qb->orderBy($sortMap[$sort], $direction === 'desc' ? 'DESC' : 'ASC');
 
         return $this->paginator->paginate($qb, $page, $size);
     }
+
+
+    //    public function findForAuthByEmail(string $email): ?AuthView
+//    {
+//        // 1. Використовуємо EntityManager замість Connection
+//        $qb = $this->em->createQueryBuilder();
+//
+//        // 2. Робимо запит через ORM
+//        $result = $qb->select([
+//            'u.id',
+//            'u.email',
+//            'u.passwordHash',
+//            "TRIM(CONCAT(u.name.first, ' ', u.name.last)) AS name",
+//            'u.role',
+//            'u.status',
+//            'u.date',
+//            'IDENTITY(u.account) AS account_id'
+//        ])
+//            ->from(User::class, 'u')
+//            ->where('u.email = :email')
+//            ->setParameter('email', $email)
+//            ->getQuery()
+//            ->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
+//
+//        if (!$result) {
+//            return null;
+//        }
+//
+//        $authView = new AuthView();
+//        $authView->id = $result['id'];
+//        $authView->email = $result['email'];
+//        $authView->password_hash = $result['passwordHash'];
+//        $authView->name = $result['name'];
+//        $authView->role = $result['role'];
+//        $authView->status = $result['status'];
+//        $authView->date = $result['date'];
+//        $authView->account_id = $result['account_id'];
+//
+//        return $authView;
+//    }
 }
