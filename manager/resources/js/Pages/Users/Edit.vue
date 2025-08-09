@@ -6,6 +6,7 @@ import SecondaryButton from '../../Components/SecondaryButton.vue'
 import InputLabel from '../../Components/InputLabel.vue'
 import InputError from '../../Components/InputError.vue'
 import TextInput from '../../Components/TextInput.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   user: Object,
@@ -35,6 +36,10 @@ function submit() {
 
 <template>
   <AppLayout>
+      <PageMeta
+          title="Edit User"
+          description="Page Edit User"
+      />
     <div class="card">
       <div class="card-body">
         <form @submit.prevent="submit">

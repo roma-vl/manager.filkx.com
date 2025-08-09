@@ -6,6 +6,7 @@ import { CheckCircleIcon, BanIcon } from 'lucide-vue-next'
 import axios from 'axios'
 import { statusBadgeClass } from '../../../../Helpers/helpers.js'
 import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   member: Object,
@@ -39,7 +40,10 @@ async function reinstate() {
 </script>
 <template>
   <AppLayout>
-    <Head title="Member Profile" />
+      <PageMeta
+          :title="`Member Profile`"
+          :description="`Page Member Profile`"
+      />
 
     <Breadcrumbs
       :items="[

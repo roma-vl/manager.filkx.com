@@ -3,8 +3,8 @@ import { onMounted, ref, watch } from 'vue'
 import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import RolesTabs from '@/Components/Work/Projects/Project/Roles/RolesTabs.vue'
-import { Head } from '@inertiajs/inertia-vue3'
 import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   dates: Array,
@@ -118,8 +118,10 @@ function goToNow() {
 <template>
   <AppLayout>
     <div class="max-w-7xl mx-auto">
-      <Head title="Projects" />
-
+        <PageMeta
+            :title="`Calendar`"
+            :description="`Page Calendar`"
+        />
       <Breadcrumbs
         :items="[
           { label: 'Home', href: '/' },

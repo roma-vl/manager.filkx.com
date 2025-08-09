@@ -6,6 +6,7 @@ import TextInput from '../../../../Components/TextInput.vue'
 import AppLayout from '../../../../Layouts/AppLayout.vue'
 import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 const props = defineProps({
   member: Object,
   errors: Object,
@@ -26,6 +27,10 @@ function submit() {
 
 <template>
   <AppLayout>
+      <PageMeta
+          :title="`Edit  ${props.member.firstName + ' ' + props.member.lastName}`"
+          :description="`Page Edit  ${props.member.firstName + ' ' + props.member.lastName}`"
+      />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },

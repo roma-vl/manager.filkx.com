@@ -1,11 +1,11 @@
-
 <script setup>
 import { ref, computed } from 'vue'
 import { Head, Link } from '@inertiajs/inertia-vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
-import RolesTabs from '../../../Components/Work/Projects/Project/Roles/RolesTabs.vue'
-import { statusBadgeClass } from '../../../Helpers/helpers.js'
-import Breadcrumbs from '../../../Components/ui/Breadcrumbs.vue'
+import RolesTabs from '@/Components/Work/Projects/Project/Roles/RolesTabs.vue'
+import { statusBadgeClass } from '@/Helpers/helpers.js'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   projects: Array,
@@ -88,7 +88,10 @@ const paginationRange = computed(() => {
 <template>
   <AppLayout>
     <Head title="Projects" />
-
+      <PageMeta
+          :title="`Projects`"
+          :description="`Page Projects`"
+      />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },

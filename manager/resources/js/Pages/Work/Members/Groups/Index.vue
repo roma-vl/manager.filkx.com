@@ -5,6 +5,7 @@ import AppLayout from '@/Layouts/AppLayout.vue'
 import axios from 'axios'
 import { ref } from 'vue'
 import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 defineProps({
   groups: Array,
@@ -32,6 +33,10 @@ async function confirmDelete(id) {
 <template>
   <AppLayout>
     <Head title="Groups" />
+      <PageMeta
+          :title="`Groups`"
+          :description="`Page Groups`"
+      />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },

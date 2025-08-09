@@ -7,6 +7,7 @@ import InputError from '../../../../Components/InputError.vue'
 import TextInput from '../../../../Components/TextInput.vue'
 import SecondaryButton from '../../../../Components/SecondaryButton.vue'
 import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   group: Object,
@@ -23,8 +24,10 @@ function submit() {
 
 <template>
   <AppLayout>
-    <Head title="Create Group" />
-
+      <PageMeta
+          :title="`Edit Group ${props.group.name}`"
+          :description="`Page Edit Group ${props.group.name}`"
+      />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },

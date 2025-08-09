@@ -1,5 +1,6 @@
 <script setup>
 import { useForm } from '@inertiajs/inertia-vue3'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   token: String,
@@ -16,6 +17,11 @@ function submit() {
 </script>
 
 <template>
+
+    <PageMeta
+        :title="`Set New Password`"
+        :description="`Page Set New Password`"
+    />
   <div class="max-w-md mx-auto mt-10 bg-white p-6 rounded shadow">
     <h1 class="text-xl font-bold mb-4">Set New Password</h1>
 

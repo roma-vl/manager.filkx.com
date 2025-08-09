@@ -8,6 +8,7 @@ import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
 import InputError from '@/Components/InputError.vue'
 import SelectInput from '@/Components/SelectInput.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   member: Object,
@@ -43,7 +44,10 @@ async function submit() {
 
 <template>
   <AppLayout>
-    <Head title="Move Member" />
+      <PageMeta
+          :title="`Move Member`"
+          :description="`Page Move Member`"
+      />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },

@@ -2,8 +2,8 @@
 import AppLayout from '@/Layouts/AppLayout.vue'
 import ActionRow from '@/Components/ActionRow.vue'
 import RolesTabs from '@/Components/Work/Projects/Project/Roles/RolesTabs.vue'
-import {Head} from '@inertiajs/inertia-vue3'
 import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 
 const props = defineProps({
@@ -13,8 +13,10 @@ const props = defineProps({
 
 <template>
   <AppLayout>
-    <Head title="Projects" />
-
+      <PageMeta
+          :title="`Actions`"
+          :description="`Page Actions`"
+      />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },

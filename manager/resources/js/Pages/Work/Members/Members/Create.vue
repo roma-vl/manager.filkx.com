@@ -6,6 +6,7 @@ import TextInput from '../../../../Components/TextInput.vue'
 import SelectInput from '../../../../Components/SelectInput.vue'
 import AppLayout from '../../../../Layouts/AppLayout.vue'
 import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 const props = defineProps({
   user: Object,
   errors: Object,
@@ -26,6 +27,10 @@ function submit() {
 
 <template>
   <AppLayout>
+      <PageMeta
+          :title="`Create Member`"
+          :description="`Page Create Member`"
+      />
     <div>
       <h1 class="text-2xl font-bold mb-4">Додати учасника</h1>
       <Breadcrumbs

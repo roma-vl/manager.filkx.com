@@ -6,6 +6,7 @@ import InputLabel from '../../Components/InputLabel.vue'
 import InputError from '../../Components/InputError.vue'
 import TextInput from '../../Components/TextInput.vue'
 import SecondaryButton from '../../Components/SecondaryButton.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 const props = defineProps({
   flash: {
     type: Object,
@@ -43,6 +44,10 @@ function submit() {
 
 <template>
   <AppLayout>
+      <PageMeta
+          title="Create User"
+          description="Page Create User"
+      />
     <div class="card">
       <div class="card-body">
         <form @submit.prevent="submit">

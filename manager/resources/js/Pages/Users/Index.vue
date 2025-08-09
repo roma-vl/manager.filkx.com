@@ -1,10 +1,10 @@
 <script setup>
-import { Link } from '@inertiajs/inertia-vue3'
-
+import {Head, Link} from '@inertiajs/inertia-vue3'
 import { computed, ref, watch } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { roleBadgeClass, statusBadgeClass } from '@/Helpers/helpers.js'
 import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   users: Array,
@@ -108,7 +108,13 @@ const paginationRange = computed(() => {
 </script>
 
 <template>
-  <AppLayout title="Users">
+  <AppLayout>
+      <PageMeta
+          title="Користувачі"
+          description="Сторінка управління користувачами системи"
+          keywords="користувачі, управління, адміністрування"
+          image="/images/og-users.jpg"
+      />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },

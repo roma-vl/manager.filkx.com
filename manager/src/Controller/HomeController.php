@@ -29,9 +29,10 @@ class HomeController extends BaseController
         ]);
 
 
-        return $inertia->render($request, 'Home', [
-            'message' => 'Inertia без Laravel!',
-        ]);
+//        return $inertia->render($request, 'Home', [
+//            'message' => 'Inertia без Laravel!',
+//        ]);
+        return $inertia->redirect('dashboard');
     }
 
     #[Route('/dashboard', name: 'dashboard')]

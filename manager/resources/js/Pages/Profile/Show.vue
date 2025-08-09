@@ -3,6 +3,7 @@ import { computed, reactive, watchEffect } from 'vue'
 import { useForm, usePage } from '@inertiajs/inertia-vue3'
 import AppLayout from '../../Layouts/AppLayout.vue'
 import {roleBadgeClass, statusBadgeClass} from '@/Helpers/helpers.js'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const page = usePage()
 const user = computed(() => page.props.value.auth?.user)
@@ -57,10 +58,16 @@ function saveField(field) {
     })
   }
 }
+
+console.log(user, 'user')
 </script>
 
 <template>
   <AppLayout>
+      <PageMeta
+          :title="`${user.name}`"
+          :description="`Page ${user.name}`"
+      />
     <div class="space-y-6">
       <div v-if="user" class="bg-white p-6 rounded shadow">
         <h2 class="text-xl font-bold mb-4">Profile</h2>

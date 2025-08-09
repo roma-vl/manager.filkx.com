@@ -1,11 +1,12 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue'
-import { usePage, Link, useForm } from '@inertiajs/inertia-vue3'
+import { usePage, useForm } from '@inertiajs/inertia-vue3'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
+import Breadcrumbs from "@/Components/ui/Breadcrumbs.vue";
 
 const { props } = usePage()
 const role = props.value.role
 const permissions = props.value.permissions
-// const errors = props.value.errors || {}
 
 const form = useForm({
   name: role.name || '',
@@ -19,19 +20,20 @@ function submit() {
 
 <template>
   <AppLayout>
-    <nav class="text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
-      <ol class="flex items-center space-x-2">
-        <li><Link href="/" class="hover:text-primary">Home</Link><span>/</span></li>
-        <li><Link href="/work" class="hover:text-primary">Work</Link><span>/</span></li>
-        <li>
-          <Link href="/work/projects" class="hover:text-primary">Projects</Link><span>/</span>
-        </li>
-        <li>
-          <Link href="/work/projects/roles" class="hover:text-primary">Roles</Link><span>/</span>
-        </li>
-        <li class="text-foreground font-semibold">Copy Role</li>
-      </ol>
-    </nav>
+      <PageMeta
+          :title="`${role.name} Copy`"
+          :description="`Page ${role.name} Copy`"
+      />
+
+      <Breadcrumbs
+          :items="[
+        { label: 'Home', href: '/' },
+        { label: 'Work', href: '/work' },
+        { label: 'Projects', href: '/work/projects' },
+        { label: 'Roles', href: '/work/projects/roles' },
+        { label: 'Copy Role' },
+      ]"
+      />
 
     <form class="max-w-xl bg-white p-6 rounded-xl shadow" @submit.prevent="submit">
       <div class="mb-4">

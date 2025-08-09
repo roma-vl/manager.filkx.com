@@ -6,6 +6,7 @@ import SelectField from '@/Components/SelectField.vue'
 import InputError from '@/Components/InputError.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   user: Object,
@@ -35,6 +36,10 @@ function submit() {
 
 <template>
   <AppLayout>
+      <PageMeta
+          title="Change User Roles"
+          description="Page Change User Roles"
+      />
     <div class="max-w-xl mx-auto mt-10 bg-white dark:bg-gray-800 p-6 rounded shadow">
       <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
         <span class="text-gray-500">Change role for:</span> {{ user.firstName }} {{ user.lastName }}

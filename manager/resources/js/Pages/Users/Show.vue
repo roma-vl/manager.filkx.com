@@ -4,6 +4,7 @@ import { Link } from '@inertiajs/inertia-vue3'
 import axios from 'axios'
 import { computed } from 'vue'
 import { roleBadgeClass, statusBadgeClass } from '@/Helpers/helpers.js'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   member: Object,
@@ -47,7 +48,11 @@ function confirmAction(action) {
 </script>
 
 <template>
-  <AppLayout title="User Info">
+  <AppLayout>
+      <PageMeta
+          :title="`${props.user?.full_name}`"
+          description="Page Change User Roles"
+      />
     <div class="space-y-6 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Heading -->
       <div class="flex flex-wrap justify-between items-center gap-2">

@@ -1,6 +1,6 @@
 <script setup>
 import {ref, computed, watch, onMounted, onBeforeUnmount} from 'vue'
-import { Link, usePage } from '@inertiajs/inertia-vue3'
+import {Head, Link, usePage} from '@inertiajs/inertia-vue3'
 import SearchBar from '../Components/SearchBar.vue'
 import NavItem from '../Components/NavItem.vue'
 import UserDropdown2 from '../Components/UserDropdown2.vue'

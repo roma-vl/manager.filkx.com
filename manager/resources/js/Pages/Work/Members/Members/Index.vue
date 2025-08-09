@@ -5,6 +5,7 @@ import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { statusBadgeClass } from '../../../../Helpers/helpers.js'
 import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   members: Array,
@@ -100,7 +101,10 @@ const paginationRange = computed(() => {
 
 <template>
   <AppLayout>
-    <Head title="Members" />
+      <PageMeta
+          :title="`Members`"
+          :description="`Page Members`"
+      />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },

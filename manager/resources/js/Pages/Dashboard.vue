@@ -1,10 +1,11 @@
 <script setup>
 import AppLayout from '../Layouts/AppLayout.vue'
-import { usePage } from '@inertiajs/inertia-vue3'
+import { usePage} from '@inertiajs/inertia-vue3'
 import { computed } from 'vue'
 import CalendarWidget from '@/Components/Widgets/CalendarWidget.vue'
 import OwnTasksWidget from '@/Components/Widgets/OwnTasksWidget.vue'
 import MeTasksWidget from '@/Components/Widgets/MeTasksWidget.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const page = usePage()
 const user = computed(() => page.props.value.auth?.user)
@@ -12,6 +13,10 @@ const user = computed(() => page.props.value.auth?.user)
 
 <template>
   <AppLayout>
+      <PageMeta
+          title="Dashboard"
+          description="Dashboard"
+      />
     <section
       class="text-white min-h-[70vh] p-6 sm:p-10 transition-all duration-300 ease-in-out max-w-7xl mx-auto"
     >

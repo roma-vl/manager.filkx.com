@@ -7,6 +7,7 @@ import InputError from '../../../../Components/InputError.vue'
 import TextInput from '../../../../Components/TextInput.vue'
 import SecondaryButton from '../../../../Components/SecondaryButton.vue'
 import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const form = useForm({
   name: '',
@@ -19,7 +20,10 @@ function submit() {
 
 <template>
   <AppLayout>
-    <Head title="Create Group" />
+      <PageMeta
+          :title="`Create Group`"
+          :description="`Page Create Group`"
+      />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },

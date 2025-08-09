@@ -1,10 +1,11 @@
 <script setup>
-import { Head, useForm, Link } from '@inertiajs/inertia-vue3'
+import { useForm, Link } from '@inertiajs/inertia-vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import InputError from '@/Components/InputError.vue'
 import TextInput from '@/Components/TextInput.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   project: Object,
@@ -24,7 +25,10 @@ function submit() {
 
 <template>
   <AppLayout>
-    <Head title="Create Project" />
+      <PageMeta
+          :title="`Create Project`"
+          :description="`Page Create Project`"
+      />
 
     <!-- Breadcrumbs -->
     <nav class="mb-6 text-sm text-gray-500" aria-label="breadcrumb">
