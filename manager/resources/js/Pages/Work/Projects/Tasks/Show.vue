@@ -1,19 +1,20 @@
 <script setup>
 import { useForm, Link } from '@inertiajs/inertia-vue3'
-import AppLayout from '../../../../Layouts/AppLayout.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
-import Breadcrumbs from '../../../../Components/ui/Breadcrumbs.vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
 import axios from 'axios'
 import ChangeTypeDropdown from './Partials/ChangeTypeDropdown.vue'
 import ChangeStatusDropdown from './Partials/ChangeStatusDropdown.vue'
 import ChangePriorityDropdown from './Partials/ChangePriorityDropdown.vue'
 import ChangeProgressBar from './Partials/ChangeProgressBar.vue'
-import SubTasksTable from '../../../../Components/Task/SubTasksTable.vue'
-import MarkdownRenderer from '../../../../Components/ui/MarkdownRenderer.vue'
+import SubTasksTable from '@/Components/Task/SubTasksTable.vue'
+import MarkdownRenderer from '@/Components/ui/MarkdownRenderer.vue'
 import FilesList from '@/Components/Task/FilesList.vue'
 import CommentList from '@/Components/Task/CommentList.vue'
 import ActionRow from '@/Components/ActionRow.vue'
 import CommentForm from '@/Components/Task/CommentForm.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   task: Object,
@@ -67,13 +68,16 @@ function formatDate(date) {
 }
 
 function reloadComments() {
-  // можна замінити на Inertia reload або запит через fetch/AJAX
   window.location.reload()
 }
 </script>
 
 <template>
   <AppLayout>
+      <PageMeta
+          :title="`${task.name + ' - ' +  project.name}`"
+          :description="`Page ${task.name + ' - ' +  project.name}`"
+      />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },
@@ -86,7 +90,7 @@ function reloadComments() {
     />
 
     <!-- Заголовок -->
-    <h1 class="mt-0 mb-3 font-xl">
+    <h1 class="mt-0 mb-3 text-xl">
       <template v-if="task.parent">
         <Link :href="`/work/projects/tasks/${task.parent.id}`">{{ task.parent.name }}</Link> /
       </template>
@@ -140,7 +144,7 @@ function reloadComments() {
       </Link>
 
       <Link
-        :href="`/work/projects/tasks/${taskId}/files`"
+        :href="`/work/projects/tasks/${task.id}/files`"
         class="inline-flex items-center px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded shadow transition"
       >
         Add File

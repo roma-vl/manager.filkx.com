@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import axios from 'axios'
 import { Link } from '@inertiajs/inertia-vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   task: Object,
@@ -36,6 +37,10 @@ const uploadFiles = async e => {
 
 <template>
   <AppLayout>
+      <PageMeta
+          :title="`Add file ${task.name}`"
+          :description="`Page Add file ${task.name}`"
+      />
     <div class="max-w-xl mx-auto bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
       <h1 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-100">
         Upload Files for: {{ task.name }}

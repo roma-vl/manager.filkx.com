@@ -4,6 +4,7 @@ import { useForm } from '@inertiajs/inertia-vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   project: Object,
@@ -36,9 +37,10 @@ const submit = () => {
 
 <template>
   <AppLayout>
-    <template #header>
-      <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Assign Member — {{ project.name }}</h1>
-    </template>
+      <PageMeta
+          :title="`Assign Member for -  ${project.name}`"
+          :description="`Assign Member for -  ${project.name}`"
+      />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },
@@ -51,9 +53,7 @@ const submit = () => {
       ]"
     />
 
-
     <form class="max-w-3xl mx-auto space-y-6  p-6 " @submit.prevent="submit">
-      <!-- Member -->
       <div>
         <label class="block mb-1 text-sm font-medium text-indigo-300">Member</label>
         <select
@@ -72,7 +72,6 @@ const submit = () => {
         <p v-if="form.errors.member" class="text-red-500 text-sm mt-1">{{ form.errors.member }}</p>
       </div>
 
-      <!-- Departments -->
       <div>
         <label class="block mb-1 text-sm font-medium text-indigo-300">Departments</label>
         <div class="space-y-2">
@@ -88,7 +87,6 @@ const submit = () => {
         <p v-if="form.errors.departments" class="text-red-500 text-sm mt-1">{{ form.errors.departments }}</p>
       </div>
 
-      <!-- Roles -->
       <div>
         <label class="block mb-1 text-sm font-medium text-indigo-300">Roles</label>
         <div class="space-y-2">
@@ -104,7 +102,6 @@ const submit = () => {
         <p v-if="form.errors.roles" class="text-red-500 text-sm mt-1">{{ form.errors.roles }}</p>
       </div>
 
-      <!-- Submit Button -->
       <div class="flex justify-end pt-4">
         <SecondaryButton :disabled="form.processing" type="submit">
           <span v-if="form.processing" class="animate-pulse">Assigning...</span>

@@ -54,7 +54,6 @@ function truncateFileName(filename, maxBaseLength = 20) {
 
 <template>
   <div class="">
-    <!-- Header -->
     <div class="flex justify-between items-center">
       <span />
       <Link
@@ -65,21 +64,18 @@ function truncateFileName(filename, maxBaseLength = 20) {
       </Link>
     </div>
 
-    <!-- File Grid -->
     <div v-if="localFiles?.length" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       <div
         v-for="file in localFiles"
         :key="file.id"
         class="group h-32 relative bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm hover:shadow-lg overflow-hidden transition"
       >
-        <!-- Image Preview -->
         <div
           v-if="isImage(file)"
           class="absolute inset-0 bg-cover bg-center opacity-80 group-hover:opacity-50 transition"
           :style="{ backgroundImage: `url(${fileUrl(file)})` }"
         />
 
-        <!-- Top Overlay -->
         <div
           class="relative z-10 p-2 flex justify-between items-start space-x-2 bg-white/80 dark:bg-gray-900/70 backdrop-blur-sm"
         >
@@ -100,7 +96,6 @@ function truncateFileName(filename, maxBaseLength = 20) {
           </button>
         </div>
 
-        <!-- Hover Info -->
         <div
           class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex flex-col justify-end text-white text-sm p-2 space-y-1"
         >
@@ -120,7 +115,6 @@ function truncateFileName(filename, maxBaseLength = 20) {
       </div>
     </div>
 
-    <!-- Empty State -->
     <div v-else class="text-center text-gray-500 dark:text-gray-400 py-6">
       No files attached yet.
     </div>
@@ -128,5 +122,4 @@ function truncateFileName(filename, maxBaseLength = 20) {
 </template>
 
 <style scoped>
-  /* Можна додати плавну появу або кастомну анімацію при hover */
 </style>

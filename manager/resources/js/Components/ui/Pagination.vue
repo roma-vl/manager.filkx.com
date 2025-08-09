@@ -7,10 +7,6 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  /**
-     * Приймає функцію (page) => string
-     * для формування посилань на сторінки
-     */
   linkBuilder: {
     type: Function,
     required: true,

@@ -6,6 +6,7 @@ import axios from 'axios'
 import { ref } from 'vue'
 import DepartmentsTabs from '@/Components/Work/Projects/Project/Settings/Departments/DepartmentsTabs.vue'
 import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const { props } = usePage()
 const project = props.value.project
@@ -28,6 +29,11 @@ async function deleteDepartment(departmentId) {
 
 <template>
   <AppLayout>
+      <PageMeta
+          :title="`Departments for ${props.project.name}`"
+          :description="`Departments for ${props.project.name}`"
+      />
+
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },

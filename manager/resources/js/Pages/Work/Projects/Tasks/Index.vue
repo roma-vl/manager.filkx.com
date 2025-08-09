@@ -1,20 +1,21 @@
 <script setup>
 import { ref, reactive } from 'vue'
-import AppLayout from '../../../../Layouts/AppLayout.vue'
-import SortIcon from '../../../../Components/Icons/SortIcon.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import SortIcon from '@/Components/Icons/SortIcon.vue'
 import Pagination from '@/Components/ui/Pagination.vue'
-import TaskFilters from '../../../../Components/TaskFilters.vue'
-import Breadcrumbs from '../../../../Components/ui/Breadcrumbs.vue'
-import RolesTabs from '../../../../Components/Work/Projects/Project/Roles/RolesTabs.vue'
-import TasksTabs from '../../../../Components/Work/Projects/TasksTabs.vue'
+import TaskFilters from '@/Components/TaskFilters.vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import RolesTabs from '@/Components/Work/Projects/Project/Roles/RolesTabs.vue'
+import TasksTabs from '@/Components/Work/Projects/TasksTabs.vue'
 import {
   formatPriority,
   formatStatus,
   formatType,
   priorityBadgeClass,
   typeBadgeClass,
-} from '../../../../Helpers/tasks.helper.js'
-import { statusBadgeClass } from '../../../../Helpers/helpers.js'
+} from '@/Helpers/tasks.helper.js'
+import { statusBadgeClass } from '@/Helpers/helpers.js'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 const props = defineProps({
   project: Object,
   members: Object,
@@ -114,6 +115,10 @@ function handleSubmit(updatedFilters) {
 
 <template>
   <AppLayout>
+      <PageMeta
+          :title="`Tasks`"
+          :description="`Page Tasks`"
+      />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },

@@ -4,7 +4,7 @@ import { ref, watch } from 'vue'
 import {
   formatType,
   typeBadgeClass,
-} from '../../../../../Helpers/tasks.helper.js'
+} from '@/Helpers/tasks.helper.js'
 
 const props = defineProps({
   taskId: Number,

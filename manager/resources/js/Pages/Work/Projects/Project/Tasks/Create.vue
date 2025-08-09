@@ -1,10 +1,11 @@
 <script setup>
 import { reactive, ref } from 'vue'
-import { useRouter } from 'vue-router' // або Inertia router
+import { useRouter } from 'vue-router'
 import { Inertia } from '@inertiajs/inertia'
-import AppLayout from '../../../../../Layouts/AppLayout.vue'
-import Breadcrumbs from '../../../../../Components/ui/Breadcrumbs.vue'
-import ProjectTabs from '../../../../../Components/Work/Projects/ProjectTabs.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   project: Object,
@@ -36,13 +37,11 @@ function removeName(index) {
 function submit() {
   error.value = null
 
-  // Валідація мінімальна: перевірка, що є хоч одна назва
   if (!form.names.some(name => name.trim().length > 0)) {
     error.value = 'Мінімум одна назва потрібна'
     return
   }
 
-  // Відправляємо POST через Inertia
   Inertia.post(
     `/work/projects/${props.project.id}/tasks/create`,
     {
@@ -70,6 +69,10 @@ function submit() {
 
 <template>
   <AppLayout>
+      <PageMeta
+          :title="`Create Task for ${props.project.name}`"
+          :description="`Create Task  for ${props.project.name}`"
+      />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },

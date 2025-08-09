@@ -57,7 +57,7 @@ function deleteComment(id) {
 </script>
 
 <template>
-  <div class="  rounded-2xl shadow-xl">
+  <div class=" rounded-2xl shadow-xl">
     <div
       v-for="comment in normalizedComments"
       :key="comment.id"

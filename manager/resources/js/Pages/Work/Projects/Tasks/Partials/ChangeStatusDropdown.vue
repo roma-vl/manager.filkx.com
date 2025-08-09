@@ -1,7 +1,7 @@
 <script setup>
 import axios from 'axios'
 import { ref, watch } from 'vue'
-import { formatStatus, statusBadgeClass } from '../../../../../Helpers/tasks.helper.js'
+import { formatStatus, statusBadgeClass } from '@/Helpers/tasks.helper.js'
 
 const props = defineProps({
   taskId: Number,

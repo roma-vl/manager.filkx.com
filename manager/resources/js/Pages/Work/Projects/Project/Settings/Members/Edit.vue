@@ -3,6 +3,7 @@ import { useForm } from '@inertiajs/inertia-vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   project: Object,
@@ -10,8 +11,6 @@ const props = defineProps({
   roles: Object,
   departments: Object,
 })
-
-console.log(props.membership)
 
 const form = useForm({
   departments: props.membership?.departments ?? [],
@@ -27,9 +26,11 @@ const submit = () => {
 
 <template>
   <AppLayout>
-    <template #header>
-      <h1>Edit Member — {{ project.name }}</h1>
-    </template>
+
+      <PageMeta
+          :title="`Edit ${membership.name}`"
+          :description="`Edit ${membership.name}`"
+      />
 
     <Breadcrumbs
       :items="[

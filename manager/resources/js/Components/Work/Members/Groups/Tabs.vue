@@ -1,4 +1,3 @@
-<!-- resources/js/Components/Work/Members/Groups/Tabs.vue -->
 <template>
   <div class="tabs">
     <Link

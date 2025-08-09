@@ -2,9 +2,10 @@
 import AppLayout from '@/Layouts/AppLayout.vue'
 import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
 import { Link, usePage } from '@inertiajs/inertia-vue3'
-import DepartmentsTabs from '../../../../../Components/Work/Projects/Project/Settings/Departments/DepartmentsTabs.vue'
-import { statusBadgeClass } from '../../../../../Helpers/helpers.js'
+import DepartmentsTabs from '@/Components/Work/Projects/Project/Settings/Departments/DepartmentsTabs.vue'
+import { statusBadgeClass } from '@/Helpers/helpers.js'
 import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const { props } = usePage()
 const project = props.value.project
@@ -20,6 +21,10 @@ function confirmAction(message, event) {
 
 <template>
   <AppLayout>
+      <PageMeta
+          :title="`Settings for ${props.project.name}`"
+          :description="`Settings for ${props.project.name}`"
+      />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },

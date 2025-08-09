@@ -2,8 +2,9 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { Inertia } from '@inertiajs/inertia'
-import AppLayout from '../../../../Layouts/AppLayout.vue'
-import Breadcrumbs from '../../../../Components/ui/Breadcrumbs.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   task: Object,
@@ -45,6 +46,11 @@ function submit() {
 
 <template>
   <AppLayout>
+      <PageMeta
+          :title="`Edit ${task.name}`"
+          :description="`Page Edit ${task.name}`"
+      />
+
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },

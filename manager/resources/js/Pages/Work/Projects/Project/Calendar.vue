@@ -5,6 +5,7 @@ import AppLayout from '@/Layouts/AppLayout.vue'
 import { Head } from '@inertiajs/inertia-vue3'
 import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
 import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   dates: Array,
@@ -120,8 +121,10 @@ function goToNow() {
 <template>
   <AppLayout>
     <div class="max-w-7xl mx-auto">
-      <Head title="Projects" />
-
+        <PageMeta
+            :title="`Calendar for ${props.project.name}`"
+            :description="`Calendar for ${props.project.name}`"
+        />
       <Breadcrumbs
         :items="[
           { label: 'Home', href: '/' },

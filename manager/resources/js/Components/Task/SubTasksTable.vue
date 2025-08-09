@@ -5,8 +5,8 @@ import {
   formatType,
   priorityBadgeClass,
   typeBadgeClass,
-} from '../../Helpers/tasks.helper.js'
-import { statusBadgeClass } from '../../Helpers/helpers.js'
+} from '@/Helpers/tasks.helper.js'
+import { statusBadgeClass } from '@/Helpers/helpers.js'
 
 const props = defineProps({
   children: Array,

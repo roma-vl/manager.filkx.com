@@ -7,6 +7,7 @@ import InputError from '@/Components/InputError.vue'
 import TextInput from '@/Components/TextInput.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   project: Object,
@@ -25,6 +26,11 @@ function submit() {
 
 <template>
   <AppLayout>
+      <PageMeta
+          :title="`Edit Department ${props.department.name} for ${props.project.name}`"
+          :description="`Edit Department ${props.department.name} for ${props.project.name}`"
+      />
+
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },
@@ -37,10 +43,8 @@ function submit() {
       ]"
     />
 
-    <!-- Tabs -->
     <ProjectTabs :project-id="project.id" />
 
-    <!-- Form -->
     <form class="" @submit.prevent="submit">
       <div>
         <InputLabel for="name" value="Department Name" />

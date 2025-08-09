@@ -5,8 +5,9 @@ import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import InputError from '@/Components/InputError.vue'
 import TextInput from '@/Components/TextInput.vue'
-import SecondaryButton from '../../../../../../Components/SecondaryButton.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
 import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   project: Object,
@@ -24,6 +25,11 @@ function submit() {
 
 <template>
   <AppLayout>
+      <PageMeta
+          :title="`Create Department for ${props.project.name}`"
+          :description="`Create Department for ${props.project.name}`"
+      />
+
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },

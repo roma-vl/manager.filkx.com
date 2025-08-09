@@ -5,6 +5,7 @@ import DepartmentsTabs from '@/Components/Work/Projects/Project/Settings/Departm
 import { Link } from '@inertiajs/inertia-vue3'
 import axios from 'axios'
 import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   project: Object,
@@ -22,6 +23,11 @@ function confirmAndRevoke(memberId) {
 </script>
 <template>
   <AppLayout>
+
+      <PageMeta
+          :title="`Members for ${props.project.name}`"
+          :description="`Members for ${props.project.name}`"
+      />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },

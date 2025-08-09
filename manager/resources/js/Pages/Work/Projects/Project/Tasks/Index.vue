@@ -6,30 +6,22 @@ import SortIcon from '@/Components/Icons/SortIcon.vue'
 import Pagination from '@/Components/ui/Pagination.vue'
 import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
 import TaskFilters from '@/Components/TaskFilters.vue'
-import {
-  formatPriority,
-  priorityBadgeClass,
-  statusBadgeClass,
-  typeBadgeClass,
-  formatStatus,
-  formatType,
-} from '@/Helpers/tasks.helper.js'
-import TasksTabs from '../../../../../Components/Work/Projects/Tasks/TasksTabs.vue'
+import {formatPriority, priorityBadgeClass, statusBadgeClass,
+  typeBadgeClass, formatStatus, formatType} from '@/Helpers/tasks.helper.js'
+import TasksTabs from '@/Components/Work/Projects/Tasks/TasksTabs.vue'
+import PageMeta from "@/Components/Seo/PageMeta.vue";
 
 const props = defineProps({
   project: Object,
   members: Object,
   filters: Object,
   tasks: Array,
-  // statuses: Array,
-  // type: Array,
-  // priority: Array,
   sort: String,
   direction: String,
   pagination: Object,
   meta: Object,
 })
-console.log(111)
+
 const text = ref(props.filters.text || '')
 const type = ref(props.filters.type || '')
 const status = ref(props.filters.status || '')
@@ -116,6 +108,11 @@ function handleSubmit(updatedFilters) {
 
 <template>
   <AppLayout>
+
+      <PageMeta
+          :title="`Tasks for ${props.project.name}`"
+          :description="`Tasks for ${props.project.name}`"
+      />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },
