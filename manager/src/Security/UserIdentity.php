@@ -30,7 +30,7 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
         string $role,
         string $status,
         string $date,
-        ?Account $account = null
+        ?Account $account = null,
     ) {
         $this->id = $id;
         $this->username = $username;

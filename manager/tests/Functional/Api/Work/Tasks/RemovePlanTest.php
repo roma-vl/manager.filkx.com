@@ -16,11 +16,11 @@ class RemovePlanTest extends DbWebTestCase
     {
         $this->client->setServerParameters(AuthFixture::adminCredentials());
 
-        $this->client->request('DELETE', sprintf(self::URI, TaskFixture::TASK_IN_PROJECT_WITH_USER_WITH_PLAN));
+        $this->client->request('DELETE', \sprintf(self::URI, TaskFixture::TASK_IN_PROJECT_WITH_USER_WITH_PLAN));
 
         self::assertEquals(204, $this->client->getResponse()->getStatusCode());
 
-        $this->client->request('GET', sprintf(self::SHOW_URI, TaskFixture::TASK_IN_PROJECT_WITH_USER_WITH_PLAN));
+        $this->client->request('GET', \sprintf(self::SHOW_URI, TaskFixture::TASK_IN_PROJECT_WITH_USER_WITH_PLAN));
         self::assertJson($content = $this->client->getResponse()->getContent());
         $data = json_decode($content, true);
 
@@ -33,7 +33,7 @@ class RemovePlanTest extends DbWebTestCase
     {
         $this->client->setServerParameters(AuthFixture::userCredentials());
 
-        $this->client->request('DELETE', sprintf(self::URI, TaskFixture::TASK_IN_PROJECT_WITH_USER_WITH_PLAN));
+        $this->client->request('DELETE', \sprintf(self::URI, TaskFixture::TASK_IN_PROJECT_WITH_USER_WITH_PLAN));
 
         self::assertEquals(204, $this->client->getResponse()->getStatusCode());
     }

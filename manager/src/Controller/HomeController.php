@@ -16,22 +16,20 @@ class HomeController extends BaseController
     public function index(
         Request $request,
         CentrifugoPublisher $centrifugoPublisher,
-        InertiaService $inertia
-    ): Response
-    {
+        InertiaService $inertia,
+    ): Response {
         $userId = 'user:' . $this->getUser()->getId();
         $centrifugoPublisher->publish('chat:general', [
-            'text' => 'Привіт з сервера!'
+            'text' => 'Привіт з сервера!',
         ]);
 
         $centrifugoPublisher->publish($userId, [
             'text' => 'Приватне повідомлення для тебе!',
         ]);
 
-
-//        return $inertia->render($request, 'Home', [
-//            'message' => 'Inertia без Laravel!',
-//        ]);
+        //        return $inertia->render($request, 'Home', [
+        //            'message' => 'Inertia без Laravel!',
+        //        ]);
         return $inertia->redirect('dashboard');
     }
 

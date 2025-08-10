@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTO\Work\Task;
 
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -52,4 +54,3 @@ class TaskDto
     #[Groups(['task:list'])]
     public ?string $root = null;
 }
-

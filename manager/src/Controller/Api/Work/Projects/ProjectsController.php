@@ -73,7 +73,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
                 ],
                 type: 'object'
             )
-        )
+        ),
     ]
 )]
 #[Route('/api/work/projects', name: 'api.work.projects', methods: ['GET'])]
@@ -82,8 +82,9 @@ class ProjectsController extends AbstractController
     private const PER_PAGE = 50;
 
     public function __construct(
-        private DenormalizerInterface $denormalizer
-    ) {}
+        private DenormalizerInterface $denormalizer,
+    ) {
+    }
 
     /**
      * @throws ExceptionInterface|Exception
@@ -113,7 +114,7 @@ class ProjectsController extends AbstractController
         );
 
         return $this->json([
-            'items' => array_map(static fn(array $item) => [
+            'items' => array_map(static fn (array $item) => [
                 'id' => $item['id'],
                 'name' => $item['name'],
                 'status' => $item['status'],

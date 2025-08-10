@@ -47,7 +47,7 @@ class TasksController extends BaseController
     public function __construct(
         private readonly ErrorHandler $errors,
         private readonly Processor $processor,
-        private readonly PaginationViewFactory $paginationFactory
+        private readonly PaginationViewFactory $paginationFactory,
     ) {
     }
 
@@ -57,7 +57,7 @@ class TasksController extends BaseController
         TaskFetcher $taskFetcher,
         MemberFetcher $memberFetcher,
         InertiaService $inertia,
-        TaskListNormalizer  $taskListNormalizer,
+        TaskListNormalizer $taskListNormalizer,
         TaskMetaBuilder $taskMetaBuilder,
     ): Response {
         $filter = $this->isGranted('ROLE_WORK_MANAGE_PROJECTS')
@@ -99,7 +99,7 @@ class TasksController extends BaseController
         TaskFetcher $taskFetcher,
         MemberFetcher $memberFetcher,
         InertiaService $inertia,
-        TaskListNormalizer  $taskListNormalizer,
+        TaskListNormalizer $taskListNormalizer,
         TaskMetaBuilder $taskMetaBuilder,
     ): Response {
         $filter = Filter\Filter::all();
@@ -139,7 +139,7 @@ class TasksController extends BaseController
         TaskFetcher $taskFetcher,
         MemberFetcher $memberFetcher,
         InertiaService $inertia,
-        TaskListNormalizer  $taskListNormalizer,
+        TaskListNormalizer $taskListNormalizer,
         TaskMetaBuilder $taskMetaBuilder,
     ): Response {
         $filter = Filter\Filter::all();
@@ -199,6 +199,7 @@ class TasksController extends BaseController
 
         try {
             $handler->handle($command);
+
             return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
         } catch (\DomainException $e) {
             $this->errors->handle($e);
@@ -612,8 +613,8 @@ class TasksController extends BaseController
                 'id' => $task->getProject()->getId()->getValue(),
                 'name' => $task->getProject()->getName(),
             ],
-            'feed' => array_map(fn(Item $item) => [
-                'date' => $item->getDate()->format(DATE_ATOM),
+            'feed' => array_map(fn (Item $item) => [
+                'date' => $item->getDate()->format(\DATE_ATOM),
                 'action' => $item->getAction(),
                 'comment' => $item->getComment(),
             ], $feed->getItems()),
@@ -814,7 +815,6 @@ class TasksController extends BaseController
         }
     }
 
-
     private function mapMembers(array $list): array
     {
         $result = [];
@@ -829,5 +829,4 @@ class TasksController extends BaseController
 
         return $result;
     }
-
 }

@@ -18,7 +18,6 @@ use App\ReadModel\Work\Projects\Task\Filter;
 use App\ReadModel\Work\Projects\Task\TaskFetcher;
 use App\Security\Voter\Work\Projects\ProjectAccess;
 use Doctrine\DBAL\Exception;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,9 +30,8 @@ class TasksController extends BaseController
     public function __construct(
         private readonly TaskFetcher $tasks,
         private readonly ErrorHandler $errors,
-        private readonly PaginationViewFactory $paginationFactory
-    )
-    {
+        private readonly PaginationViewFactory $paginationFactory,
+    ) {
     }
 
     /**
@@ -45,7 +43,7 @@ class TasksController extends BaseController
         Request $request,
         MemberFetcher $memberFetcher,
         InertiaService $inertia,
-        TaskListNormalizer  $taskListNormalizer,
+        TaskListNormalizer $taskListNormalizer,
         TaskMetaBuilder $taskMetaBuilder,
     ): Response {
         $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
@@ -91,7 +89,7 @@ class TasksController extends BaseController
         TaskFetcher $taskFetcher,
         MemberFetcher $memberFetcher,
         InertiaService $inertia,
-        TaskListNormalizer  $taskListNormalizer,
+        TaskListNormalizer $taskListNormalizer,
         TaskMetaBuilder $taskMetaBuilder,
     ): Response {
         $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
@@ -128,7 +126,7 @@ class TasksController extends BaseController
         TaskFetcher $taskFetcher,
         MemberFetcher $memberFetcher,
         InertiaService $inertia,
-        TaskListNormalizer  $taskListNormalizer,
+        TaskListNormalizer $taskListNormalizer,
         TaskMetaBuilder $taskMetaBuilder,
     ): Response {
         $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);

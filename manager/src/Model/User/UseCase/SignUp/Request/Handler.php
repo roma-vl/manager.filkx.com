@@ -7,9 +7,9 @@ namespace App\Model\User\UseCase\SignUp\Request;
 use App\Model\Flusher;
 use App\Model\User\Entity\Account\Account;
 use App\Model\User\Entity\Account\AccountRepository;
+use App\Model\User\Entity\Account\Id as AccountId;
 use App\Model\User\Entity\User\Email;
 use App\Model\User\Entity\User\Id;
-use App\Model\User\Entity\Account\Id as AccountId;
 use App\Model\User\Entity\User\Name;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Entity\User\UserRepository;
@@ -26,7 +26,8 @@ class Handler
         private readonly SignUpConfirmTokenizer $tokenizer,
         private readonly SignUpConfirmTokenSender $sender,
         private readonly Flusher $flusher,
-    ) {}
+    ) {
+    }
 
     public function handle(Command $command): void
     {

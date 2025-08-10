@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Api;
 
 use OpenApi\Attributes as OA;
@@ -25,7 +27,7 @@ class HomeController extends AbstractController
                     ],
                     type: 'object'
                 )
-            )
+            ),
         ]
     )]
     public function home(): Response

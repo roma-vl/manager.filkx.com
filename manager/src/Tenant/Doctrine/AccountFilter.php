@@ -15,7 +15,7 @@ class AccountFilter extends SQLFilter
         if ($targetEntity->hasAssociation('account')
             && $targetEntity->isSingleValuedAssociation('account')) {
             try {
-                return sprintf('%s.account_id = %s', $targetTableAlias, $this->getParameter('account_id'));
+                return \sprintf('%s.account_id = %s', $targetTableAlias, $this->getParameter('account_id'));
             } catch (\InvalidArgumentException $e) {
                 return '';
             }
@@ -24,7 +24,7 @@ class AccountFilter extends SQLFilter
         // Для сутностей з полем account_id без явного зв'язку
         if ($targetEntity->hasField('account_id')) {
             try {
-                return sprintf('%s.account_id = %s', $targetTableAlias, $this->getParameter('account_id'));
+                return \sprintf('%s.account_id = %s', $targetTableAlias, $this->getParameter('account_id'));
             } catch (\InvalidArgumentException $e) {
                 return '';
             }

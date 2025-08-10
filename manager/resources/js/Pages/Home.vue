@@ -3,7 +3,7 @@ import AppLayout from '../Layouts/AppLayout.vue'
 
 import { usePage} from '@inertiajs/inertia-vue3'
 import {computed} from 'vue'
-import PageMeta from "@/Components/Seo/PageMeta.vue";
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
 const page = usePage()
 

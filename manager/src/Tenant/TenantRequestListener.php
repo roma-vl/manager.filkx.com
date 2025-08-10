@@ -1,20 +1,21 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Tenant;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Bundle\SecurityBundle\Security;
-
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class TenantRequestListener
 {
     public function __construct(
-        private readonly TenantContext          $tenantContext,
+        private readonly TenantContext $tenantContext,
         private readonly EntityManagerInterface $em,
-        private readonly Security               $security,
-    ) {}
+        private readonly Security $security,
+    ) {
+    }
 
     public function onKernelRequest(RequestEvent $event): void
     {

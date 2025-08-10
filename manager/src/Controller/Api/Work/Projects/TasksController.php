@@ -36,11 +36,10 @@ class TasksController extends AbstractController
     private const PER_PAGE = 50;
 
     public function __construct(
-        private readonly SerializerInterface   $serializer,
+        private readonly SerializerInterface $serializer,
         private readonly DenormalizerInterface $denormalizer,
-        private readonly ValidatorInterface    $validator,
-    )
-    {
+        private readonly ValidatorInterface $validator,
+    ) {
     }
 
     /**
@@ -110,7 +109,7 @@ class TasksController extends AbstractController
                     ],
                     type: 'object'
                 )
-            )
+            ),
         ]
     )]
     public function index(Request $request, TaskFetcher $fetcher): Response
@@ -139,7 +138,7 @@ class TasksController extends AbstractController
         );
 
         return $this->json([
-            'items' => array_map(static fn(array $item) => [
+            'items' => array_map(static fn (array $item) => [
                 'id' => $item['id'],
                 'project' => [
                     'id' => $item['project_id'],
@@ -157,10 +156,10 @@ class TasksController extends AbstractController
                 'progress' => $item['progress'],
                 'priority' => $item['priority'],
                 'status' => $item['status'],
-                'executors' => array_map(static fn(array $member) => [
+                'executors' => array_map(static fn (array $member) => [
                     'name' => $member['name'],
                 ], $item['executors']),
-            ], (array)$pagination->getItems()),
+            ], (array) $pagination->getItems()),
             'pagination' => PaginationSerializer::toArray($pagination),
         ]);
     }
@@ -203,8 +202,9 @@ class TasksController extends AbstractController
 
         $violations = $this->validator->validate($command);
 
-        if (count($violations) > 0) {
+        if (\count($violations) > 0) {
             $json = $this->serializer->serialize($violations, 'json');
+
             return new JsonResponse($json, Response::HTTP_BAD_REQUEST, [], true);
         }
 
@@ -385,17 +385,16 @@ class TasksController extends AbstractController
                     ],
                     type: 'object'
                 )
-            )
+            ),
         ]
     )]
     public function show(
-        Task           $task,
+        Task $task,
         CommentFetcher $comments,
-        FileUploader   $uploader,
-        ActionFetcher  $actions,
-        Processor      $processor
-    ): Response
-    {
+        FileUploader $uploader,
+        ActionFetcher $actions,
+        Processor $processor,
+    ): Response {
         $this->denyAccessUnlessGranted(TaskAccess::VIEW, $task);
 
         $feed = new Feed(
@@ -414,16 +413,16 @@ class TasksController extends AbstractController
                 'id' => $task->getAuthor()->getId()->getValue(),
                 'name' => $task->getAuthor()->getName()->getFull(),
             ],
-            'date' => $task->getDate()->format(DATE_ATOM),
-            'plan_date' => $task->getPlanDate()?->format(DATE_ATOM),
-            'start_date' => $task->getStartDate()?->format(DATE_ATOM),
-            'end_date' => $task->getEndDate()?->format(DATE_ATOM),
+            'date' => $task->getDate()->format(\DATE_ATOM),
+            'plan_date' => $task->getPlanDate()?->format(\DATE_ATOM),
+            'start_date' => $task->getStartDate()?->format(\DATE_ATOM),
+            'end_date' => $task->getEndDate()?->format(\DATE_ATOM),
             'name' => $task->getName(),
             'content' => $processor->process($task->getContent()),
             'files' => array_map(static function (File $file) use ($uploader) {
                 return [
                     'id' => $file->getId()->getValue(),
-                    'date' => $file->getDate()->format(DATE_ATOM),
+                    'date' => $file->getDate()->format(\DATE_ATOM),
                     'member' => [
                         'id' => $file->getMember()->getId()->getValue(),
                         'name' => $file->getMember()->getName()->getFull(),
@@ -449,11 +448,12 @@ class TasksController extends AbstractController
                     'name' => $member->getName()->getFull(),
                 ];
             }, $task->getExecutors()),
-            'feed' => array_map(static function (Item $item) use ( $processor) {
+            'feed' => array_map(static function (Item $item) use ($processor) {
                 $action = $item->getAction();
                 $comment = $item->getComment();
+
                 return [
-                    'date' => $item->getDate()->format(DATE_ATOM),
+                    'date' => $item->getDate()->format(\DATE_ATOM),
                     'action' => $action ? [
                         'id' => $action['id'],
                         'date' => $action['date'],

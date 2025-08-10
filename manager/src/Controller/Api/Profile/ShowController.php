@@ -46,7 +46,7 @@ use Symfony\Component\Routing\Annotation\Route;
                 ],
                 type: 'object'
             )
-        )
+        ),
     ]
 )]
 #[Route('/api/profile', name: 'api.profile.show', methods: ['GET'])]
@@ -68,7 +68,7 @@ class ShowController extends AbstractController
                     'name' => $network->getNetwork(),
                     'identity' => $network->getIdentity(),
                 ];
-            }, $user->getNetworks())
+            }, $user->getNetworks()),
         ]);
     }
 }

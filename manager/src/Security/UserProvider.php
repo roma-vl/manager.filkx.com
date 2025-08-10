@@ -21,7 +21,8 @@ class UserProvider implements UserProviderInterface
     public function __construct(
         private readonly UserFetcher $users,
         private readonly EntityManagerInterface $entityManager,
-    ) {}
+    ) {
+    }
 
     public function loadUserByUsername(string $username): UserInterface
     {
@@ -82,6 +83,7 @@ class UserProvider implements UserProviderInterface
     public function loadUserByIdentifier(string $identifier): UserIdentity
     {
         $user = $this->loadUser($identifier);
+
         return $this->identityByUser($user, $identifier);
     }
 }

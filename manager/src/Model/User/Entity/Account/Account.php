@@ -1,19 +1,20 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\User\Entity\Account;
 
-use Doctrine\ORM\Mapping as ORM;
+use App\Model\User\Entity\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use App\Model\User\Entity\User\User;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'accounts')]
 class Account
 {
     #[ORM\Id]
-    #[ORM\Column(type: "user_account_id")]
+    #[ORM\Column(type: 'user_account_id')]
     private Id $id;
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
@@ -27,7 +28,6 @@ class Account
 
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
-
 
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'account')]
     private Collection $users;
@@ -45,7 +45,6 @@ class Account
     {
         return new self($id, $name, $locale);
     }
-
 
     public function getId(): Id
     {

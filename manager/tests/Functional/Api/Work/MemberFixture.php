@@ -7,13 +7,8 @@ namespace App\Tests\Functional\Api\Work;
 use App\Model\User\Entity\User\User;
 use App\Model\Work\Entity\Members\Member\Email;
 use App\Model\Work\Entity\Members\Member\Id as MemberId;
-use App\Model\Work\Entity\Projects\Project\Department\Id as DepartmentId;
-use App\Model\Work\Entity\Projects\Project\Id;
-use App\Model\Work\Entity\Projects\Project\Project;
-use App\Model\Work\Entity\Projects\Role\Permission;
 use App\Tests\Builder\Work\Members\GroupBuilder;
 use App\Tests\Builder\Work\Members\MemberBuilder;
-use App\Tests\Builder\Work\Projects\RoleBuilder;
 use App\Tests\Functional\AuthFixture;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -69,7 +64,6 @@ class MemberFixture extends Fixture implements DependentFixtureInterface
     }
 
     /**
-     * @param string $reference
      * @return User|object
      */
     private function getUser(string $reference): User
@@ -77,4 +71,3 @@ class MemberFixture extends Fixture implements DependentFixtureInterface
         return $this->getReference($reference);
     }
 }
-

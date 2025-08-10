@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mapper\Work;
 
 use App\DTO\Work\Task\TaskDto;

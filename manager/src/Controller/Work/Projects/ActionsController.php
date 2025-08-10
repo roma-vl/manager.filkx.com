@@ -19,7 +19,8 @@ class ActionsController extends AbstractController
 
     public function __construct(
         private readonly ActionFetcher $actions,
-    ) {}
+    ) {
+    }
 
     #[Route('', name: '', methods: ['GET'])]
     public function index(Request $request, InertiaService $inertia): Response

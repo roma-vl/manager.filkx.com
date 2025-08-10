@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace App\Model\User\Entity\Account;
+
 use Doctrine\ORM\EntityManagerInterface;
 
 class AccountRepository

@@ -14,6 +14,7 @@ class AuthView
     public string $status;
     public string $date;
     public ?string $account_id = null;
+
     public function getAccountId(): ?string
     {
         return $this->account_id;

@@ -60,7 +60,8 @@ class UsersController extends BaseController
             'role' => $user['role']?->getName(),
             'status' => $user['status'],
             'date' => $user['date']?->format('Y-m-d'),
-        ],$pagination->getItems());
+        ], $pagination->getItems());
+
         return $inertia->render($request, 'Users/Index', [
             'users' => $users,
             'pagination' => [
@@ -264,7 +265,7 @@ class UsersController extends BaseController
             array_merge(
                 $this->userShowPropsProvider->getProps(['userId' => $user->getId()->getValue()]),
                 ['member' => $member],
-                [ 'user' => [
+                ['user' => [
                     'id' => $user->getId()->getValue(),
                     'full_name' => $user->getName()->getFull(),
                     'email' => $user->getEmail()?->getValue(),
@@ -275,7 +276,7 @@ class UsersController extends BaseController
                         'network' => $n->getNetwork(),
                         'identity' => $n->getIdentity(),
                     ], $user->getNetworks()),
-                ],],
+                ], ],
             )
         );
     }

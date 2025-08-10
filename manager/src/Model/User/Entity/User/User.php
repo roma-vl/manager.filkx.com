@@ -71,7 +71,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->id = $id;
         $this->date = $date;
         $this->name = $name;
-//        $this->account = $account;
+        //        $this->account = $account;
         $this->role = Role::user();
         $this->networks = new ArrayCollection();
     }
@@ -357,7 +357,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * Ефективна мова: user.language ?? account.language
+     * Ефективна мова: user.language ?? account.language.
      */
     public function getEffectiveLanguage(): string
     {

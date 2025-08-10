@@ -1,11 +1,11 @@
 <script setup>
-import AppLayout from '../Layouts/AppLayout.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
 import { usePage} from '@inertiajs/inertia-vue3'
 import { computed } from 'vue'
 import CalendarWidget from '@/Components/Widgets/CalendarWidget.vue'
 import OwnTasksWidget from '@/Components/Widgets/OwnTasksWidget.vue'
 import MeTasksWidget from '@/Components/Widgets/MeTasksWidget.vue'
-import PageMeta from "@/Components/Seo/PageMeta.vue";
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
 const page = usePage()
 const user = computed(() => page.props.value.auth?.user)

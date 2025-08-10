@@ -38,7 +38,7 @@ class ShowTest extends DbWebTestCase
                 [
                     'name' => 'facebook',
                     'identity' => '1111',
-                ]
+                ],
             ],
         ], $data);
     }

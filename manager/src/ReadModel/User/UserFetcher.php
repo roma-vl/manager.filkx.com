@@ -25,9 +25,8 @@ class UserFetcher
     public function __construct(
         Connection $connection,
         EntityManagerInterface $em,
-        PaginatorInterface $paginator
-    )
-    {
+        PaginatorInterface $paginator,
+    ) {
         $this->connection = $connection;
         $this->em = $em;
         $this->repository = $em->getRepository(User::class);
@@ -220,10 +219,10 @@ class UserFetcher
 
         // Мапимо зрозумілі назви сортування на реальні поля з alias-ом
         $sortMap = [
-            'date'   => 'u.date',
-            'name'   => "CONCAT(u.name.first, ' ', u.name.last)",
-            'email'  => 'u.email',
-            'role'   => 'u.role',
+            'date' => 'u.date',
+            'name' => "CONCAT(u.name.first, ' ', u.name.last)",
+            'email' => 'u.email',
+            'role' => 'u.role',
             'status' => 'u.status',
         ];
 
@@ -236,43 +235,42 @@ class UserFetcher
         return $this->paginator->paginate($qb, $page, $size);
     }
 
-
     //    public function findForAuthByEmail(string $email): ?AuthView
-//    {
-//        // 1. Використовуємо EntityManager замість Connection
-//        $qb = $this->em->createQueryBuilder();
-//
-//        // 2. Робимо запит через ORM
-//        $result = $qb->select([
-//            'u.id',
-//            'u.email',
-//            'u.passwordHash',
-//            "TRIM(CONCAT(u.name.first, ' ', u.name.last)) AS name",
-//            'u.role',
-//            'u.status',
-//            'u.date',
-//            'IDENTITY(u.account) AS account_id'
-//        ])
-//            ->from(User::class, 'u')
-//            ->where('u.email = :email')
-//            ->setParameter('email', $email)
-//            ->getQuery()
-//            ->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
-//
-//        if (!$result) {
-//            return null;
-//        }
-//
-//        $authView = new AuthView();
-//        $authView->id = $result['id'];
-//        $authView->email = $result['email'];
-//        $authView->password_hash = $result['passwordHash'];
-//        $authView->name = $result['name'];
-//        $authView->role = $result['role'];
-//        $authView->status = $result['status'];
-//        $authView->date = $result['date'];
-//        $authView->account_id = $result['account_id'];
-//
-//        return $authView;
-//    }
+    //    {
+    //        // 1. Використовуємо EntityManager замість Connection
+    //        $qb = $this->em->createQueryBuilder();
+    //
+    //        // 2. Робимо запит через ORM
+    //        $result = $qb->select([
+    //            'u.id',
+    //            'u.email',
+    //            'u.passwordHash',
+    //            "TRIM(CONCAT(u.name.first, ' ', u.name.last)) AS name",
+    //            'u.role',
+    //            'u.status',
+    //            'u.date',
+    //            'IDENTITY(u.account) AS account_id'
+    //        ])
+    //            ->from(User::class, 'u')
+    //            ->where('u.email = :email')
+    //            ->setParameter('email', $email)
+    //            ->getQuery()
+    //            ->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
+    //
+    //        if (!$result) {
+    //            return null;
+    //        }
+    //
+    //        $authView = new AuthView();
+    //        $authView->id = $result['id'];
+    //        $authView->email = $result['email'];
+    //        $authView->password_hash = $result['passwordHash'];
+    //        $authView->name = $result['name'];
+    //        $authView->role = $result['role'];
+    //        $authView->status = $result['status'];
+    //        $authView->date = $result['date'];
+    //        $authView->account_id = $result['account_id'];
+    //
+    //        return $authView;
+    //    }
 }
