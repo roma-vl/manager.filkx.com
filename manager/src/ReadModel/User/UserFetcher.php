@@ -186,11 +186,11 @@ class UserFetcher
         $qb = $this->em->createQueryBuilder()
             ->select(
                 'u.id',
-                'u.date',
+                'u.date AS date',
                 "CONCAT(u.name.first, ' ', u.name.last) AS name",
-                'u.email',
-                'u.role',
-                'u.status'
+                'u.email AS email',
+                'u.role AS role',
+                'u.status AS status',
             )
             ->from(User::class, 'u');
 
@@ -217,13 +217,12 @@ class UserFetcher
             $qb->setParameter('role', $filter->role);
         }
 
-        // Мапимо зрозумілі назви сортування на реальні поля з alias-ом
         $sortMap = [
-            'date' => 'u.date',
+            'date' => 'date',
             'name' => "CONCAT(u.name.first, ' ', u.name.last)",
-            'email' => 'u.email',
-            'role' => 'u.role',
-            'status' => 'u.status',
+            'email' => 'email',
+            'role' => 'role',
+            'status' => 'status',
         ];
 
         if (!isset($sortMap[$sort])) {

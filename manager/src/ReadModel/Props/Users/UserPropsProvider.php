@@ -26,9 +26,9 @@ final readonly class UserPropsProvider implements PropsProviderInterface
         return [
             'user' => [
                 'id' => $user->getId()->getValue(),
-                'email' => $user->getEmail()->getValue(),
-                'firstName' => $user->getName()->getFirst(),
-                'lastName' => $user->getName()->getLast(),
+                'email' => $user->getEmail()?->getValue(),
+                'firstName' => $user->getName()?->getFirst(),
+                'lastName' => $user->getName()?->getLast(),
                 'roles' => $user->getRoles(),
             ],
         ];

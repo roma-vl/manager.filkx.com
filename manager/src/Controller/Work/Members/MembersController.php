@@ -28,6 +28,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_WORK_MANAGE_MEMBERS')]
 class MembersController extends BaseController
 {
+    const PER_PAGE = 2;
+
     public function __construct(
         private readonly ErrorHandler $errors,
     ) {
@@ -49,7 +51,7 @@ class MembersController extends BaseController
         $pagination = $fetcher->all(
             $filter,
             $request->query->getInt('page', 1),
-            50,
+            self::PER_PAGE,
             $request->query->get('sort', 'name'),
             $request->query->get('direction', 'asc')
         );
@@ -65,7 +67,7 @@ class MembersController extends BaseController
             ], $pagination->getItems()),
             'pagination' => [
                 'currentPage' => $pagination->getCurrentPageNumber(),
-                'lastPage' => ceil($pagination->getTotalItemCount() / 50),
+                'lastPage' => ceil($pagination->getTotalItemCount() / self::PER_PAGE),
                 'total' => $pagination->getTotalItemCount(),
             ],
             'filters' => $request->query->all(),
