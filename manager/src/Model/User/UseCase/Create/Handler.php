@@ -49,6 +49,7 @@ class Handler
             ),
             $email,
             'placeholder',
+            $command->account
         );
         $hashedPassword = $this->hasher->hash($user, $this->generator->generate());
         $user->updatePasswordHash($hashedPassword);

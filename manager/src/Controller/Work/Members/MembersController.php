@@ -58,11 +58,11 @@ class MembersController extends BaseController
 
         return $inertia->render($request, 'Work/Members/Members/Index', [
             'members' => array_map(fn ($member) => [
-                'id' => $member['id'],
+                'id' => $member['id']->getValue(),
                 'name' => $member['name'],
-                'email' => $member['email'],
+                'email' => $member['email']->getValue(),
                 'group' => $member['group'],
-                'status' => $member['status'],
+                'status' => $member['status']->getName(),
                 'memberships_count' => $member['memberships_count'] ?? 0,
             ], $pagination->getItems()),
             'pagination' => [
@@ -91,6 +91,7 @@ class MembersController extends BaseController
         InertiaService $inertia,
         CommandFactory $commandFactory,
     ): Response {
+        $dd = $user->getAccount()->getId();
         if ($fetcher->exists($user->getId()->getValue())) {
             $this->addFlash('error', 'Учасник уже існує.');
 

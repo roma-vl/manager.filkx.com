@@ -6,6 +6,7 @@ namespace App\ReadModel\Work\Members\Member;
 
 use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Members\Member\Status;
+use App\Model\Work\Entity\Projects\Project\Membership;
 use App\ReadModel\Work\Members\Member\Filter\Filter;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
@@ -13,19 +14,22 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use UnexpectedValueException;
 
 class MemberFetcher
 {
     private Connection $connection;
     private PaginatorInterface $paginator;
     private EntityRepository $repository;
+    private EntityManagerInterface $em;
 
     public function __construct(
         Connection $connection,
-        EntityManagerInterface $em,
         PaginatorInterface $paginator,
+        EntityManagerInterface $em,
     ) {
         $this->connection = $connection;
+        $this->em = $em;
         $this->repository = $em->getRepository(Member::class);
         $this->paginator = $paginator;
     }
@@ -37,20 +41,23 @@ class MemberFetcher
 
     public function all(Filter $filter, int $page, int $size, string $sort, string $direction): PaginationInterface
     {
-        $qb = $this->connection->createQueryBuilder()
-            ->select(
-                'm.id',
-                'TRIM(CONCAT(m.name_first, \' \', m.name_last)) AS name',
-                'm.email',
-                'g.name as group',
-                'm.status',
-                '(SELECT COUNT(*) FROM work_projects_project_memberships ms WHERE ms.member_id = m.id) as memberships_count'
-            )
-            ->from('work_members_members', 'm')
-            ->innerJoin('m', 'work_members_groups', 'g', 'm.group_id = g.id');
+        $membershipClass = Membership::class;
+
+        $qb = $this->em->createQueryBuilder()
+            ->select('m.id')
+            ->addSelect("CONCAT(m.name.first, ' ', m.name.last) AS name")
+            ->addSelect('m.email AS email')
+            ->addSelect('g.name AS group')
+            ->addSelect('m.status AS status')
+            ->addSelect("(SELECT COUNT(pm.id) FROM {$membershipClass} pm WHERE pm.member = m) AS memberships_count")
+            ->from(Member::class, 'm')
+            ->join('m.group', 'g');
 
         if ($filter->name) {
-            $qb->andWhere($qb->expr()->like('LOWER(CONCAT(m.name_first, \' \', m.name_last))', ':name'));
+            $qb->andWhere($qb->expr()->like(
+                "LOWER(CONCAT(m.name.first, ' ', m.name.last))",
+                ':name'
+            ));
             $qb->setParameter('name', '%' . mb_strtolower($filter->name) . '%');
         }
 
@@ -65,18 +72,27 @@ class MemberFetcher
         }
 
         if ($filter->group) {
-            $qb->andWhere('m.group_id = :group');
+            $qb->andWhere('g.id = :group');
             $qb->setParameter('group', $filter->group);
         }
 
-        if (!\in_array($sort, ['name', 'email', 'group', 'status'], true)) {
-            throw new \UnexpectedValueException('Cannot sort by ' . $sort);
+        $sortMap = [
+            'name'  => 'name',
+            'email' => 'email',
+            'group' => 'group_name',
+            'status'=> 'status',
+        ];
+
+        if (!isset($sortMap[$sort])) {
+            throw new UnexpectedValueException('Cannot sort by ' . $sort);
         }
 
-        $qb->orderBy($sort, $direction === 'desc' ? 'desc' : 'asc');
+        $qb->orderBy($sortMap[$sort], $direction === 'desc' ? 'DESC' : 'ASC');
 
         return $this->paginator->paginate($qb, $page, $size);
     }
+
+
 
     public function exists(string $id): bool
     {

@@ -68,6 +68,7 @@
         <tbody class="divide-y divide-gray-800">
           <tr v-for="group in groups" :key="group.id" class="hover:bg-indigo-800/30 transition-all">
             <td class="px-6 py-4 font-medium text-indigo-300">
+                {{console.log(group, 'group')}}
               <Link
                 v-if="group.members > 0"
                 :href="`/work/members?group=${group.id}`"

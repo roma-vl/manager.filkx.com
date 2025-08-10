@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Model\Work\Entity\Members\Group;
 
 use App\Model\User\Entity\Account\Account;
+use App\Model\Work\Entity\Members\Member\Member;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -21,6 +23,10 @@ class Group
     #[ORM\Version]
     #[ORM\Column(type: 'integer')]
     private int $version;
+
+    #[ORM\OneToMany(targetEntity: Member::class, mappedBy: 'group')]
+    private Collection $members;
+
 
     #[ORM\ManyToOne(targetEntity: Account::class)]
     #[ORM\JoinColumn(name: 'account_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]

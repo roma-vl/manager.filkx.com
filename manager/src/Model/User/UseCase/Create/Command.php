@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\User\UseCase\Create;
 
+use App\Model\User\Entity\Account\Account;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
@@ -33,4 +34,7 @@ class Command
         maxMessage: 'Last name must not exceed {{ limit }} characters.'
     )]
     public string $lastName;
+
+    #[Assert\NotBlank]
+    public Account $account;
 }

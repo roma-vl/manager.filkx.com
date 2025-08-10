@@ -19,6 +19,7 @@ use App\ReadModel\User\Filter;
 use App\ReadModel\User\UserFetcher;
 use App\ReadModel\Work\Members\Member\MemberFetcher;
 use App\Service\CommandFactory;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -56,7 +57,7 @@ class UsersController extends BaseController
         $users = array_map(fn ($user) => [
             'id' => $user['id']->getValue(),
             'name' => $user['name'],
-            'email' => $user['email']?->getValue(), // <-- дістаємо саму адресу
+            'email' => $user['email']?->getValue(),
             'role' => $user['role']?->getName(),
             'status' => $user['status'],
             'date' => $user['date']?->format('Y-m-d'),
@@ -81,12 +82,14 @@ class UsersController extends BaseController
         Create\Handler $handler,
         InertiaService $inertia,
         CommandFactory $commandFactory,
+        Security $security,
     ): Response {
         if ($request->isMethod('GET')) {
             return $inertia->render($request, 'Users/Create');
         }
 
         $command = new Create\Command();
+        $command->account = $security->getUser()->getAccount();
         $errors = $commandFactory->createFromRequest($request, $command);
 
         if ($errors) {

@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\ReadModel\Work\Members;
 
-use Doctrine\DBAL\Connection;
+use App\Model\Work\Entity\Members\Group\Group;
 use Doctrine\DBAL\Exception;
+use Doctrine\ORM\EntityManagerInterface;
 
 readonly class GroupFetcher
 {
     public function __construct(
-        private Connection $connection,
+        private EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -19,30 +20,32 @@ readonly class GroupFetcher
      */
     public function assoc(): array
     {
-        $stmt = $this->connection->createQueryBuilder()
-            ->select('id', 'name')
-            ->from('work_members_groups')
-            ->orderBy('name')
-            ->executeQuery();
+        $qb = $this->entityManager->createQueryBuilder()
+            ->select('g.id', 'g.name')
+            ->from(Group::class, 'g')
+            ->orderBy('g.name', 'ASC');
 
-        return $stmt->fetchAllKeyValue();
+        $results = $qb->getQuery()->getArrayResult();
+
+        $assoc = [];
+        foreach ($results as $row) {
+            $assoc[$row['id']->getValue()] = $row['name'];
+        }
+
+        return $assoc;
     }
 
-    /**
-     * @throws Exception
-     */
+
     public function all(): array
     {
-        $stmt = $this->connection->createQueryBuilder()
-            ->select(
-                'g.id',
-                'g.name',
-                '(SELECT COUNT(*) FROM work_members_members m WHERE m.group_id = g.id) AS members'
-            )
-            ->from('work_members_groups', 'g')
-            ->orderBy('g.name')
-            ->executeQuery();
+        $qb = $this->entityManager->createQueryBuilder()
+            ->select('g.id', 'g.name', 'COUNT(m.id) AS members')
+            ->from(Group::class, 'g')
+            ->leftJoin('g.members', 'm')
+            ->groupBy('g.id')
+            ->orderBy('g.name', 'ASC');
 
-        return $stmt->fetchAllAssociative();
+        return $qb->getQuery()->getArrayResult();
     }
+
 }

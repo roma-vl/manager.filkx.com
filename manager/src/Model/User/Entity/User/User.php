@@ -78,17 +78,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public static function create(Id $id, \DateTimeImmutable $date, Name $name, Email $email, string $hash, Account $account): self
     {
-        $user = new self($id, $date, $name, $account);
+        $user = new self($id, $date, $name);
         $user->email = $email;
         $user->passwordHash = $hash;
         $user->status = self::STATUS_ACTIVE;
-
+        $user->account = $account;
+        $user->locale = $account->getLocale();
         return $user;
     }
 
     public static function signUpByEmail(Id $id, \DateTimeImmutable $date, Name $name, Email $email, string $hash, string $token, Account $account): self
     {
-        $user = new self($id, $date, $name, $account);
+        $user = new self($id, $date, $name);
         $user->account = $account;
         $user->email = $email;
         $user->passwordHash = $hash;
