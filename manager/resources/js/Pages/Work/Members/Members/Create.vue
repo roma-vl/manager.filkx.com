@@ -1,36 +1,33 @@
 <script setup>
-import { useForm } from '@inertiajs/inertia-vue3'
-import InputLabel from '../../../../Components/InputLabel.vue'
-import InputError from '../../../../Components/InputError.vue'
-import TextInput from '../../../../Components/TextInput.vue'
-import SelectInput from '../../../../Components/SelectInput.vue'
-import AppLayout from '../../../../Layouts/AppLayout.vue'
-import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-import PageMeta from "@/Components/Seo/PageMeta.vue";
-const props = defineProps({
-  user: Object,
-  errors: Object,
-  groups: Array,
-})
-const form = useForm({
-  id: props.user.id,
-  group: '',
-  firstName: props.user.firstName || '',
-  lastName: props.user.lastName || '',
-  email: props.user.email || '',
-})
+  import { useForm } from '@inertiajs/inertia-vue3'
+  import InputLabel from '../../../../Components/InputLabel.vue'
+  import InputError from '../../../../Components/InputError.vue'
+  import TextInput from '../../../../Components/TextInput.vue'
+  import SelectInput from '../../../../Components/SelectInput.vue'
+  import AppLayout from '../../../../Layouts/AppLayout.vue'
+  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
+  const props = defineProps({
+    user: Object,
+    errors: Object,
+    groups: Array,
+  })
+  const form = useForm({
+    id: props.user.id,
+    group: '',
+    firstName: props.user.firstName || '',
+    lastName: props.user.lastName || '',
+    email: props.user.email || '',
+  })
 
-function submit() {
-  form.post(`/work/members/create/${props.user.id}`)
-}
+  function submit() {
+    form.post(`/work/members/create/${props.user.id}`)
+  }
 </script>
 
 <template>
   <AppLayout>
-      <PageMeta
-          :title="`Create Member`"
-          :description="`Page Create Member`"
-      />
+    <PageMeta :title="`Create Member`" :description="`Page Create Member`" />
     <div>
       <h1 class="text-2xl font-bold mb-4">Додати учасника</h1>
       <Breadcrumbs
@@ -38,10 +35,10 @@ function submit() {
           { label: 'Home', href: '/' },
           { label: 'Work', href: '/work' },
           { label: 'Members', href: '/work/members' },
-          { label: 'Create' }
+          { label: 'Create' },
         ]"
       />
-      <form class="max-w-3xl mx-auto space-y-6  p-6 h-[500px]" @submit.prevent="submit">
+      <form class="max-w-3xl mx-auto space-y-6 p-6 h-[500px]" @submit.prevent="submit">
         <div>
           <SelectInput
             v-model="form.group"

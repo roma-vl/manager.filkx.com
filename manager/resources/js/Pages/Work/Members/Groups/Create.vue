@@ -1,42 +1,39 @@
 <script setup>
-import { Head, useForm } from '@inertiajs/inertia-vue3'
-import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
-import AppLayout from '../../../../Layouts/AppLayout.vue'
-import InputLabel from '../../../../Components/InputLabel.vue'
-import InputError from '../../../../Components/InputError.vue'
-import TextInput from '../../../../Components/TextInput.vue'
-import SecondaryButton from '../../../../Components/SecondaryButton.vue'
-import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-import PageMeta from "@/Components/Seo/PageMeta.vue";
+  import { Head, useForm } from '@inertiajs/inertia-vue3'
+  import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
+  import AppLayout from '../../../../Layouts/AppLayout.vue'
+  import InputLabel from '../../../../Components/InputLabel.vue'
+  import InputError from '../../../../Components/InputError.vue'
+  import TextInput from '../../../../Components/TextInput.vue'
+  import SecondaryButton from '../../../../Components/SecondaryButton.vue'
+  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-const form = useForm({
-  name: '',
-})
+  const form = useForm({
+    name: '',
+  })
 
-function submit() {
-  form.post('/work/members/groups/create')
-}
+  function submit() {
+    form.post('/work/members/groups/create')
+  }
 </script>
 
 <template>
   <AppLayout>
-      <PageMeta
-          :title="`Create Group`"
-          :description="`Page Create Group`"
-      />
+    <PageMeta :title="`Create Group`" :description="`Page Create Group`" />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },
         { label: 'Work', href: '/work' },
         { label: 'Members', href: '/work/members' },
         { label: 'Groups', href: '/work/members/groups' },
-        { label: 'Create' }
+        { label: 'Create' },
       ]"
     />
 
     <GroupsTabs />
 
-    <form novalidate class="max-w-3xl mx-auto space-y-6  p-6" @submit.prevent="submit">
+    <form novalidate class="max-w-3xl mx-auto space-y-6 p-6" @submit.prevent="submit">
       <div>
         <InputLabel for="name" :value="'Name'" class="block text-sm font-medium text-gray-700" />
         <TextInput

@@ -1,83 +1,82 @@
 <script setup>
-import { useForm, Link } from '@inertiajs/inertia-vue3'
-import AppLayout from '@/Layouts/AppLayout.vue'
-import { onBeforeUnmount, onMounted, ref } from 'vue'
-import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-import axios from 'axios'
-import ChangeTypeDropdown from './Partials/ChangeTypeDropdown.vue'
-import ChangeStatusDropdown from './Partials/ChangeStatusDropdown.vue'
-import ChangePriorityDropdown from './Partials/ChangePriorityDropdown.vue'
-import ChangeProgressBar from './Partials/ChangeProgressBar.vue'
-import SubTasksTable from '@/Components/Task/SubTasksTable.vue'
-import MarkdownRenderer from '@/Components/ui/MarkdownRenderer.vue'
-import FilesList from '@/Components/Task/FilesList.vue'
-import CommentList from '@/Components/Task/CommentList.vue'
-import ActionRow from '@/Components/ActionRow.vue'
-import CommentForm from '@/Components/Task/CommentForm.vue'
-import PageMeta from "@/Components/Seo/PageMeta.vue";
+  import { useForm, Link } from '@inertiajs/inertia-vue3'
+  import AppLayout from '@/Layouts/AppLayout.vue'
+  import { onBeforeUnmount, onMounted, ref } from 'vue'
+  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import axios from 'axios'
+  import ChangeTypeDropdown from './Partials/ChangeTypeDropdown.vue'
+  import ChangeStatusDropdown from './Partials/ChangeStatusDropdown.vue'
+  import ChangePriorityDropdown from './Partials/ChangePriorityDropdown.vue'
+  import ChangeProgressBar from './Partials/ChangeProgressBar.vue'
+  import SubTasksTable from '@/Components/Task/SubTasksTable.vue'
+  import MarkdownRenderer from '@/Components/ui/MarkdownRenderer.vue'
+  import FilesList from '@/Components/Task/FilesList.vue'
+  import CommentList from '@/Components/Task/CommentList.vue'
+  import ActionRow from '@/Components/ActionRow.vue'
+  import CommentForm from '@/Components/Task/CommentForm.vue'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-const props = defineProps({
-  task: Object,
-  project: Object,
-  member: Object,
-  children: Array,
-  statuses: Array,
-  types: Array,
-  priorities: Array,
-  progress: Array,
-  feed: Object,
-  meta: Object,
-})
-
-
-const openDropdown = ref(false)
-const form = useForm({})
-function toggleDropdown() {
-  openDropdown.value = !openDropdown.value
-}
-
-function closeDropdown(event) {
-  if (!event.target.closest('.dropdown-container')) {
-    openDropdown.value = false
-  }
-}
-
-onMounted(() => {
-  document.addEventListener('click', closeDropdown)
-})
-
-onBeforeUnmount(() => {
-  document.removeEventListener('click', closeDropdown)
-})
-
-function confirmAndSubmit(url) {
-  if (!window.confirm('Are you sure?')) return
-  axios.post(url)
-}
-
-function revokeExecutor(memberId) {
-  if (!confirm('Are you sure?')) return
-
-  form.post(`/work/projects/tasks/${props.task.id}/revoke/${memberId}`, {
-    preserveScroll: true,
+  const props = defineProps({
+    task: Object,
+    project: Object,
+    member: Object,
+    children: Array,
+    statuses: Array,
+    types: Array,
+    priorities: Array,
+    progress: Array,
+    feed: Object,
+    meta: Object,
   })
-}
 
-function formatDate(date) {
-  return new Date(date).toLocaleString()
-}
+  const openDropdown = ref(false)
+  const form = useForm({})
+  function toggleDropdown() {
+    openDropdown.value = !openDropdown.value
+  }
 
-function reloadComments() {
-  window.location.reload()
-}
+  function closeDropdown(event) {
+    if (!event.target.closest('.dropdown-container')) {
+      openDropdown.value = false
+    }
+  }
+
+  onMounted(() => {
+    document.addEventListener('click', closeDropdown)
+  })
+
+  onBeforeUnmount(() => {
+    document.removeEventListener('click', closeDropdown)
+  })
+
+  function confirmAndSubmit(url) {
+    if (!window.confirm('Are you sure?')) return
+    axios.post(url)
+  }
+
+  function revokeExecutor(memberId) {
+    if (!confirm('Are you sure?')) return
+
+    form.post(`/work/projects/tasks/${props.task.id}/revoke/${memberId}`, {
+      preserveScroll: true,
+    })
+  }
+
+  function formatDate(date) {
+    return new Date(date).toLocaleString()
+  }
+
+  function reloadComments() {
+    window.location.reload()
+  }
 </script>
 
 <template>
   <AppLayout>
-      <PageMeta
-          :title="`${task.name + ' - ' +  project.name}`"
-          :description="`Page ${task.name + ' - ' +  project.name}`"
-      />
+    <PageMeta
+      :title="`${task.name + ' - ' + project.name}`"
+      :description="`Page ${task.name + ' - ' + project.name}`"
+    />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },
@@ -220,10 +219,9 @@ function reloadComments() {
               <SubTasksTable :children="children" :project-id="project.id" />
             </div>
 
-            <div class="rounded-lg shadow-lg shadow-indigo-800/40 mt-5 ">
+            <div class="rounded-lg shadow-lg shadow-indigo-800/40 mt-5">
               <div
-                class="rounded-t-xl p-3 text-left text-sm font-semibold tracking-wide select-none
-            bg-indigo-800 sticky top-0 text-white"
+                class="rounded-t-xl p-3 text-left text-sm font-semibold tracking-wide select-none bg-indigo-800 sticky top-0 text-white"
               >
                 Attachments
               </div>
@@ -232,10 +230,9 @@ function reloadComments() {
               </div>
             </div>
 
-            <div class="rounded-lg shadow-lg shadow-indigo-800/40 mt-5 ">
+            <div class="rounded-lg shadow-lg shadow-indigo-800/40 mt-5">
               <div
-                class="rounded-t-xl p-3 text-left text-sm font-semibold tracking-wide select-none
-                bg-indigo-800 sticky top-0 text-white"
+                class="rounded-t-xl p-3 text-left text-sm font-semibold tracking-wide select-none bg-indigo-800 sticky top-0 text-white"
               >
                 Comments
               </div>
@@ -244,9 +241,10 @@ function reloadComments() {
               </div>
             </div>
 
-
             <div class="rounded-lg shadow-lg shadow-indigo-800/40 mt-5">
-              <div class="text-white rounded-t-xl p-3 text-left text-sm font-semibold tracking-wide select-none bg-indigo-800 sticky top-0">
+              <div
+                class="text-white rounded-t-xl p-3 text-left text-sm font-semibold tracking-wide select-none bg-indigo-800 sticky top-0"
+              >
                 History
               </div>
 
@@ -254,7 +252,7 @@ function reloadComments() {
                 <div
                   v-for="(entry, index) in feed"
                   :key="index"
-                  class="rounded-xl   p-4 shadow bg-white dark:bg-gray-900"
+                  class="rounded-xl p-4 shadow bg-white dark:bg-gray-900"
                 >
                   <div class="text-sm text-gray-500 dark:text-gray-400">
                     {{ formatDate(entry.date) }}

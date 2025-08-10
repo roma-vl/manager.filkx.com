@@ -15,7 +15,7 @@ window.fetch = (input, init = {}) => {
 axios.defaults.withCredentials = true
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 axios.defaults.headers.common['X-CSRF-TOKEN'] =
-document.querySelector('meta[name="csrf-token"]')?.content
+  document.querySelector('meta[name="csrf-token"]')?.content
 
 const pages = import.meta.glob('./Pages/**/*.vue')
 

@@ -1,126 +1,121 @@
 <script setup>
-import {Head, Link} from '@inertiajs/inertia-vue3'
-import { computed, ref, watch } from 'vue'
-import AppLayout from '@/Layouts/AppLayout.vue'
-import { roleBadgeClass, statusBadgeClass } from '@/Helpers/helpers.js'
-import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-import PageMeta from "@/Components/Seo/PageMeta.vue";
+  import { Head, Link } from '@inertiajs/inertia-vue3'
+  import { computed, ref, watch } from 'vue'
+  import AppLayout from '@/Layouts/AppLayout.vue'
+  import { roleBadgeClass, statusBadgeClass } from '@/Helpers/helpers.js'
+  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-const props = defineProps({
-  users: Array,
-  pagination: Object,
-  filters: {
-    type: Object,
-    default: () => ({ name: '', email: '', role: '', status: '' }),
-  },
-  sort: String,
-  direction: String,
-})
+  const props = defineProps({
+    users: Array,
+    pagination: Object,
+    filters: {
+      type: Object,
+      default: () => ({ name: '', email: '', role: '', status: '' }),
+    },
+    sort: String,
+    direction: String,
+  })
 
-const name = ref(props.filters.name || '')
-const email = ref(props.filters.email || '')
-const role = ref(props.filters.role || '')
-const status = ref(props.filters.status || '')
-const sort = ref(props.sort || 'date')
-const direction = ref(props.direction || 'desc')
+  const name = ref(props.filters.name || '')
+  const email = ref(props.filters.email || '')
+  const role = ref(props.filters.role || '')
+  const status = ref(props.filters.status || '')
+  const sort = ref(props.sort || 'date')
+  const direction = ref(props.direction || 'desc')
 
-function toggleSort(field) {
-  if (sort.value === field) {
-    direction.value = direction.value === 'asc' ? 'desc' : 'asc'
-  } else {
-    sort.value = field
-    direction.value = 'asc'
-  }
-
-  submitFilters()
-}
-
-function submitFilters(page = 1) {
-  const query = new URLSearchParams({
-    name: name.value,
-    email: email.value,
-    role: role.value,
-    status: status.value,
-    sort: sort.value,
-    direction: direction.value,
-    page: page,
-  }).toString()
-
-  window.location.href = `/users?${query}`
-}
-
-function resetFilters() {
-  name.value = ''
-  email.value = ''
-  role.value = ''
-  status.value = ''
-  submitFilters()
-}
-
-watch(role, () => submitFilters())
-watch(status, () => submitFilters())
-
-function paginationLink(page) {
-  const query = new URLSearchParams({
-    name: name.value,
-    email: email.value,
-    role: role.value,
-    status: status.value,
-    page: page,
-  }).toString()
-
-  return `/users?${query}`
-}
-
-const paginationRange = computed(() => {
-  const current = props.pagination.currentPage
-  const last = props.pagination.lastPage
-  const delta = 2
-  const range = []
-  const rangeWithDots = []
-
-  for (let i = Math.max(1, current - delta); i <= Math.min(last, current + delta); i++) {
-    range.push(i)
-  }
-
-  if (range[0] > 2) {
-    rangeWithDots.push(1)
-    rangeWithDots.push('...')
-  } else {
-    for (let i = 1; i < range[0]; i++) {
-      rangeWithDots.push(i)
+  function toggleSort(field) {
+    if (sort.value === field) {
+      direction.value = direction.value === 'asc' ? 'desc' : 'asc'
+    } else {
+      sort.value = field
+      direction.value = 'asc'
     }
+
+    submitFilters()
   }
 
-  rangeWithDots.push(...range)
+  function submitFilters(page = 1) {
+    const query = new URLSearchParams({
+      name: name.value,
+      email: email.value,
+      role: role.value,
+      status: status.value,
+      sort: sort.value,
+      direction: direction.value,
+      page: page,
+    }).toString()
 
-  if (range[range.length - 1] < last - 1) {
-    rangeWithDots.push('...')
-    rangeWithDots.push(last)
-  } else {
-    for (let i = range[range.length - 1] + 1; i <= last; i++) {
-      rangeWithDots.push(i)
+    window.location.href = `/users?${query}`
+  }
+
+  function resetFilters() {
+    name.value = ''
+    email.value = ''
+    role.value = ''
+    status.value = ''
+    submitFilters()
+  }
+
+  watch(role, () => submitFilters())
+  watch(status, () => submitFilters())
+
+  function paginationLink(page) {
+    const query = new URLSearchParams({
+      name: name.value,
+      email: email.value,
+      role: role.value,
+      status: status.value,
+      page: page,
+    }).toString()
+
+    return `/users?${query}`
+  }
+
+  const paginationRange = computed(() => {
+    const current = props.pagination.currentPage
+    const last = props.pagination.lastPage
+    const delta = 2
+    const range = []
+    const rangeWithDots = []
+
+    for (let i = Math.max(1, current - delta); i <= Math.min(last, current + delta); i++) {
+      range.push(i)
     }
-  }
 
-  return rangeWithDots
-})
+    if (range[0] > 2) {
+      rangeWithDots.push(1)
+      rangeWithDots.push('...')
+    } else {
+      for (let i = 1; i < range[0]; i++) {
+        rangeWithDots.push(i)
+      }
+    }
+
+    rangeWithDots.push(...range)
+
+    if (range[range.length - 1] < last - 1) {
+      rangeWithDots.push('...')
+      rangeWithDots.push(last)
+    } else {
+      for (let i = range[range.length - 1] + 1; i <= last; i++) {
+        rangeWithDots.push(i)
+      }
+    }
+
+    return rangeWithDots
+  })
 </script>
 
 <template>
   <AppLayout>
-      <PageMeta
-          title="Користувачі"
-          description="Сторінка управління користувачами системи"
-          keywords="користувачі, управління, адміністрування"
-          image="/images/og-users.jpg"
-      />
-    <Breadcrumbs
-      :items="[
-        { label: 'Home', href: '/' },
-        { label: 'Users' },
-      ]"
+    <PageMeta
+      title="Користувачі"
+      description="Сторінка управління користувачами системи"
+      keywords="користувачі, управління, адміністрування"
+      image="/images/og-users.jpg"
     />
+    <Breadcrumbs :items="[{ label: 'Home', href: '/' }, { label: 'Users' }]" />
     <div class="space-y-4">
       <div class="flex justify-between items-center">
         <h1 class="text-2xl font-bold">Users</h1>
@@ -186,9 +181,7 @@ const paginationRange = computed(() => {
               <td class="p-2">{{ user.date }}</td>
               <td class="p-2">
                 <Link :href="`/users/${user.id}`" class="text-blue-600 hover:underline">
-                  {{
-                    user.name
-                  }}
+                  {{ user.name }}
                 </Link>
               </td>
               <td class="p-2">{{ user.email }}</td>

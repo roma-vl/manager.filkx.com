@@ -1,19 +1,16 @@
 <script setup>
-import {  usePage } from '@inertiajs/inertia-vue3'
-import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
-import AppLayout from '@/Layouts/AppLayout.vue'
-import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-import PageMeta from "@/Components/Seo/PageMeta.vue";
+  import { usePage } from '@inertiajs/inertia-vue3'
+  import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
+  import AppLayout from '@/Layouts/AppLayout.vue'
+  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-const { props } = usePage()
-const project = props.value.project
+  const { props } = usePage()
+  const project = props.value.project
 </script>
 <template>
   <AppLayout>
-      <PageMeta
-          :title="` ${project.name}`"
-          :description="`Page  ${project.name}`"
-      />
+    <PageMeta :title="` ${project.name}`" :description="`Page  ${project.name}`" />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },

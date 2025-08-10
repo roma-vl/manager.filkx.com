@@ -1,37 +1,37 @@
 <script setup>
-import { useForm } from '@inertiajs/inertia-vue3'
-import InputLabel from '@/Components/InputLabel.vue'
-import InputError from '@/Components/InputError.vue'
-import TextInput from '@/Components/TextInput.vue'
-import AppLayout from '@/Layouts/AppLayout.vue'
-import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
-import SecondaryButton from '@/Components/SecondaryButton.vue'
-import PageMeta from "@/Components/Seo/PageMeta.vue";
-import Breadcrumbs from "@/Components/ui/Breadcrumbs.vue";
+  import { useForm } from '@inertiajs/inertia-vue3'
+  import InputLabel from '@/Components/InputLabel.vue'
+  import InputError from '@/Components/InputError.vue'
+  import TextInput from '@/Components/TextInput.vue'
+  import AppLayout from '@/Layouts/AppLayout.vue'
+  import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
+  import SecondaryButton from '@/Components/SecondaryButton.vue'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
+  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
 
-const props = defineProps({
-  project: Object,
-})
+  const props = defineProps({
+    project: Object,
+  })
 
-const form = useForm({
-  name: props.project.name || '',
-  sort: props.project.sort || '',
-})
+  const form = useForm({
+    name: props.project.name || '',
+    sort: props.project.sort || '',
+  })
 
-function submit() {
-  form.post(`/work/projects/${props.project.id}/settings/edit`)
-}
+  function submit() {
+    form.post(`/work/projects/${props.project.id}/settings/edit`)
+  }
 </script>
 
 <template>
   <AppLayout>
-      <PageMeta
-          :title="`Settings for ${props.project.name}`"
-          :description="`Settings for ${props.project.name}`"
-      />
+    <PageMeta
+      :title="`Settings for ${props.project.name}`"
+      :description="`Settings for ${props.project.name}`"
+    />
 
-      <Breadcrumbs
-          :items="[
+    <Breadcrumbs
+      :items="[
         { label: 'Home', href: '/' },
         { label: 'Work', href: '/work' },
         { label: 'Projects', href: '/work/projects' },
@@ -39,7 +39,7 @@ function submit() {
         { label: 'Settings', href: `/work/projects/${project.id}/settings` },
         { label: 'Edit' },
       ]"
-      />
+    />
 
     <ProjectTabs :project-id="project.id" />
 

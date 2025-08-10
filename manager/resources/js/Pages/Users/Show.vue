@@ -1,64 +1,59 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue'
-import { Link } from '@inertiajs/inertia-vue3'
-import axios from 'axios'
-import { computed } from 'vue'
-import { roleBadgeClass, statusBadgeClass } from '@/Helpers/helpers.js'
-import PageMeta from "@/Components/Seo/PageMeta.vue";
+  import AppLayout from '@/Layouts/AppLayout.vue'
+  import { Link } from '@inertiajs/inertia-vue3'
+  import axios from 'axios'
+  import { computed } from 'vue'
+  import { roleBadgeClass, statusBadgeClass } from '@/Helpers/helpers.js'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-const props = defineProps({
-  member: Object,
-  user: Object,
-})
+  const props = defineProps({
+    member: Object,
+    user: Object,
+  })
 
-console.log(props.user)
-const me = props.member?.id === props.user?.id
-const allNetworks = ['facebook', 'google']
+  console.log(props.user)
+  const me = props.member?.id === props.user?.id
+  const allNetworks = ['facebook', 'google']
 
-const connectedNetworks = computed(() => {
-  return props.user.networks.reduce((acc, net) => {
-    acc[net.network] = net
-    return acc
-  }, {})
-})
+  const connectedNetworks = computed(() => {
+    return props.user.networks.reduce((acc, net) => {
+      acc[net.network] = net
+      return acc
+    }, {})
+  })
 
-function unlink(network) {
-  if (confirm(`Ви впевнені, що хочете відв'язати ${network}?`)) {
-    axios
-      .post(`/auth/${network}/detach`)
-      .then(() => location.reload())
-      .catch(err => {
-        console.error(err)
-        alert('Помилка при відв’язці мережі')
-      })
+  function unlink(network) {
+    if (confirm(`Ви впевнені, що хочете відв'язати ${network}?`)) {
+      axios
+        .post(`/auth/${network}/detach`)
+        .then(() => location.reload())
+        .catch(err => {
+          console.error(err)
+          alert('Помилка при відв’язці мережі')
+        })
+    }
   }
-}
 
-function confirmAction(action) {
-  if (confirm(`Are you sure you want to ${action} this user?`)) {
-    axios
-      .post(`/users/${props.user.id}/${action}`)
-      .then(() => location.reload())
-      .catch(error => {
-        console.error(error)
-        alert('Error during action')
-      })
+  function confirmAction(action) {
+    if (confirm(`Are you sure you want to ${action} this user?`)) {
+      axios
+        .post(`/users/${props.user.id}/${action}`)
+        .then(() => location.reload())
+        .catch(error => {
+          console.error(error)
+          alert('Error during action')
+        })
+    }
   }
-}
 </script>
 
 <template>
   <AppLayout>
-      <PageMeta
-          :title="`${props.user?.full_name}`"
-          description="Page Change User Roles"
-      />
+    <PageMeta :title="`${props.user?.full_name}`" description="Page Change User Roles" />
     <div class="space-y-6 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Heading -->
       <div class="flex flex-wrap justify-between items-center gap-2">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-          👤 {{ user.full_name }}
-        </h1>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">👤 {{ user.full_name }}</h1>
 
         <div class="flex flex-wrap gap-2">
           <div v-if="props.member">

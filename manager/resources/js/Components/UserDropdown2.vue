@@ -72,14 +72,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { Link } from '@inertiajs/inertia-vue3'
-import {
-  ChevronDownIcon,
-  UserIcon,
-  Cog6ToothIcon as CogIcon,
-  ArrowLeftOnRectangleIcon as LogoutIcon,
-} from '@heroicons/vue/24/outline'
+  import { ref } from 'vue'
+  import { Link } from '@inertiajs/inertia-vue3'
+  import {
+    ChevronDownIcon,
+    UserIcon,
+    Cog6ToothIcon as CogIcon,
+    ArrowLeftOnRectangleIcon as LogoutIcon,
+  } from '@heroicons/vue/24/outline'
 
-const open = ref(false)
+  const open = ref(false)
 </script>

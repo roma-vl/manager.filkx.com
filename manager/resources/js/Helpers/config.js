@@ -1,1 +1,1 @@
-export const BASE_APP_NAME = 'Filkx Task';
+export const BASE_APP_NAME = 'Filkx Task'

@@ -1,76 +1,76 @@
 <script setup>
-import {ref, computed, watch, onMounted, onBeforeUnmount} from 'vue'
-import {Head, Link, usePage} from '@inertiajs/inertia-vue3'
-import SearchBar from '../Components/SearchBar.vue'
-import NavItem from '../Components/NavItem.vue'
-import UserDropdown2 from '../Components/UserDropdown2.vue'
-import DarkModeToggle from '../Components/DarkModeToggle.vue'
+  import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+  import { Head, Link, usePage } from '@inertiajs/inertia-vue3'
+  import SearchBar from '../Components/SearchBar.vue'
+  import NavItem from '../Components/NavItem.vue'
+  import UserDropdown2 from '../Components/UserDropdown2.vue'
+  import DarkModeToggle from '../Components/DarkModeToggle.vue'
 
-const page = usePage()
-const sidebarOpen = ref(window.innerWidth >= 1024)
-const flash = computed(() => page.props.value.flash || {})
-const roles = page.props.value.auth.roles
-const canManageUsers = roles?.includes('ROLE_MANAGE_USERS')
-const showFlash = ref(false)
-import {useCentrifugo} from '@/services/useCentrifugo.js'
-import {toast} from 'vue3-toastify'
+  const page = usePage()
+  const sidebarOpen = ref(window.innerWidth >= 1024)
+  const flash = computed(() => page.props.value.flash || {})
+  const roles = page.props.value.auth.roles
+  const canManageUsers = roles?.includes('ROLE_MANAGE_USERS')
+  const showFlash = ref(false)
+  import { useCentrifugo } from '@/services/useCentrifugo.js'
+  import { toast } from 'vue3-toastify'
 
-const { init, subscribe, unsubscribe, disconnect } = useCentrifugo()
+  const { init, subscribe, unsubscribe, disconnect } = useCentrifugo()
 
-const privateMessages = ref([])
-const userId = page.props.value.auth.user.id
-onMounted(async () => {
-  await init()
+  const privateMessages = ref([])
+  const userId = page.props.value.auth.user.id
+  onMounted(async () => {
+    await init()
 
-  subscribe('chat:general', {
-    publication(ctx) {
-      toast.info(ctx.data.text)
-    },
+    subscribe('chat:general', {
+      publication(ctx) {
+        toast.info(ctx.data.text)
+      },
+    })
+
+    subscribe(`user:${userId}`, {
+      publication(ctx) {
+        privateMessages.value.push(ctx.data)
+        toast.info(ctx.data.text)
+      },
+    })
   })
 
-  subscribe(`user:${userId}`, {
-    publication(ctx) {
-      privateMessages.value.push(ctx.data)
-      toast.info(ctx.data.text)
-    },
+  onBeforeUnmount(() => {
+    unsubscribe('chat:general')
+    unsubscribe(`user:${userId}`)
+    disconnect()
   })
-})
 
-onBeforeUnmount(() => {
-  unsubscribe('chat:general')
-  unsubscribe(`user:${userId}`)
-  disconnect()
-})
-
-watch(
-  flash,
-  newVal => {
-    if (newVal.error || newVal.success) {
+  watch(
+    flash,
+    newVal => {
+      if (newVal.error || newVal.success) {
+        showFlash.value = true
+        setTimeout(() => (showFlash.value = false), 5000)
+      }
+    },
+    {}
+  )
+  onMounted(() => {
+    if (flash.value.success || flash.value.error) {
       showFlash.value = true
       setTimeout(() => (showFlash.value = false), 5000)
     }
-  },
-  {},
-)
-onMounted(() => {
-  if (flash.value.success || flash.value.error) {
-    showFlash.value = true
-    setTimeout(() => (showFlash.value = false), 5000)
+  })
+
+  const toggleSidebar = () => {
+    sidebarOpen.value = !sidebarOpen.value
   }
-})
 
-const toggleSidebar = () => {
-  sidebarOpen.value = !sidebarOpen.value
-}
-
-watch(
-  () => page.url,
-  () => {
-    if (window.innerWidth < 1024) {
-      sidebarOpen.value = false
+  watch(
+    () => page.url,
+    () => {
+      if (window.innerWidth < 1024) {
+        sidebarOpen.value = false
+      }
     }
-  },
-)
+  )
 </script>
 
 <template>
@@ -229,16 +229,13 @@ watch(
           </div>
         </Transition>
         <div
-          class="mx-auto p-3 rounded-lg bg-white text-gray-800 shadow-md shadow-gray-200/50 dark:bg-gradient-to-br
-        dark:from-indigo-900 dark:via-gray-900 dark:to-[#0e0f11] dark:text-indigo-200
-        dark:shadow-indigo-900/40 transition-all duration-300 ease-in-out min-h-[400px]"
+          class="mx-auto p-3 rounded-lg bg-white text-gray-800 shadow-md shadow-gray-200/50 dark:bg-gradient-to-br dark:from-indigo-900 dark:via-gray-900 dark:to-[#0e0f11] dark:text-indigo-200 dark:shadow-indigo-900/40 transition-all duration-300 ease-in-out min-h-[400px]"
           role="main"
         >
           <slot />
         </div>
       </div>
     </main>
-
 
     <!-- Overlay -->
     <Transition name="fade">

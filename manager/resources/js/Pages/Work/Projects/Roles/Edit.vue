@@ -1,45 +1,42 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue'
-import { useForm } from '@inertiajs/inertia-vue3'
-import PageMeta from "@/Components/Seo/PageMeta.vue";
-import Breadcrumbs from "@/Components/ui/Breadcrumbs.vue";
+  import AppLayout from '@/Layouts/AppLayout.vue'
+  import { useForm } from '@inertiajs/inertia-vue3'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
+  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
 
-const props = defineProps({
-  role: Object,
-  permissions: Array,
-  errors: Object,
-})
+  const props = defineProps({
+    role: Object,
+    permissions: Array,
+    errors: Object,
+  })
 
-const form = useForm({
-  name: props.role.name,
-  permissions: props.role.permissions,
-})
+  const form = useForm({
+    name: props.role.name,
+    permissions: props.role.permissions,
+  })
 
-if (props.errors) {
-  form.setError(props.errors)
-}
+  if (props.errors) {
+    form.setError(props.errors)
+  }
 
-function submit() {
-  form.post(`/work/projects/roles/${props.role.id}/edit`)
-}
+  function submit() {
+    form.post(`/work/projects/roles/${props.role.id}/edit`)
+  }
 </script>
 
 <template>
   <AppLayout>
-      <PageMeta
-          :title="`${role.name} Edit`"
-          :description="`Page ${role.name} Edit`"
-      />
+    <PageMeta :title="`${role.name} Edit`" :description="`Page ${role.name} Edit`" />
 
-      <Breadcrumbs
-          :items="[
+    <Breadcrumbs
+      :items="[
         { label: 'Home', href: '/' },
         { label: 'Work', href: '/work' },
         { label: 'Projects', href: '/work/projects' },
         { label: 'Roles', href: '/work/projects/roles' },
         { label: 'Edit' },
       ]"
-      />
+    />
 
     <form @submit.prevent="submit">
       <div class="card p-6">

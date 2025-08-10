@@ -1,56 +1,56 @@
 <script setup>
-import { ref, computed } from 'vue'
-import { Search, RefreshCw, Check } from 'lucide-vue-next'
+  import { ref, computed } from 'vue'
+  import { Search, RefreshCw, Check } from 'lucide-vue-next'
 
-const props = defineProps({
-  filters: Object,
-  members: Object,
-  types: Array,
-  statuses: Array,
-  priorities: Array,
-})
-
-const emit = defineEmits(['submit', 'reset'])
-
-const text = ref(props.filters.text || '')
-const type = ref(props.filters.type || '')
-const status = ref(props.filters.status || '')
-const priority = ref(props.filters.priority || '')
-const author = ref(props.filters.author || '')
-const executor = ref(props.filters.executor || '')
-const roots = ref(props.filters.roots || false)
-
-const groupedMembers = computed(() => {
-  const groups = {}
-  for (const member of props.members) {
-    if (!groups[member.group]) groups[member.group] = []
-    groups[member.group].push(member)
-  }
-  return Object.entries(groups).map(([label, members]) => ({ label, members }))
-})
-
-function submit() {
-  emit('submit', {
-    text: text.value,
-    type: type.value,
-    status: status.value,
-    priority: priority.value,
-    author: author.value,
-    executor: executor.value,
-    roots: roots.value,
+  const props = defineProps({
+    filters: Object,
+    members: Object,
+    types: Array,
+    statuses: Array,
+    priorities: Array,
   })
-}
 
-function reset() {
-  text.value = ''
-  type.value = ''
-  status.value = ''
-  priority.value = ''
-  author.value = ''
-  executor.value = ''
-  roots.value = false
-  emit('reset')
-}
+  const emit = defineEmits(['submit', 'reset'])
+
+  const text = ref(props.filters.text || '')
+  const type = ref(props.filters.type || '')
+  const status = ref(props.filters.status || '')
+  const priority = ref(props.filters.priority || '')
+  const author = ref(props.filters.author || '')
+  const executor = ref(props.filters.executor || '')
+  const roots = ref(props.filters.roots || false)
+
+  const groupedMembers = computed(() => {
+    const groups = {}
+    for (const member of props.members) {
+      if (!groups[member.group]) groups[member.group] = []
+      groups[member.group].push(member)
+    }
+    return Object.entries(groups).map(([label, members]) => ({ label, members }))
+  })
+
+  function submit() {
+    emit('submit', {
+      text: text.value,
+      type: type.value,
+      status: status.value,
+      priority: priority.value,
+      author: author.value,
+      executor: executor.value,
+      roots: roots.value,
+    })
+  }
+
+  function reset() {
+    text.value = ''
+    type.value = ''
+    status.value = ''
+    priority.value = ''
+    author.value = ''
+    executor.value = ''
+    roots.value = false
+    emit('reset')
+  }
 </script>
 
 <template>

@@ -1,124 +1,121 @@
 <script setup>
-import { ref, reactive } from 'vue'
-import AppLayout from '@/Layouts/AppLayout.vue'
-import SortIcon from '@/Components/Icons/SortIcon.vue'
-import Pagination from '@/Components/ui/Pagination.vue'
-import TaskFilters from '@/Components/TaskFilters.vue'
-import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-import RolesTabs from '@/Components/Work/Projects/Project/Roles/RolesTabs.vue'
-import TasksTabs from '@/Components/Work/Projects/TasksTabs.vue'
-import {
-  formatPriority,
-  formatStatus,
-  formatType,
-  priorityBadgeClass,
-  typeBadgeClass,
-} from '@/Helpers/tasks.helper.js'
-import { statusBadgeClass } from '@/Helpers/helpers.js'
-import PageMeta from "@/Components/Seo/PageMeta.vue";
-const props = defineProps({
-  project: Object,
-  members: Object,
-  filters: Object,
-  tasks: Array,
-  statuses: Array,
-  type: Array,
-  priority: Array,
-  sort: String,
-  direction: String,
-  pagination: Object,
-  meta: Object,
-})
-console.log('asd')
-const text = ref(props.filters.text || '')
-const type = ref(props.filters.type || '')
-const status = ref(props.filters.status || '')
-const priority = ref(props.filters.priority || '')
-const author = ref(props.filters.author || '')
-const executor = ref(props.filters.executor || '')
-const roots = ref(props.filters.roots || false)
-const sort = ref(props.filters.sort || false)
-const direction = ref(props.filters.direction ?? 'asc')
+  import { ref, reactive } from 'vue'
+  import AppLayout from '@/Layouts/AppLayout.vue'
+  import SortIcon from '@/Components/Icons/SortIcon.vue'
+  import Pagination from '@/Components/ui/Pagination.vue'
+  import TaskFilters from '@/Components/TaskFilters.vue'
+  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import RolesTabs from '@/Components/Work/Projects/Project/Roles/RolesTabs.vue'
+  import TasksTabs from '@/Components/Work/Projects/TasksTabs.vue'
+  import {
+    formatPriority,
+    formatStatus,
+    formatType,
+    priorityBadgeClass,
+    typeBadgeClass,
+  } from '@/Helpers/tasks.helper.js'
+  import { statusBadgeClass } from '@/Helpers/helpers.js'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
+  const props = defineProps({
+    project: Object,
+    members: Object,
+    filters: Object,
+    tasks: Array,
+    statuses: Array,
+    type: Array,
+    priority: Array,
+    sort: String,
+    direction: String,
+    pagination: Object,
+    meta: Object,
+  })
+  console.log('asd')
+  const text = ref(props.filters.text || '')
+  const type = ref(props.filters.type || '')
+  const status = ref(props.filters.status || '')
+  const priority = ref(props.filters.priority || '')
+  const author = ref(props.filters.author || '')
+  const executor = ref(props.filters.executor || '')
+  const roots = ref(props.filters.roots || false)
+  const sort = ref(props.filters.sort || false)
+  const direction = ref(props.filters.direction ?? 'asc')
 
-const tasks = ref(props.tasks || [])
-const pagination = reactive({ ...props.pagination })
+  const tasks = ref(props.tasks || [])
+  const pagination = reactive({ ...props.pagination })
 
-function toggleSort(field) {
-  if (sort.value === field) {
-    direction.value = direction.value === 'asc' ? 'desc' : 'asc'
-  } else {
-    sort.value = field
-    direction.value = 'asc'
-  }
-  submitFilters(1)
-}
-
-function submitFilters(page = 1) {
-  if (typeof page !== 'number') {
-    page = 1
+  function toggleSort(field) {
+    if (sort.value === field) {
+      direction.value = direction.value === 'asc' ? 'desc' : 'asc'
+    } else {
+      sort.value = field
+      direction.value = 'asc'
+    }
+    submitFilters(1)
   }
 
-  const query = new URLSearchParams({
-    text: text.value,
-    type: type.value,
-    status: status.value,
-    priority: priority.value,
-    author: author.value,
-    executor: executor.value,
-    roots: roots.value ? 1 : '',
-    page,
-    sort: typeof sort.value === 'string' ? sort.value : 't.id',
-    direction: direction.value,
-  }).toString()
+  function submitFilters(page = 1) {
+    if (typeof page !== 'number') {
+      page = 1
+    }
 
-  window.location.href = `/work/projects/tasks?${query}`
-}
+    const query = new URLSearchParams({
+      text: text.value,
+      type: type.value,
+      status: status.value,
+      priority: priority.value,
+      author: author.value,
+      executor: executor.value,
+      roots: roots.value ? 1 : '',
+      page,
+      sort: typeof sort.value === 'string' ? sort.value : 't.id',
+      direction: direction.value,
+    }).toString()
 
-function resetFilters() {
-  text.value = ''
-  type.value = ''
-  status.value = ''
-  priority.value = ''
-  author.value = ''
-  executor.value = ''
-  roots.value = ''
-  submitFilters()
-}
+    window.location.href = `/work/projects/tasks?${query}`
+  }
 
-function paginationLink(page) {
-  const query = new URLSearchParams({
-    text: text.value,
-    type: type.value,
-    status: status.value,
-    priority: priority.value,
-    author: author.value,
-    executor: executor.value,
-    roots: roots.value ? 1 : '',
-    page,
-    sort: typeof sort.value === 'string' ? sort.value : 't.id',
-    direction: direction.value,
-  }).toString()
+  function resetFilters() {
+    text.value = ''
+    type.value = ''
+    status.value = ''
+    priority.value = ''
+    author.value = ''
+    executor.value = ''
+    roots.value = ''
+    submitFilters()
+  }
 
-  return `/work/projects/tasks?${query}`
-}
-function handleSubmit(updatedFilters) {
-  text.value = updatedFilters.text
-  type.value = updatedFilters.type
-  status.value = updatedFilters.status
-  priority.value = updatedFilters.priority
-  author.value = updatedFilters.author
-  executor.value = updatedFilters.executor
-  roots.value = updatedFilters.roots
-  submitFilters(1)
-}
+  function paginationLink(page) {
+    const query = new URLSearchParams({
+      text: text.value,
+      type: type.value,
+      status: status.value,
+      priority: priority.value,
+      author: author.value,
+      executor: executor.value,
+      roots: roots.value ? 1 : '',
+      page,
+      sort: typeof sort.value === 'string' ? sort.value : 't.id',
+      direction: direction.value,
+    }).toString()
+
+    return `/work/projects/tasks?${query}`
+  }
+  function handleSubmit(updatedFilters) {
+    text.value = updatedFilters.text
+    type.value = updatedFilters.type
+    status.value = updatedFilters.status
+    priority.value = updatedFilters.priority
+    author.value = updatedFilters.author
+    executor.value = updatedFilters.executor
+    roots.value = updatedFilters.roots
+    submitFilters(1)
+  }
 </script>
 
 <template>
   <AppLayout>
-      <PageMeta
-          :title="`Tasks`"
-          :description="`Page Tasks`"
-      />
+    <PageMeta :title="`Tasks`" :description="`Page Tasks`" />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },

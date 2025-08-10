@@ -1,52 +1,49 @@
 <script setup>
-import { useForm, usePage } from '@inertiajs/inertia-vue3'
-import { computed, ref, watch } from 'vue'
-import PageMeta from "@/Components/Seo/PageMeta.vue";
+  import { useForm, usePage } from '@inertiajs/inertia-vue3'
+  import { computed, ref, watch } from 'vue'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-const page = usePage()
-const flash = computed(() => page.props.value.flash || {})
-const showFlash = ref(false)
-// const user = computed(() => page.props.value.auth?.user)
-// const permissions = computed(() => page.props.value.auth?.permissions || [])
-const props = defineProps({
-  lastUsername: String,
-  csrfToken: String,
-})
-
-watch(
-  flash,
-  newVal => {
-    if (newVal.error || newVal.success) {
-      showFlash.value = true
-      setTimeout(() => {
-        showFlash.value = false
-      }, 5000)
-    }
-  },
-  { immediate: true },
-)
-
-const form = useForm({
-  _csrf_token: props.csrfToken,
-  email: props.lastUsername || '',
-  password: '',
-  _remember_me: false,
-})
-function submit() {
-  form.post('/login', {
-    preserveScroll: true,
-    onError: () => {
-      form._password = ''
-    },
+  const page = usePage()
+  const flash = computed(() => page.props.value.flash || {})
+  const showFlash = ref(false)
+  // const user = computed(() => page.props.value.auth?.user)
+  // const permissions = computed(() => page.props.value.auth?.permissions || [])
+  const props = defineProps({
+    lastUsername: String,
+    csrfToken: String,
   })
-}
+
+  watch(
+    flash,
+    newVal => {
+      if (newVal.error || newVal.success) {
+        showFlash.value = true
+        setTimeout(() => {
+          showFlash.value = false
+        }, 5000)
+      }
+    },
+    { immediate: true }
+  )
+
+  const form = useForm({
+    _csrf_token: props.csrfToken,
+    email: props.lastUsername || '',
+    password: '',
+    _remember_me: false,
+  })
+  function submit() {
+    form.post('/login', {
+      preserveScroll: true,
+      onError: () => {
+        form._password = ''
+      },
+    })
+  }
 </script>
 
 <template>
-    <PageMeta
-        :title="`Login`"
-        :description="`Page Login`"
-    />
+  <PageMeta :title="`Login`" :description="`Page Login`" />
   <div class="min-h-screen flex items-center justify-center bg-gray-100">
     <div class="max-w-md w-full bg-white p-8 rounded shadow">
       <h1 class="text-2xl font-bold mb-6">Log In</h1>

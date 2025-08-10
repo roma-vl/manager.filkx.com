@@ -1,43 +1,43 @@
 <script setup>
-import { Link } from '@inertiajs/inertia-vue3'
-import {computed, reactive} from 'vue'
+  import { Link } from '@inertiajs/inertia-vue3'
+  import { computed, reactive } from 'vue'
 
-const props = defineProps({
-  pagination: {
-    type: Object,
-    required: true,
-  },
-  linkBuilder: {
-    type: Function,
-    required: true,
-  },
-})
-const pagination = reactive({ ...props.pagination })
-const paginationRange = computed(() => {
-  const current = props.pagination.currentPage
-  const last = props.pagination.lastPage
-  const delta = 2
-  const range = []
+  const props = defineProps({
+    pagination: {
+      type: Object,
+      required: true,
+    },
+    linkBuilder: {
+      type: Function,
+      required: true,
+    },
+  })
+  const pagination = reactive({ ...props.pagination })
+  const paginationRange = computed(() => {
+    const current = props.pagination.currentPage
+    const last = props.pagination.lastPage
+    const delta = 2
+    const range = []
 
-  for (let i = Math.max(1, current - delta); i <= Math.min(last, current + delta); i++) {
-    range.push(i)
-  }
+    for (let i = Math.max(1, current - delta); i <= Math.min(last, current + delta); i++) {
+      range.push(i)
+    }
 
-  const result = []
-  if (range[0] > 1) {
-    result.push(1)
-    if (range[0] > 2) result.push('...')
-  }
+    const result = []
+    if (range[0] > 1) {
+      result.push(1)
+      if (range[0] > 2) result.push('...')
+    }
 
-  result.push(...range)
+    result.push(...range)
 
-  if (range[range.length - 1] < last) {
-    if (range[range.length - 1] < last - 1) result.push('...')
-    result.push(last)
-  }
+    if (range[range.length - 1] < last) {
+      if (range[range.length - 1] < last - 1) result.push('...')
+      result.push(last)
+    }
 
-  return result
-})
+    return result
+  })
 </script>
 
 <template>

@@ -1,25 +1,23 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue'
-import ActionRow from '@/Components/ActionRow.vue'
-import {Head} from '@inertiajs/inertia-vue3'
-import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
-import PageMeta from "@/Components/Seo/PageMeta.vue";
+  import AppLayout from '@/Layouts/AppLayout.vue'
+  import ActionRow from '@/Components/ActionRow.vue'
+  import { Head } from '@inertiajs/inertia-vue3'
+  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-
-const props = defineProps({
-  project: Object,
-  pagination: Object,
-})
+  const props = defineProps({
+    project: Object,
+    pagination: Object,
+  })
 </script>
 
 <template>
   <AppLayout>
-
-      <PageMeta
-          :title="`Actions for ${props.project.name}`"
-          :description="`Actions for ${props.project.name}`"
-      />
+    <PageMeta
+      :title="`Actions for ${props.project.name}`"
+      :description="`Actions for ${props.project.name}`"
+    />
 
     <Breadcrumbs
       :items="[
@@ -74,14 +72,22 @@ const props = defineProps({
         <button
           v-if="pagination.pagination.current_page > 1"
           class="btn"
-          @click="$inertia.get(window.location.pathname + '?page=' + (pagination.pagination.current_page - 1))"
+          @click="
+            $inertia.get(
+              window.location.pathname + '?page=' + (pagination.pagination.current_page - 1)
+            )
+          "
         >
           Prev
         </button>
         <button
           v-if="pagination.pagination.current_page < pagination.pagination.total_pages"
           class="btn ml-2"
-          @click="$inertia.get(window.location.pathname + '?page=' + (pagination.pagination.current_page + 1))"
+          @click="
+            $inertia.get(
+              window.location.pathname + '?page=' + (pagination.pagination.current_page + 1)
+            )
+          "
         >
           Next
         </button>
@@ -91,7 +97,7 @@ const props = defineProps({
 </template>
 
 <style scoped>
-.btn {
+  .btn {
     @apply bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700 transition;
-}
+  }
 </style>

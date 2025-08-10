@@ -1,73 +1,70 @@
 <script setup>
-import { computed, reactive, watchEffect } from 'vue'
-import { useForm, usePage } from '@inertiajs/inertia-vue3'
-import AppLayout from '../../Layouts/AppLayout.vue'
-import {roleBadgeClass, statusBadgeClass} from '@/Helpers/helpers.js'
-import PageMeta from "@/Components/Seo/PageMeta.vue";
+  import { computed, reactive, watchEffect } from 'vue'
+  import { useForm, usePage } from '@inertiajs/inertia-vue3'
+  import AppLayout from '../../Layouts/AppLayout.vue'
+  import { roleBadgeClass, statusBadgeClass } from '@/Helpers/helpers.js'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-const page = usePage()
-const user = computed(() => page.props.value.auth?.user)
+  const page = usePage()
+  const user = computed(() => page.props.value.auth?.user)
 
-const editing = reactive({
-  name: false,
-  email: false,
-})
+  const editing = reactive({
+    name: false,
+    email: false,
+  })
 
-const form = useForm({
-  first: '',
-  last: '',
-  email: '',
-})
+  const form = useForm({
+    first: '',
+    last: '',
+    email: '',
+  })
 
-watchEffect(() => {
-  if (user.value) {
-    form.first = user.value.first_name
-    form.last = user.value.last_name
-    form.email = user.value.email
+  watchEffect(() => {
+    if (user.value) {
+      form.first = user.value.first_name
+      form.last = user.value.last_name
+      form.email = user.value.email
+    }
+  })
+
+  function startEdit(field) {
+    editing[field] = true
   }
-})
 
-function startEdit(field) {
-  editing[field] = true
-}
-
-function cancelEdit(field) {
-  if (field === 'name') {
-    form.first = user.value.first_name
-    form.last = user.value.last_name
-  } else {
-    form[field] = user[field]
+  function cancelEdit(field) {
+    if (field === 'name') {
+      form.first = user.value.first_name
+      form.last = user.value.last_name
+    } else {
+      form[field] = user[field]
+    }
+    editing[field] = false
   }
-  editing[field] = false
-}
 
-function saveField(field) {
-  if (field === 'name') {
-    form.post('/profile/name', {
-      preserveScroll: true,
-      onSuccess: () => {
-        editing.name = false
-      },
-    })
-  } else if (field === 'email') {
-    form.post('/profile/email', {
-      preserveScroll: true,
-      onSuccess: () => {
-        editing.email = false
-      },
-    })
+  function saveField(field) {
+    if (field === 'name') {
+      form.post('/profile/name', {
+        preserveScroll: true,
+        onSuccess: () => {
+          editing.name = false
+        },
+      })
+    } else if (field === 'email') {
+      form.post('/profile/email', {
+        preserveScroll: true,
+        onSuccess: () => {
+          editing.email = false
+        },
+      })
+    }
   }
-}
 
-console.log(user, 'user')
+  console.log(user, 'user')
 </script>
 
 <template>
   <AppLayout>
-      <PageMeta
-          :title="`${user.name}`"
-          :description="`Page ${user.name}`"
-      />
+    <PageMeta :title="`${user.name}`" :description="`Page ${user.name}`" />
     <div class="space-y-6">
       <div v-if="user" class="bg-white p-6 rounded shadow">
         <h2 class="text-xl font-bold mb-4">Profile</h2>

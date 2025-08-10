@@ -1,34 +1,30 @@
 <script setup>
-import { useForm, Link } from '@inertiajs/inertia-vue3'
-import AppLayout from '@/Layouts/AppLayout.vue'
-import InputLabel from '@/Components/InputLabel.vue'
-import InputError from '@/Components/InputError.vue'
-import TextInput from '@/Components/TextInput.vue'
-import SecondaryButton from '@/Components/SecondaryButton.vue'
-import PageMeta from "@/Components/Seo/PageMeta.vue";
+  import { useForm, Link } from '@inertiajs/inertia-vue3'
+  import AppLayout from '@/Layouts/AppLayout.vue'
+  import InputLabel from '@/Components/InputLabel.vue'
+  import InputError from '@/Components/InputError.vue'
+  import TextInput from '@/Components/TextInput.vue'
+  import SecondaryButton from '@/Components/SecondaryButton.vue'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-const props = defineProps({
-  project: Object,
-})
+  const props = defineProps({
+    project: Object,
+  })
 
+  const form = useForm({
+    name: '',
+    sort: props.project.sort,
+    status: 'active',
+  })
 
-const form = useForm({
-  name: '',
-  sort: props.project.sort,
-  status: 'active',
-})
-
-function submit() {
-  form.post('/work/projects/create')
-}
+  function submit() {
+    form.post('/work/projects/create')
+  }
 </script>
 
 <template>
   <AppLayout>
-      <PageMeta
-          :title="`Create Project`"
-          :description="`Page Create Project`"
-      />
+    <PageMeta :title="`Create Project`" :description="`Page Create Project`" />
 
     <!-- Breadcrumbs -->
     <nav class="mb-6 text-sm text-gray-500" aria-label="breadcrumb">
@@ -38,7 +34,8 @@ function submit() {
           <Link href="/work" class="hover:text-blue-600">Work</Link><span class="mx-2">/</span>
         </li>
         <li>
-          <Link href="/work/projects" class="hover:text-blue-600">Projects</Link><span class="mx-2">/</span>
+          <Link href="/work/projects" class="hover:text-blue-600">Projects</Link
+          ><span class="mx-2">/</span>
         </li>
         <li class="text-gray-700 font-semibold" aria-current="page">Create</li>
       </ol>

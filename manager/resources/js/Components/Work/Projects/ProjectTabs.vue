@@ -1,12 +1,12 @@
 <script setup>
-import { Link } from '@inertiajs/inertia-vue3'
+  import { Link } from '@inertiajs/inertia-vue3'
 
-defineProps({
-  projectId: {
-    type: String,
-    required: true,
-  },
-})
+  defineProps({
+    projectId: {
+      type: String,
+      required: true,
+    },
+  })
 </script>
 
 <template>
@@ -14,7 +14,7 @@ defineProps({
     <nav class="-mb-px flex space-x-8" aria-label="Tabs">
       <Link
         :href="`/work/projects/${projectId}`"
-        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm "
+        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
         :class="{
           'border-indigo-500 text-indigo-600':
             $page.url.startsWith(`/work/projects/${projectId}`) &&

@@ -1,54 +1,54 @@
 <script setup>
-import axios from 'axios'
-import { ref, watch } from 'vue'
-import { formatPriority, priorityBadgeClass } from '@/Helpers/tasks.helper.js'
+  import axios from 'axios'
+  import { ref, watch } from 'vue'
+  import { formatPriority, priorityBadgeClass } from '@/Helpers/tasks.helper.js'
 
-const props = defineProps({
-  taskId: Number,
-  currentPriority: String,
-  priorities: {
-    type: Array,
-    default: () => [],
-  },
-})
+  const props = defineProps({
+    taskId: Number,
+    currentPriority: String,
+    priorities: {
+      type: Array,
+      default: () => [],
+    },
+  })
 
-const selectedPriority = ref(props.currentPriority)
-const dropdownOpen = ref(false)
-const isSubmitting = ref(false)
-const error = ref(null)
+  const selectedPriority = ref(props.currentPriority)
+  const dropdownOpen = ref(false)
+  const isSubmitting = ref(false)
+  const error = ref(null)
 
-watch(
-  () => props.currentPriority,
-  newVal => {
-    selectedPriority.value = newVal
-  },
-)
+  watch(
+    () => props.currentPriority,
+    newVal => {
+      selectedPriority.value = newVal
+    }
+  )
 
-const toggleDropdown = () => {
-  dropdownOpen.value = !dropdownOpen.value
-}
-
-const setPriority = async priorityId => {
-  if (priorityId === selectedPriority.value) {
-    dropdownOpen.value = false
-    return
+  const toggleDropdown = () => {
+    dropdownOpen.value = !dropdownOpen.value
   }
 
-  isSubmitting.value = true
-  error.value = null
+  const setPriority = async priorityId => {
+    if (priorityId === selectedPriority.value) {
+      dropdownOpen.value = false
+      return
+    }
 
-  try {
-    await axios.post(`/work/projects/tasks/${props.taskId}/priority`, {
-      priority: priorityId,
-    })
-    selectedPriority.value = priorityId
-    dropdownOpen.value = false
-  } catch (e) {
-    error.value = e.response?.data?.error ?? 'Unknown error'
-  } finally {
-    isSubmitting.value = false
+    isSubmitting.value = true
+    error.value = null
+
+    try {
+      await axios.post(`/work/projects/tasks/${props.taskId}/priority`, {
+        priority: priorityId,
+      })
+      selectedPriority.value = priorityId
+      dropdownOpen.value = false
+    } catch (e) {
+      error.value = e.response?.data?.error ?? 'Unknown error'
+    } finally {
+      isSubmitting.value = false
+    }
   }
-}
 </script>
 
 <template>
