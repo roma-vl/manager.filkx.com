@@ -25,7 +25,8 @@ class Handler
         $project = new Project(
             Id::next(),
             $command->name,
-            $command->sort
+            $command->sort,
+            $command->account
         );
 
         $this->projects->add($project);
