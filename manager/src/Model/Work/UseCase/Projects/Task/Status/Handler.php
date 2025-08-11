@@ -32,7 +32,8 @@ class Handler
         $task->changeStatus(
             $actor,
             new \DateTimeImmutable(),
-            new Status($command->status)
+            new Status($command->status),
+            $command->account
         );
 
         $this->flusher->flush($task);
