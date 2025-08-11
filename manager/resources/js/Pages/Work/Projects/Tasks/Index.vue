@@ -12,9 +12,9 @@
     formatStatus,
     formatType,
     priorityBadgeClass,
+      statusBadgeClass,
     typeBadgeClass,
   } from '@/Helpers/tasks.helper.js'
-  import { statusBadgeClass } from '@/Helpers/helpers.js'
   import PageMeta from '@/Components/Seo/PageMeta.vue'
   const props = defineProps({
     project: Object,
@@ -29,7 +29,7 @@
     pagination: Object,
     meta: Object,
   })
-  console.log('asd')
+
   const text = ref(props.filters.text || '')
   const type = ref(props.filters.type || '')
   const status = ref(props.filters.status || '')
@@ -277,7 +277,7 @@
               <span
                 v-for="executor in task.executors"
                 :key="executor.name"
-                class="inline-block bg-indigo-700 text-indigo-100 px-2 py-0.5 rounded select-none"
+                class="inline-block bg-indigo-700 text-indigo-100 px-2 py-0.5 rounded select-none m-0.5"
               >
                 {{ executor.name }}
               </span>
