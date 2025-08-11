@@ -18,6 +18,7 @@ use App\ReadModel\Work\Projects\Task\Filter;
 use App\ReadModel\Work\Projects\Task\TaskFetcher;
 use App\Security\Voter\Work\Projects\ProjectAccess;
 use Doctrine\DBAL\Exception;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,6 +46,7 @@ class TasksController extends BaseController
         InertiaService $inertia,
         TaskListNormalizer $taskListNormalizer,
         TaskMetaBuilder $taskMetaBuilder,
+        Security $security,
     ): Response {
         $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
 
@@ -58,6 +60,7 @@ class TasksController extends BaseController
             ->withExecutor($request->query->get('executor'))
             ->withAuthor($request->query->get('author'))
             ->withRoots($request->query->get('roots'));
+        $filter->account_id = $security->getUser()->getAccount()->getId()->getValue();
 
         $pagination = $this->tasks->all(
             $filter,
@@ -73,7 +76,9 @@ class TasksController extends BaseController
                 'name' => $project->getName(),
             ],
             'tasks' => $taskListNormalizer->normalize($pagination->getItems()),
-            'members' => $this->mapMembers($memberFetcher->activeGroupedList()),
+            'members' => $this->mapMembers($memberFetcher->activeGroupedList(
+                $security->getUser()->getAccount()->getId()->getValue()
+            )),
             'pagination' => $this->paginationFactory->create($pagination, self::PER_PAGE),
             'filters' => $request->query->all(),
             'sort' => $request->query->get('sort', 't.id'),
@@ -91,10 +96,12 @@ class TasksController extends BaseController
         InertiaService $inertia,
         TaskListNormalizer $taskListNormalizer,
         TaskMetaBuilder $taskMetaBuilder,
+        Security $security,
     ): Response {
         $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
 
         $filter = Filter\Filter::forProject($project->getId()->getValue());
+        $filter->account_id = $security->getUser()->getAccount()->getId()->getValue();
 
         $pagination = $taskFetcher->all(
             $filter->withExecutor($this->getUser()->getId()),
@@ -110,7 +117,9 @@ class TasksController extends BaseController
                 'name' => $project->getName(),
             ],
             'tasks' => $taskListNormalizer->normalize($pagination->getItems()),
-            'members' => $this->mapMembers($memberFetcher->activeGroupedList()),
+            'members' => $this->mapMembers($memberFetcher->activeGroupedList(
+                $security->getUser()->getAccount()->getId()->getValue()
+            )),
             'pagination' => $this->paginationFactory->create($pagination, self::PER_PAGE),
             'filters' => $request->query->all(),
             'sort' => $request->query->get('sort', 't.date'),
@@ -128,10 +137,12 @@ class TasksController extends BaseController
         InertiaService $inertia,
         TaskListNormalizer $taskListNormalizer,
         TaskMetaBuilder $taskMetaBuilder,
+        Security $security,
     ): Response {
         $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
 
         $filter = Filter\Filter::forProject($project->getId()->getValue());
+        $filter->account_id = $security->getUser()->getAccount()->getId()->getValue();
 
         $pagination = $taskFetcher->all(
             $filter->withAuthor($this->getUser()->getId()),
@@ -147,7 +158,9 @@ class TasksController extends BaseController
                 'name' => $project->getName(),
             ],
             'tasks' => $taskListNormalizer->normalize($pagination->getItems()),
-            'members' => $this->mapMembers($memberFetcher->activeGroupedList()),
+            'members' => $this->mapMembers($memberFetcher->activeGroupedList(
+                $security->getUser()->getAccount()->getId()->getValue()
+            )),
             'pagination' => $this->paginationFactory->create($pagination, self::PER_PAGE),
             'filters' => $request->query->all(),
             'sort' => $request->query->get('sort', 't.date'),
@@ -162,6 +175,7 @@ class TasksController extends BaseController
         Request $request,
         Create\Handler $handler,
         InertiaService $inertia,
+        Security $security,
     ): Response {
         $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
 
@@ -200,7 +214,8 @@ class TasksController extends BaseController
 
         $command = new Create\Command(
             $project->getId()->getValue(),
-            $this->getUser()->getId()
+            $this->getUser()->getId(),
+            $security->getUser()->getAccount()
         );
 
         $command->names = $data['names'] ?? [];

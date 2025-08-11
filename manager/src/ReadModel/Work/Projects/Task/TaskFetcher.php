@@ -57,6 +57,12 @@ class TaskFetcher
             ->innerJoin('t', 'work_members_members', 'm', 't.author_id = m.id')
             ->innerJoin('t', 'work_projects_projects', 'p', 't.project_id = p.id');
 
+        if ($filter->account_id) {
+            $qb
+                ->andWhere('p.account_id = :account_id')
+                ->setParameter('account_id', $filter->account_id);
+        }
+
         if ($filter->member) {
             $qb->innerJoin('t', 'work_projects_project_memberships', 'ms', 't.project_id = ms.project_id');
             $qb->andWhere('ms.member_id = :member');

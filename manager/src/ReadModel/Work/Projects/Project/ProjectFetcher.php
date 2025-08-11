@@ -56,6 +56,12 @@ final class ProjectFetcher
             ->select('p.id', 'p.name', 'p.status')
             ->from('work_projects_projects', 'p');
 
+        if ($filter->account_id) {
+            $qb
+                ->andWhere('p.account_id = :account_id')
+                ->setParameter('account_id', $filter->account_id);
+        }
+
         if ($filter->member) {
             $qb
                 ->andWhere('EXISTS (
