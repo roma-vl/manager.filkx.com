@@ -19,6 +19,7 @@ use App\ReadModel\Work\Members\GroupFetcher;
 use App\ReadModel\Work\Members\Member\Filter\Filter;
 use App\ReadModel\Work\Members\Member\MemberFetcher;
 use App\Service\CommandFactory;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -90,8 +91,8 @@ class MembersController extends BaseController
         Create\Handler $handler,
         InertiaService $inertia,
         CommandFactory $commandFactory,
+        Security $security,
     ): Response {
-        $dd = $user->getAccount()->getId();
         if ($fetcher->exists($user->getId()->getValue())) {
             $this->addFlash('error', 'Учасник уже існує.');
 
@@ -114,6 +115,7 @@ class MembersController extends BaseController
         $command->firstName = $user->getName()->getFirst();
         $command->lastName = $user->getName()->getLast();
         $command->email = $user->getEmail()?->getValue();
+        $command->account = $security->getUser()->getAccount();
 
         $errors = $commandFactory->createFromRequest($request, $command);
 

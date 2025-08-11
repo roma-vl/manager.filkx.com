@@ -108,7 +108,7 @@ class MemberFetcher
     /**
      * @throws Exception
      */
-    public function activeGroupedList(): array
+    public function activeGroupedList(string $account): array
     {
         $stmt = $this->connection->createQueryBuilder()
             ->select([
@@ -118,6 +118,8 @@ class MemberFetcher
             ])
             ->from('work_members_members', 'm')
             ->leftJoin('m', 'work_members_groups', 'g', 'g.id = m.group_id')
+            ->andWhere('m.account_id = :account') // ← додав префікс
+            ->setParameter('account', $account)
             ->andWhere('m.status = :status')
             ->setParameter('status', Status::ACTIVE)
             ->orderBy('g.name')->addOrderBy('name')
@@ -125,6 +127,7 @@ class MemberFetcher
 
         return $stmt->fetchAllAssociative();
     }
+
 
     /**
      * @throws Exception

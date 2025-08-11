@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Work\UseCase\Members\Member\Create;
 
+use App\Model\User\Entity\Account\Account;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
@@ -22,6 +23,9 @@ class Command
 
     #[Assert\Email]
     public string $email;
+
+    #[Assert\NotBlank]
+    public Account $account;
 
     public function __construct(string $id)
     {
