@@ -22,7 +22,12 @@ class Handler
     private TaskRepository $tasks;
     private Flusher $flusher;
 
-    public function __construct(MemberRepository $members, ProjectRepository $projects, TaskRepository $tasks, Flusher $flusher)
+    public function __construct(
+        MemberRepository $members,
+        ProjectRepository $projects,
+        TaskRepository $tasks,
+        Flusher $flusher
+    )
     {
         $this->members = $members;
         $this->projects = $projects;
@@ -55,15 +60,16 @@ class Handler
                 new Type($command->type),
                 $command->priority,
                 $nameText,
-                $command->content
+                $command->content,
+                $command->account,
             );
 
             if ($parent) {
-                $task->setChildOf($member, $date, $parent);
+                $task->setChildOf($member, $date, $parent, $command->account);
             }
 
             if ($command->plan) {
-                $task->plan($member, $date, $command->plan);
+                $task->plan($member, $date, $command->plan, $command->account);
             }
 
             $this->tasks->add($task);
