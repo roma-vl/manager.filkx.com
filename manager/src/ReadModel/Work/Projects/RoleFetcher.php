@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\ReadModel\Work\Projects;
 
+use App\Model\User\Entity\Account\Account;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 
@@ -19,7 +20,7 @@ class RoleFetcher
     /**
      * @throws Exception
      */
-    public function allList(): array
+    public function allList(string $account): array
     {
         $stmt = $this->connection->createQueryBuilder()
             ->select(
@@ -27,6 +28,8 @@ class RoleFetcher
                 'name'
             )
             ->from('work_projects_roles')
+            ->where('account_id = :account')
+            ->setParameter('account', $account)
             ->orderBy('name')
             ->executeQuery();
 
@@ -36,7 +39,7 @@ class RoleFetcher
     /**
      * @throws Exception
      */
-    public function all(): array
+    public function all(string $account): array
     {
         $stmt = $this->connection->createQueryBuilder()
             ->select(
@@ -46,6 +49,8 @@ class RoleFetcher
                 '(SELECT COUNT(*) FROM work_projects_project_membership_roles m WHERE m.role_id = r.id) AS memberships_count'
             )
             ->from('work_projects_roles', 'r')
+            ->where('account_id = :account')
+            ->setParameter('account', $account)
             ->orderBy('name')
             ->executeQuery();
 

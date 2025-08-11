@@ -29,7 +29,8 @@ class Handler
         $role = new Role(
             Id::next(),
             $command->name,
-            $command->permissions
+            $command->permissions,
+            $command->account
         );
 
         $this->roles->add($role);

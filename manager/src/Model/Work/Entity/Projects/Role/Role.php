@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Work\Entity\Projects\Role;
 
+use App\Model\User\Entity\Account\Account;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,6 +16,10 @@ class Role
     #[ORM\Id]
     #[ORM\Column(type: 'work_projects_role_id')]
     private Id $id;
+
+    #[ORM\ManyToOne(targetEntity: Account::class)]
+    #[ORM\JoinColumn(name: 'account_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private Account $account;
 
     #[ORM\Column(type: 'string', unique: true)]
     private string $name;
@@ -32,11 +37,12 @@ class Role
     /**
      * @param string[] $permissions
      */
-    public function __construct(Id $id, string $name, array $permissions)
+    public function __construct(Id $id, string $name, array $permissions, Account $account)
     {
         $this->id = $id;
         $this->name = $name;
         $this->setPermissions($permissions);
+        $this->account = $account;
     }
 
     /**
