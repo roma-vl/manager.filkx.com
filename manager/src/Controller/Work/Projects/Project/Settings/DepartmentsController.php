@@ -16,6 +16,7 @@ use App\ReadModel\Work\Projects\Project\DepartmentFetcher;
 use App\Security\Voter\Work\Projects\ProjectAccess;
 use App\Service\CommandFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -53,6 +54,7 @@ class DepartmentsController extends AbstractController
         Create\Handler $handler,
         InertiaService $inertia,
         CommandFactory $commandFactory,
+        Security $security,
     ): Response {
         $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
 
@@ -66,7 +68,7 @@ class DepartmentsController extends AbstractController
         }
 
         $command = new Create\Command($project->getId()->getValue());
-
+        $command->account = $security->getUser()->getAccount();
         $errors = $commandFactory->createFromRequest($request, $command);
 
         if ($errors) {

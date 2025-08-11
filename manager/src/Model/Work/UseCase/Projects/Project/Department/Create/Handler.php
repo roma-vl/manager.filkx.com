@@ -26,7 +26,8 @@ class Handler
 
         $project->addDepartment(
             Id::next(),
-            $command->name
+            $command->name,
+            $command->account
         );
 
         $this->flusher->flush();
