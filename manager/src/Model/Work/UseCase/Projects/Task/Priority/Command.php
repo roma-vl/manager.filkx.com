@@ -29,7 +29,7 @@ class Command
 
     public static function fromTask(string $actor, Task $task, Account $account): self
     {
-        $command = new self($actor, $task->getId()->getValue(),$account);
+        $command = new self($actor, $task->getId()->getValue(), $account);
         $command->priority = $task->getPriority();
 
         return $command;

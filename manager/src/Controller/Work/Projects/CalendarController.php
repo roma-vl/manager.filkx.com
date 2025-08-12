@@ -27,8 +27,7 @@ class CalendarController extends BaseController
     public function index(
         Request $request,
         Security $security,
-    ): Response|JsonResponse
-    {
+    ): Response|JsonResponse {
         $now = new \DateTimeImmutable();
 
         if ($this->isGranted('ROLE_WORK_MANAGE_PROJECTS')) {

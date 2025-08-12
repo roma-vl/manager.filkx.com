@@ -84,6 +84,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $user->status = self::STATUS_ACTIVE;
         $user->account = $account;
         $user->locale = $account->getLocale();
+
         return $user;
     }
 

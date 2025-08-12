@@ -27,7 +27,6 @@ class Group
     #[ORM\OneToMany(targetEntity: Member::class, mappedBy: 'group')]
     private Collection $members;
 
-
     #[ORM\ManyToOne(targetEntity: Account::class)]
     #[ORM\JoinColumn(name: 'account_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private Account $account;

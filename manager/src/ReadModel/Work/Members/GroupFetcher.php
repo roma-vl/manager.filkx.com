@@ -35,7 +35,6 @@ readonly class GroupFetcher
         return $assoc;
     }
 
-
     public function all(): array
     {
         $qb = $this->entityManager->createQueryBuilder()
@@ -47,5 +46,4 @@ readonly class GroupFetcher
 
         return $qb->getQuery()->getArrayResult();
     }
-
 }

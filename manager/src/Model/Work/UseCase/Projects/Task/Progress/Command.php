@@ -19,7 +19,6 @@ class Command
     #[Assert\NotBlank]
     public Account $account;
 
-
     public function __construct(string $actor, int $id, Account $account)
     {
         $this->actor = $actor;
@@ -29,7 +28,7 @@ class Command
 
     public static function fromTask(string $actor, Task $task, Account $account): self
     {
-        $command = new self($actor, $task->getId()->getValue(),$account);
+        $command = new self($actor, $task->getId()->getValue(), $account);
         $command->progress = $task->getProgress();
 
         return $command;

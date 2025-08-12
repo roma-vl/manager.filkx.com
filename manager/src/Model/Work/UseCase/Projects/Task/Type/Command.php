@@ -20,7 +20,7 @@ class Command
     #[Assert\NotBlank]
     public Account $account;
 
-    public function __construct(string $actor, int $id , Account $account)
+    public function __construct(string $actor, int $id, Account $account)
     {
         $this->actor = $actor;
         $this->id = $id;

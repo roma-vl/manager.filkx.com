@@ -16,9 +16,8 @@ class Handler
 
     public function __construct(
         GroupRepository $groups,
-        Flusher $flusher
-    )
-    {
+        Flusher $flusher,
+    ) {
         $this->groups = $groups;
         $this->flusher = $flusher;
     }

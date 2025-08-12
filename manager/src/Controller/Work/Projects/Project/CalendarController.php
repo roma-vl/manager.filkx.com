@@ -26,7 +26,7 @@ class CalendarController extends AbstractController
     }
 
     #[Route('', name: '', methods: ['GET'])]
-    public function index(Project $project, Request $request, Security $security,): Response|JsonResponse
+    public function index(Project $project, Request $request, Security $security): Response|JsonResponse
     {
         $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
 

@@ -37,7 +37,6 @@ class Command
     #[Assert\NotBlank]
     public Account $account;
 
-
     public function __construct(string $project, string $member, Account $account)
     {
         $this->project = $project;

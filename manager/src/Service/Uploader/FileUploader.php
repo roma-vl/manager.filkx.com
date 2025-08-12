@@ -35,7 +35,7 @@ class FileUploader
             @chmod($this->localRoot . '/' . $path, 0775);
         }
 
-        $stream = fopen($file->getRealPath(), 'rb');
+        $stream = fopen($file->getRealPath(), 'r');
         $this->storage->writeStream(
             $path . '/' . $name,
             $stream,

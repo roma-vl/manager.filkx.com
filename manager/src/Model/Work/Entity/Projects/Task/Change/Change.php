@@ -24,7 +24,7 @@ class Change
 
     #[ORM\ManyToOne(targetEntity: Account::class)]
     #[ORM\JoinColumn(name: 'account_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    public Account  $account;
+    public Account $account;
 
     #[ORM\ManyToOne(targetEntity: Member::class)]
     #[ORM\JoinColumn(name: 'actor_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]

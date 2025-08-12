@@ -535,7 +535,7 @@ class TasksController extends BaseController
         Request $request,
         Plan\Set\Handler $handler,
         InertiaService $inertia,
-        Security $security
+        Security $security,
     ): Response {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
@@ -741,8 +741,7 @@ class TasksController extends BaseController
         Request $request,
         UseCaseStatus\Handler $handler,
         Security $security,
-    ): Response
-    {
+    ): Response {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
         $data = json_decode($request->getContent(), true);
@@ -775,8 +774,7 @@ class TasksController extends BaseController
         Request $request,
         UseCaseType\Handler $handler,
         Security $security,
-    ): Response
-    {
+    ): Response {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
         $data = json_decode($request->getContent(), true);
@@ -806,7 +804,7 @@ class TasksController extends BaseController
     #[Route('/{id}/priority', name: '.priority', methods: ['POST'])]
     public function changePriority(
         Task $task,
-        Request $request, UseCasePriority\Handler $handler, Security $security,): Response
+        Request $request, UseCasePriority\Handler $handler, Security $security, ): Response
     {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
@@ -834,7 +832,7 @@ class TasksController extends BaseController
     }
 
     #[Route('/{id}/progress', name: '.progress', methods: ['POST'])]
-    public function changeProgress(Task $task, Request $request, UseCaseProgress\Handler $handler,Security $security,): Response
+    public function changeProgress(Task $task, Request $request, UseCaseProgress\Handler $handler, Security $security): Response
     {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 

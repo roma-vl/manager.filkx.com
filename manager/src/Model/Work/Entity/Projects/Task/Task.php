@@ -109,7 +109,7 @@ class Task implements AggregateRoot
         int $priority,
         string $name,
         ?string $content,
-        Account $account
+        Account $account,
     ) {
         $this->id = $id;
         $this->project = $project;
@@ -423,5 +423,4 @@ class Task implements AggregateRoot
         }
         $this->changes->add(new Change($this, $next, $actor, $date, $set, $account));
     }
-
 }

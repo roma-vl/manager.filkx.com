@@ -16,10 +16,8 @@ class Command
     #[Assert\NotBlank]
     public string $file;
 
-
     #[Assert\NotBlank]
     public Account $account;
-
 
     public function __construct(string $actor, int $id, string $file, Account $account)
     {

@@ -29,7 +29,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_WORK_MANAGE_MEMBERS')]
 class MembersController extends BaseController
 {
-    const PER_PAGE = 10;
+    public const PER_PAGE = 10;
 
     public function __construct(
         private readonly ErrorHandler $errors,

@@ -14,7 +14,6 @@ class Command
     #[Assert\NotBlank]
     public int $id;
 
-
     #[Assert\NotBlank]
     public Account $account;
 

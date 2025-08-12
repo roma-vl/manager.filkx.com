@@ -14,7 +14,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use UnexpectedValueException;
 
 class MemberFetcher
 {
@@ -77,22 +76,20 @@ class MemberFetcher
         }
 
         $sortMap = [
-            'name'  => 'name',
+            'name' => 'name',
             'email' => 'email',
             'group' => 'group_name',
-            'status'=> 'status',
+            'status' => 'status',
         ];
 
         if (!isset($sortMap[$sort])) {
-            throw new UnexpectedValueException('Cannot sort by ' . $sort);
+            throw new \UnexpectedValueException('Cannot sort by ' . $sort);
         }
 
         $qb->orderBy($sortMap[$sort], $direction === 'desc' ? 'DESC' : 'ASC');
 
         return $this->paginator->paginate($qb, $page, $size);
     }
-
-
 
     public function exists(string $id): bool
     {
@@ -127,7 +124,6 @@ class MemberFetcher
 
         return $stmt->fetchAllAssociative();
     }
-
 
     /**
      * @throws Exception

@@ -28,7 +28,7 @@ class ActionsController extends AbstractController
     }
 
     #[Route('', name: '', methods: ['GET'])]
-    public function index(Project $project, Request $request, InertiaService $inertia , Security $security): Response
+    public function index(Project $project, Request $request, InertiaService $inertia, Security $security): Response
     {
         $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
 

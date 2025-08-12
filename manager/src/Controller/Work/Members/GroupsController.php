@@ -7,7 +7,6 @@ namespace App\Controller\Work\Members;
 use App\Controller\BaseController;
 use App\Controller\ErrorHandler;
 use App\Infrastructure\Inertia\InertiaService;
-use App\Model\User\Entity\User\User;
 use App\Model\Work\Entity\Members\Group\Group;
 use App\Model\Work\UseCase\Members\Group\Create;
 use App\Model\Work\UseCase\Members\Group\Edit;

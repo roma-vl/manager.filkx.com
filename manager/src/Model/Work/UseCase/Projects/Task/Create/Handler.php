@@ -26,9 +26,8 @@ class Handler
         MemberRepository $members,
         ProjectRepository $projects,
         TaskRepository $tasks,
-        Flusher $flusher
-    )
-    {
+        Flusher $flusher,
+    ) {
         $this->members = $members;
         $this->projects = $projects;
         $this->tasks = $tasks;

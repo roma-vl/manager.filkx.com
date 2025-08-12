@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\ReadModel\Work\Projects;
 
-use App\Model\User\Entity\Account\Account;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 

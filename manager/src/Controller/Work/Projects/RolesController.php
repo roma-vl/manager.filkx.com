@@ -36,8 +36,7 @@ class RolesController extends BaseController
         InertiaService $inertia,
         Request $request,
         Security $security,
-    ): Response
-    {
+    ): Response {
         return $inertia->render($request, 'Work/Projects/Roles/Index', [
             'roles' => $fetcher->all(
                 $security->getUser()->getAccount()->getId()->getValue()

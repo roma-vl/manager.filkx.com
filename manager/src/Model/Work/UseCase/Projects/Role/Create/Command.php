@@ -15,6 +15,5 @@ class Command
     #[Assert\NotBlank]
     public Account $account;
 
-
     public array $permissions;
 }

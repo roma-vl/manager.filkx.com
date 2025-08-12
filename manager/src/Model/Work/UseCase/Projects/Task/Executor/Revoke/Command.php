@@ -18,7 +18,6 @@ class Command
     #[Assert\NotBlank]
     public Account $account;
 
-
     public function __construct(string $actor, int $id, string $member, Account $account)
     {
         $this->actor = $actor;

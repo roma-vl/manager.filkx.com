@@ -28,7 +28,7 @@ class Command
         $this->account = $account;
     }
 
-    public static function fromTask(string $actor, Task $task,Account $account): self
+    public static function fromTask(string $actor, Task $task, Account $account): self
     {
         $command = new self($actor, $task->getId()->getValue(), $account);
         $command->name = $task->getName();
