@@ -7,12 +7,14 @@ namespace App\Controller\Work\Members;
 use App\Controller\BaseController;
 use App\Controller\ErrorHandler;
 use App\Infrastructure\Inertia\InertiaService;
+use App\Model\User\Entity\User\User;
 use App\Model\Work\Entity\Members\Group\Group;
 use App\Model\Work\UseCase\Members\Group\Create;
 use App\Model\Work\UseCase\Members\Group\Edit;
 use App\Model\Work\UseCase\Members\Group\Remove;
 use App\ReadModel\Work\Members\GroupFetcher;
 use App\Service\CommandFactory;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -31,7 +33,11 @@ class GroupsController extends BaseController
     public function index(GroupFetcher $fetcher, InertiaService $inertia, Request $request): Response
     {
         return $inertia->render($request, 'Work/Members/Groups/Index', [
-            'groups' => $fetcher->all(),
+            'groups' => array_map(fn ($member) => [
+                'id' => $member['id']->getValue(),
+                'name' => $member['name'],
+                'members' => $member['members'],
+            ], $fetcher->all()),
         ]);
     }
 
@@ -41,12 +47,14 @@ class GroupsController extends BaseController
         Create\Handler $handler,
         InertiaService $inertia,
         CommandFactory $commandFactory,
+        Security $security,
     ): Response {
         if ($request->isMethod('GET')) {
             return $inertia->render($request, 'Work/Members/Groups/Create');
         }
 
         $command = new Create\Command();
+        $command->account = $security->getUser()->getAccount();
         $errors = $commandFactory->createFromRequest($request, $command);
 
         if ($errors) {

@@ -1,135 +1,128 @@
 <script setup>
-import { ref, computed } from 'vue'
-import { Head, Link } from '@inertiajs/inertia-vue3'
-import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
-import AppLayout from '@/Layouts/AppLayout.vue'
-import { statusBadgeClass } from '../../../../Helpers/helpers.js'
-import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import { ref, computed } from 'vue'
+  import { Head, Link } from '@inertiajs/inertia-vue3'
+  import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
+  import AppLayout from '@/Layouts/AppLayout.vue'
+  import { statusBadgeClass } from '../../../../Helpers/helpers.js'
+  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
+  import Pagination from "@/Components/ui/Pagination.vue";
+  import {Check, RefreshCw} from "lucide-vue-next";
 
-const props = defineProps({
-  members: Array,
-  filters: Object,
-  groups: Array,
-  statuses: Array,
-  sort: String,
-  direction: String,
-  pagination: Object,
-})
+  const props = defineProps({
+    members: Array,
+    filters: Object,
+    groups: Array,
+    statuses: Array,
+    sort: String,
+    direction: String,
+    pagination: Object,
+  })
 
-const name = ref(props.filters.name || '')
-const email = ref(props.filters.email || '')
-const group = ref(props.filters.group || '')
-const status = ref(props.filters.status || '')
-const sort = ref(props.sort || 'name')
-const direction = ref(props.direction || 'asc')
+  const name = ref(props.filters.name || '')
+  const email = ref(props.filters.email || '')
+  const group = ref(props.filters.group || '')
+  const status = ref(props.filters.status || '')
+  const sort = ref(props.sort || 'name')
+  const direction = ref(props.direction || 'asc')
 
-const directionIcon = computed(() => (direction.value === 'asc' ? '↑' : '↓'))
+  const directionIcon = computed(() => (direction.value === 'asc' ? '↑' : '↓'))
 
-function toggleSort(field) {
-  if (sort.value === field) {
-    direction.value = direction.value === 'asc' ? 'desc' : 'asc'
-  } else {
-    sort.value = field
-    direction.value = 'asc'
-  }
-  submitFilters()
-}
-
-function submitFilters(page = 1) {
-  const query = new URLSearchParams({
-    name: name.value,
-    email: email.value,
-    group: group.value,
-    status: status.value,
-    sort: sort.value,
-    direction: direction.value,
-    page,
-  }).toString()
-
-  window.location.href = `/work/members?${query}`
-}
-
-function resetFilters() {
-  name.value = ''
-  email.value = ''
-  group.value = ''
-  status.value = ''
-  submitFilters()
-}
-
-function paginationLink(page) {
-  const query = new URLSearchParams({
-    name: name.value,
-    email: email.value,
-    group: group.value,
-    status: status.value,
-    sort: sort.value,
-    direction: direction.value,
-    page,
-  }).toString()
-
-  return `/work/members?${query}`
-}
-
-const paginationRange = computed(() => {
-  const current = props.pagination.currentPage
-  const last = props.pagination.lastPage
-  const delta = 2
-  const range = []
-
-  for (let i = Math.max(1, current - delta); i <= Math.min(last, current + delta); i++) {
-    range.push(i)
+  function toggleSort(field) {
+    if (sort.value === field) {
+      direction.value = direction.value === 'asc' ? 'desc' : 'asc'
+    } else {
+      sort.value = field
+      direction.value = 'asc'
+    }
+    submitFilters()
   }
 
-  const result = []
-  if (range[0] > 1) {
-    result.push(1)
-    if (range[0] > 2) result.push('...')
+  function submitFilters(page = 1) {
+
+      if (typeof page !== 'number') {
+          page = 1
+      }
+    const query = new URLSearchParams({
+      name: name.value,
+      email: email.value,
+      group: group.value,
+      status: status.value,
+      sort: sort.value,
+      direction: direction.value,
+      page,
+    }).toString()
+
+    window.location.href = `/work/members?${query}`
   }
 
-  result.push(...range)
-
-  if (range[range.length - 1] < last) {
-    if (range[range.length - 1] < last - 1) result.push('...')
-    result.push(last)
+  function resetFilters() {
+    name.value = ''
+    email.value = ''
+    group.value = ''
+    status.value = ''
+    submitFilters()
   }
 
-  return result
-})
+  function paginationLink(page) {
+    const query = new URLSearchParams({
+      name: name.value,
+      email: email.value,
+      group: group.value,
+      status: status.value,
+      sort: sort.value,
+      direction: direction.value,
+      page,
+    }).toString()
+
+    return `/work/members?${query}`
+  }
+
 </script>
 
 <template>
   <AppLayout>
-    <Head title="Members" />
+    <PageMeta :title="`Members`" :description="`Page Members`" />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },
         { label: 'Work', href: '/work' },
-        { label: 'Members' }
+        { label: 'Members' },
       ]"
     />
-
 
     <GroupsTabs />
 
     <form
-      class=" mt-5 bg-gradient-to-br from-gray-900 to-[#0e0f11] p-4 rounded-2xl shadow-md mb-8 grid grid-cols-1 md:grid-cols-5 gap-4 text-white/80"
+      class="mt-5 bg-gradient-to-br from-gray-900 to-[#0e0f11] p-4 rounded-2xl shadow-md mb-8 grid grid-cols-1 md:grid-cols-5 gap-4 text-white/80"
       @submit.prevent="submitFilters"
     >
-      <input v-model="name" placeholder="Name" class="input-dark" />
-      <input v-model="email" placeholder="Email" class="input-dark" />
-      <select v-model="group" class="input-dark">
+      <input v-model="name" placeholder="Name" class="filter-select" />
+      <input v-model="email" placeholder="Email" class="filter-select" />
+      <select v-model="group" class="filter-select">
         <option value="">All Groups</option>
         <option v-for="g in groups" :key="g.id" :value="g.id">{{ g.name }}</option>
       </select>
-      <select v-model="status" class="input-dark">
+      <select v-model="status" class="filter-select">
         <option value="">All Statuses</option>
         <option v-for="s in statuses" :key="s.id" :value="s.id">{{ s.name }}</option>
       </select>
-      <div class="flex gap-2">
-        <button type="submit" class="btn-primary-dark w-full">Filter</button>
-        <button type="button" class="btn-outline-dark w-full" @click="resetFilters">Reset</button>
-      </div>
+        <div class="flex items-center gap-2 ml-auto">
+            <button
+                type="button"
+                class="border-none flex items-center gap-1 px-3 py-1.5 text-sm border rounded-md border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                @click="resetFilters"
+            >
+                <RefreshCw class="w-4 h-4" /> Скинути
+            </button>
+
+            <button
+                type="submit"
+                class="border-none flex items-center gap-1 px-4 py-1.5 text-sm rounded-md bg-indigo-600 hover:bg-indigo-700 text-white transition"
+            >
+                <Check class="w-4 h-4" /> Застосувати
+            </button>
+        </div>
     </form>
 
     <!-- Table -->
@@ -174,62 +167,12 @@ const paginationRange = computed(() => {
         </tbody>
       </table>
     </div>
-
-    <!-- Pagination -->
-    <div v-if="pagination.lastPage > 1" class="mt-6 flex justify-center space-x-2">
-      <Link
-        v-if="pagination.currentPage > 1"
-        :href="paginationLink(pagination.currentPage - 1)"
-        class="pagination-link"
-      >
-        ← Prev
-      </Link>
-
-      <template v-for="page in paginationRange" :key="page">
-        <span v-if="page === '...'" class="px-3 py-1 text-gray-500">…</span>
-        <Link
-          v-else
-          :href="paginationLink(page)"
-          class="pagination-link"
-          :class="{ 'bg-indigo-700 text-white': page === pagination.currentPage }"
-        >
-          {{ page }}
-        </Link>
-      </template>
-
-      <Link
-        v-if="pagination.currentPage < pagination.lastPage"
-        :href="paginationLink(pagination.currentPage + 1)"
-        class="pagination-link"
-      >
-        Next →
-      </Link>
-    </div>
+      <Pagination :pagination="pagination" :link-builder="paginationLink" />
   </AppLayout>
 </template>
 
 <style scoped>
-  .input-dark {
-    @apply bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-500;
-  }
-  .btn-primary-dark {
-    @apply bg-indigo-700 hover:bg-indigo-600 text-white font-semibold rounded px-4 py-2 transition-all;
-  }
-  .btn-outline-dark {
-    @apply border border-white/30 text-white/70 hover:bg-white/10 font-medium rounded px-4 py-2 transition-all;
-  }
-  .th-sort {
-    @apply px-6 py-3 cursor-pointer hover:text-indigo-300 transition-all;
-  }
-  .pagination-link {
-    @apply px-3 py-1 border border-gray-700 rounded text-white hover:bg-indigo-600 hover:text-white transition-all;
-  }
-  ::-webkit-scrollbar {
-    height: 8px;
-    width: 8px;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #4b5563;
-    border-radius: 4px;
-  }
+.filter-select {
+    @apply px-3 py-2 text-sm rounded-md border bg-white dark:bg-gray-800 dark:text-white border-gray-300 dark:border-gray-700 focus:ring-indigo-500 focus:border-indigo-500;
+}
 </style>

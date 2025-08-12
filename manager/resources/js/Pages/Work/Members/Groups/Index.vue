@@ -1,43 +1,45 @@
 <script setup>
-import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
-import { Head, Link } from '@inertiajs/inertia-vue3'
-import AppLayout from '@/Layouts/AppLayout.vue'
-import axios from 'axios'
-import { ref } from 'vue'
-import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
+  import { Head, Link } from '@inertiajs/inertia-vue3'
+  import AppLayout from '@/Layouts/AppLayout.vue'
+  import axios from 'axios'
+  import { ref } from 'vue'
+  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-defineProps({
-  groups: Array,
-  csrf: String,
-})
+  defineProps({
+    groups: Array,
+    csrf: String,
+  })
 
-const deleting = ref(null)
+  const deleting = ref(null)
 
-async function confirmDelete(id) {
-  if (!confirm('Are you sure?')) return
-  deleting.value = id
+  async function confirmDelete(id) {
+    if (!confirm('Are you sure?')) return
+    deleting.value = id
 
-  try {
-    await axios.post(`/work/members/groups/${id}/delete`)
-    location.reload()
-  } catch (error) {
-    console.error('Delete error:', error)
-    alert('Failed to delete group')
-  } finally {
-    deleting.value = null
+    try {
+      await axios.post(`/work/members/groups/${id}/delete`)
+      location.reload()
+    } catch (error) {
+      console.error('Delete error:', error)
+      alert('Failed to delete group')
+    } finally {
+      deleting.value = null
+    }
   }
-}
 </script>
 
 <template>
   <AppLayout>
     <Head title="Groups" />
+    <PageMeta :title="`Groups`" :description="`Page Groups`" />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },
         { label: 'Work', href: '/work' },
         { label: 'Members', href: '/work/members' },
-        { label: 'Groups' }
+        { label: 'Groups' },
       ]"
     />
 
@@ -60,7 +62,7 @@ async function confirmDelete(id) {
           <tr>
             <th class="px-6 py-3 text-left tracking-wider text-white/80">Name</th>
             <th class="px-6 py-3 text-center tracking-wider text-white/80">Members</th>
-            <th class="px-6 py-3 text-right sr-only">Actions</th>
+            <th class="px-6 py-3 text-center tracking-wider text-white/80">Actions</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-800">

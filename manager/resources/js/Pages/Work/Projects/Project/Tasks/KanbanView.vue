@@ -1,34 +1,34 @@
 <script setup>
-const props = defineProps({
-  tasks: Array,
-  statuses: Array,
-})
+  const props = defineProps({
+    tasks: Array,
+    statuses: Array,
+  })
 
-const tasksByStatus = statusId => {
-  return props.tasks.filter(task => task.status === statusId)
-}
-
-const formatType = type => {
-  const map = {
-    bug: '🐞',
-    feature: '✨',
-    task: '📋',
+  const tasksByStatus = statusId => {
+    return props.tasks.filter(task => task.status === statusId)
   }
-  return map[type] ?? ''
-}
 
-const priorityClass = priority => {
-  switch (priority) {
-  case 'low':
-    return 'bg-green-500'
-  case 'medium':
-    return 'bg-yellow-500'
-  case 'high':
-    return 'bg-red-500'
-  default:
-    return 'bg-gray-400'
+  const formatType = type => {
+    const map = {
+      bug: '🐞',
+      feature: '✨',
+      task: '📋',
+    }
+    return map[type] ?? ''
   }
-}
+
+  const priorityClass = priority => {
+    switch (priority) {
+      case 'low':
+        return 'bg-green-500'
+      case 'medium':
+        return 'bg-yellow-500'
+      case 'high':
+        return 'bg-red-500'
+      default:
+        return 'bg-gray-400'
+    }
+  }
 </script>
 
 <template>

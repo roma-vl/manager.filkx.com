@@ -1,49 +1,53 @@
 <script setup>
-import { reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { Inertia } from '@inertiajs/inertia'
-import AppLayout from '../../../../Layouts/AppLayout.vue'
-import Breadcrumbs from '../../../../Components/ui/Breadcrumbs.vue'
+  import { reactive, ref } from 'vue'
+  import { useRouter } from 'vue-router'
+  import { Inertia } from '@inertiajs/inertia'
+  import AppLayout from '@/Layouts/AppLayout.vue'
+  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-const props = defineProps({
-  task: Object,
-  project: Object,
-  members: Array,
-  selectedMembers: Array,
-})
+  const props = defineProps({
+    task: Object,
+    project: Object,
+    members: Array,
+    selectedMembers: Array,
+  })
 
-const router = useRouter()
-const error = ref(null)
+  const router = useRouter()
+  const error = ref(null)
 
-// В реактивній формі зберігаємо вибраних виконавців (масив рядків)
-const form = reactive({
-  members: props.selectedMembers ? [...props.selectedMembers] : [],
-})
+  const form = reactive({
+    members: props.selectedMembers ? [...props.selectedMembers] : [],
+  })
 
-function submit() {
-  error.value = null
-  if (!form.members.length) {
-    error.value = 'Виберіть принаймні одного виконавця'
-    return
+  function submit() {
+    error.value = null
+    if (!form.members.length) {
+      error.value = 'Виберіть принаймні одного виконавця'
+      return
+    }
+
+    Inertia.post(
+      `/work/projects/tasks/${props.task.id}/assign`,
+      { members: form.members },
+      {
+        onSuccess: () => {
+          router.push({ name: 'work.tasks.show', params: { id: props.task.id } })
+        },
+        onError: errors => {
+          error.value = errors.error || 'Сталася помилка'
+        },
+      }
+    )
   }
-
-  Inertia.post(
-    `/work/projects/tasks/${props.task.id}/assign`,
-    { members: form.members },
-    {
-      onSuccess: () => {
-        router.push({ name: 'work.tasks.show', params: { id: props.task.id } })
-      },
-      onError: errors => {
-        error.value = errors.error || 'Сталася помилка'
-      },
-    },
-  )
-}
 </script>
 
 <template>
   <AppLayout>
+    <PageMeta
+      :title="`Assign Executors to ${task.name}`"
+      :description="`Page Assign Executors to ${task.name}\``"
+    />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },
@@ -58,7 +62,7 @@ function submit() {
       class="max-w-3xl mx-auto space-y-6 bg-gradient-to-br from-indigo-950 via-gray-900 to-[#0e0f11] p-6 rounded-lg shadow-lg shadow-indigo-900/40 text-indigo-200"
       @submit.prevent="submit"
     >
-      <h2 class="text-lg font-semibold mb-4">Assign Executors to Task</h2>
+      <h2 class="text-lg font-semibold mb-4">Assign Executors to {{ task.name }}</h2>
 
       <div
         class="space-y-2 max-h-64 overflow-y-auto border border-indigo-700 rounded p-3 bg-gray-900"

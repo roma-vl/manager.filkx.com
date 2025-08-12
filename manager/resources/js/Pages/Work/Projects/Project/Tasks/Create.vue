@@ -1,75 +1,78 @@
 <script setup>
-import { reactive, ref } from 'vue'
-import { useRouter } from 'vue-router' // або Inertia router
-import { Inertia } from '@inertiajs/inertia'
-import AppLayout from '../../../../../Layouts/AppLayout.vue'
-import Breadcrumbs from '../../../../../Components/ui/Breadcrumbs.vue'
-import ProjectTabs from '../../../../../Components/Work/Projects/ProjectTabs.vue'
+  import { reactive, ref } from 'vue'
+  import { useRouter } from 'vue-router'
+  import { Inertia } from '@inertiajs/inertia'
+  import AppLayout from '@/Layouts/AppLayout.vue'
+  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-const props = defineProps({
-  project: Object,
-  defaults: Object,
-  types: Array,
-  priorities: Array,
-})
+  const props = defineProps({
+    project: Object,
+    defaults: Object,
+    types: Array,
+    priorities: Array,
+  })
 
-const router = useRouter()
-const error = ref(null)
+  const router = useRouter()
+  const error = ref(null)
 
-const form = reactive({
-  names: props.defaults.names.length ? [...props.defaults.names] : [''],
-  content: props.defaults.content ?? '',
-  parent: props.defaults.parent ?? null,
-  plan: props.defaults.plan ?? '',
-  type: props.defaults.type,
-  priority: props.defaults.priority,
-})
+  const form = reactive({
+    names: props.defaults.names.length ? [...props.defaults.names] : [''],
+    content: props.defaults.content ?? '',
+    parent: props.defaults.parent ?? null,
+    plan: props.defaults.plan ?? '',
+    type: props.defaults.type,
+    priority: props.defaults.priority,
+  })
 
-function addName() {
-  form.names.push('')
-}
-
-function removeName(index) {
-  form.names.splice(index, 1)
-}
-
-function submit() {
-  error.value = null
-
-  // Валідація мінімальна: перевірка, що є хоч одна назва
-  if (!form.names.some(name => name.trim().length > 0)) {
-    error.value = 'Мінімум одна назва потрібна'
-    return
+  function addName() {
+    form.names.push('')
   }
 
-  // Відправляємо POST через Inertia
-  Inertia.post(
-    `/work/projects/${props.project.id}/tasks/create`,
-    {
-      names: form.names,
-      content: form.content,
-      parent: form.parent,
-      plan: form.plan,
-      type: form.type,
-      priority: form.priority,
-    },
-    {
-      onSuccess: () => {
-        router.push({
-          name: 'work.projects.project.tasks',
-          params: { project_id: props.project.id },
-        })
+  function removeName(index) {
+    form.names.splice(index, 1)
+  }
+
+  function submit() {
+    error.value = null
+
+    if (!form.names.some(name => name.trim().length > 0)) {
+      error.value = 'Мінімум одна назва потрібна'
+      return
+    }
+
+    Inertia.post(
+      `/work/projects/${props.project.id}/tasks/create`,
+      {
+        names: form.names,
+        content: form.content,
+        parent: form.parent,
+        plan: form.plan,
+        type: form.type,
+        priority: form.priority,
       },
-      onError: errors => {
-        error.value = errors.error || 'Сталася помилка'
-      },
-    },
-  )
-}
+      {
+        onSuccess: () => {
+          router.push({
+            name: 'work.projects.project.tasks',
+            params: { project_id: props.project.id },
+          })
+        },
+        onError: errors => {
+          error.value = errors.error || 'Сталася помилка'
+        },
+      }
+    )
+  }
 </script>
 
 <template>
   <AppLayout>
+    <PageMeta
+      :title="`Create Task for ${props.project.name}`"
+      :description="`Create Task  for ${props.project.name}`"
+    />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },
@@ -86,7 +89,9 @@ function submit() {
       @submit.prevent="submit"
     >
       <div>
-        <label class="block mb-1 text-sm font-medium text-indigo-300">Назви задач (назви можуть бути декілька):</label>
+        <label class="block mb-1 text-sm font-medium text-indigo-300"
+          >Назви задач (назви можуть бути декілька):</label
+        >
         <div
           v-for="(name, index) in form.names"
           :key="index"
@@ -130,7 +135,9 @@ function submit() {
       </div>
 
       <div>
-        <label class="block mb-1 text-sm font-medium text-indigo-300">Батьківська задача (ID)</label>
+        <label class="block mb-1 text-sm font-medium text-indigo-300"
+          >Батьківська задача (ID)</label
+        >
         <input
           v-model.number="form.parent"
           type="number"

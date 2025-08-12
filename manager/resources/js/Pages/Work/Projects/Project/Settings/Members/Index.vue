@@ -1,27 +1,31 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue'
-import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
-import DepartmentsTabs from '@/Components/Work/Projects/Project/Settings/Departments/DepartmentsTabs.vue'
-import { Link } from '@inertiajs/inertia-vue3'
-import axios from 'axios'
-import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import AppLayout from '@/Layouts/AppLayout.vue'
+  import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
+  import DepartmentsTabs from '@/Components/Work/Projects/Project/Settings/Departments/DepartmentsTabs.vue'
+  import { Link } from '@inertiajs/inertia-vue3'
+  import axios from 'axios'
+  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-const props = defineProps({
-  project: Object,
-  memberships: Array,
-})
-
-
-function confirmAndRevoke(memberId) {
-  if (!confirm('Are you sure?')) return
-
-  axios.post(`/work/projects/${props.project.id}/settings/members/${memberId}/revoke`, {
-    preserveScroll: true,
+  const props = defineProps({
+    project: Object,
+    memberships: Array,
   })
-}
+
+  function confirmAndRevoke(memberId) {
+    if (!confirm('Are you sure?')) return
+
+    axios.post(`/work/projects/${props.project.id}/settings/members/${memberId}/revoke`, {
+      preserveScroll: true,
+    })
+  }
 </script>
 <template>
   <AppLayout>
+    <PageMeta
+      :title="`Members for ${props.project.name}`"
+      :description="`Members for ${props.project.name}`"
+    />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },
@@ -112,19 +116,19 @@ function confirmAndRevoke(memberId) {
 </template>
 
 <style scoped>
-.btn {
+  .btn {
     @apply inline-flex items-center justify-center px-4 py-2 rounded text-white text-sm font-medium;
-}
-.btn-success {
+  }
+  .btn-success {
     @apply bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800;
-}
-.btn-primary {
+  }
+  .btn-primary {
     @apply bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800;
-}
-.btn-danger {
+  }
+  .btn-danger {
     @apply bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800;
-}
-.btn-sm {
+  }
+  .btn-sm {
     @apply px-2 py-1 text-xs;
-}
+  }
 </style>

@@ -43,7 +43,8 @@ class Handler
                 $command->firstName,
                 $command->lastName
             ),
-            new Email($command->email)
+            new Email($command->email),
+            $command->account
         );
 
         $this->members->add($member);

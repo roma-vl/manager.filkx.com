@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Work\Entity\Projects\Project\Department;
 
+use App\Model\User\Entity\Account\Account;
 use App\Model\Work\Entity\Projects\Project\Project;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -15,6 +16,10 @@ class Department
     #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false)]
     private Project $project;
 
+    #[ORM\ManyToOne(targetEntity: Account::class)]
+    #[ORM\JoinColumn(name: 'account_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private Account $account;
+
     #[ORM\Id]
     #[ORM\Column(type: 'work_projects_project_department_id')]
     private Id $id;
@@ -22,11 +27,12 @@ class Department
     #[ORM\Column(type: 'string')]
     private string $name;
 
-    public function __construct(Project $project, Id $id, string $name)
+    public function __construct(Project $project, Id $id, string $name, Account $account)
     {
         $this->project = $project;
         $this->id = $id;
         $this->name = $name;
+        $this->account = $account;
     }
 
     public function isNameEqual(string $name): bool

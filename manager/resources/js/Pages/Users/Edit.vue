@@ -1,40 +1,42 @@
 <script setup>
-import { useForm } from '@inertiajs/inertia-vue3'
-import { ref } from 'vue'
-import AppLayout from '../../Layouts/AppLayout.vue'
-import SecondaryButton from '../../Components/SecondaryButton.vue'
-import InputLabel from '../../Components/InputLabel.vue'
-import InputError from '../../Components/InputError.vue'
-import TextInput from '../../Components/TextInput.vue'
+  import { useForm } from '@inertiajs/inertia-vue3'
+  import { ref } from 'vue'
+  import AppLayout from '../../Layouts/AppLayout.vue'
+  import SecondaryButton from '../../Components/SecondaryButton.vue'
+  import InputLabel from '../../Components/InputLabel.vue'
+  import InputError from '../../Components/InputError.vue'
+  import TextInput from '../../Components/TextInput.vue'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-const props = defineProps({
-  user: Object,
-  flash: Object,
-})
-
-const form = useForm({
-  email: props.user.email,
-  firstName: props.user.firstName,
-  lastName: props.user.lastName,
-})
-
-const flashError = ref(props.flash?.error ?? '')
-
-function submit() {
-  flashError.value = ''
-  form.post(`/users/${props.user.id}/edit`, {
-    onError: errors => {
-      if (errors.errors) {
-        flashError.value = Object.values(errors.errors).join('; ')
-      }
-    },
-    preserveScroll: true,
+  const props = defineProps({
+    user: Object,
+    flash: Object,
   })
-}
+
+  const form = useForm({
+    email: props.user.email,
+    firstName: props.user.firstName,
+    lastName: props.user.lastName,
+  })
+
+  const flashError = ref(props.flash?.error ?? '')
+
+  function submit() {
+    flashError.value = ''
+    form.post(`/users/${props.user.id}/edit`, {
+      onError: errors => {
+        if (errors.errors) {
+          flashError.value = Object.values(errors.errors).join('; ')
+        }
+      },
+      preserveScroll: true,
+    })
+  }
 </script>
 
 <template>
   <AppLayout>
+    <PageMeta title="Edit User" description="Page Edit User" />
     <div class="card">
       <div class="card-body">
         <form @submit.prevent="submit">

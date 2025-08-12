@@ -6,7 +6,6 @@ namespace App\ReadModel\Work\Projects\Action;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
-use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -25,6 +24,11 @@ class ActionFetcher
     public function all(Filter $filter, int $page, int $size): PaginationInterface
     {
         $qb = $this->createQb();
+
+        if ($filter->account_id) {
+            $qb->andWhere('c.account_id = :account_id');
+            $qb->setParameter('account_id', $filter->account_id);
+        }
 
         if ($filter->member) {
             $qb->innerJoin('project', 'work_projects_project_memberships', 'membership', 'project.id = memberships.project_id');

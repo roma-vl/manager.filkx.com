@@ -15,6 +15,7 @@ use App\Model\Work\UseCase\Projects\Role\Edit;
 use App\Model\Work\UseCase\Projects\Role\Remove;
 use App\ReadModel\Work\Projects\RoleFetcher;
 use App\Service\CommandFactory;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -30,10 +31,17 @@ class RolesController extends BaseController
     }
 
     #[Route('', name: '', methods: ['GET'])]
-    public function index(RoleFetcher $fetcher, InertiaService $inertia, Request $request): Response
+    public function index(
+        RoleFetcher $fetcher,
+        InertiaService $inertia,
+        Request $request,
+        Security $security,
+    ): Response
     {
         return $inertia->render($request, 'Work/Projects/Roles/Index', [
-            'roles' => $fetcher->all(),
+            'roles' => $fetcher->all(
+                $security->getUser()->getAccount()->getId()->getValue()
+            ),
             'permissions' => Permission::names(),
         ]);
     }
@@ -44,6 +52,7 @@ class RolesController extends BaseController
         Create\Handler $handler,
         InertiaService $inertia,
         CommandFactory $factory,
+        Security $security,
     ): Response {
         if ($request->isMethod('GET')) {
             return $inertia->render($request, 'Work/Projects/Roles/Create', [
@@ -52,6 +61,7 @@ class RolesController extends BaseController
         }
 
         $command = new Create\Command();
+        $command->account = $security->getUser()->getAccount();
         $errors = $factory->createFromRequest($request, $command);
 
         if ($errors) {

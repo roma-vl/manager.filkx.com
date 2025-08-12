@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use App\Model\User\Entity\Account\Account;
 use App\Model\User\Entity\User\User;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -19,6 +20,8 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
     private string $status;
     private string $date;
 
+    private ?Account $account;
+
     public function __construct(
         string $id,
         string $username,
@@ -27,6 +30,7 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
         string $role,
         string $status,
         string $date,
+        ?Account $account = null,
     ) {
         $this->id = $id;
         $this->username = $username;
@@ -35,11 +39,17 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
         $this->role = $role;
         $this->status = $status;
         $this->date = $date;
+        $this->account = $account;
     }
 
     public function getId(): string
     {
         return $this->id;
+    }
+
+    public function getAccount(): ?Account
+    {
+        return $this->account;
     }
 
     public function isActive(): bool

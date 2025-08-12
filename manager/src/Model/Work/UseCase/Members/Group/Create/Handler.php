@@ -14,7 +14,10 @@ class Handler
     private GroupRepository $groups;
     private Flusher $flusher;
 
-    public function __construct(GroupRepository $groups, Flusher $flusher)
+    public function __construct(
+        GroupRepository $groups,
+        Flusher $flusher
+    )
     {
         $this->groups = $groups;
         $this->flusher = $flusher;
@@ -24,7 +27,8 @@ class Handler
     {
         $group = new Group(
             Id::next(),
-            $command->name
+            $command->name,
+            $command->account
         );
 
         $this->groups->add($group);

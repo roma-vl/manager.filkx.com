@@ -17,6 +17,7 @@ use App\ReadModel\Work\Projects\RoleFetcher;
 use App\Security\Voter\Work\Projects\ProjectAccess;
 use App\Service\CommandFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -78,6 +79,7 @@ class MembersController extends AbstractController
         RoleFetcher $roleFetcher,
         DepartmentFetcher $departmentFetcher,
         MemberFetcher $memberFetcher,
+        Security $security,
     ): Response {
         $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
 
@@ -87,9 +89,13 @@ class MembersController extends AbstractController
                     'id' => $project->getId()->getValue(),
                     'name' => $project->getName(),
                 ],
-                'roles' => $roleFetcher->allList(),
+                'roles' => $roleFetcher->allList(
+                    $security->getUser()->getAccount()->getId()->getValue()
+                ),
                 'departments' => $departmentFetcher->listOfProject($project->getId()->getValue()),
-                'members' => $this->mapMembers($memberFetcher->activeGroupedList()),
+                'members' => $this->mapMembers($memberFetcher->activeGroupedList(
+                    $security->getUser()->getAccount()->getId()->getValue()
+                )),
             ]);
         }
 

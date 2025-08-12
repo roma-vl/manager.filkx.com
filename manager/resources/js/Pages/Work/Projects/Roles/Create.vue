@@ -1,33 +1,35 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue'
-import { useForm } from '@inertiajs/inertia-vue3'
-import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-import SecondaryButton from '@/Components/SecondaryButton.vue'
-import InputError from '@/Components/InputError.vue'
-import InputLabel from '@/Components/InputLabel.vue'
-import TextInput from '@/Components/TextInput.vue'
+  import AppLayout from '@/Layouts/AppLayout.vue'
+  import { useForm } from '@inertiajs/inertia-vue3'
+  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import SecondaryButton from '@/Components/SecondaryButton.vue'
+  import InputError from '@/Components/InputError.vue'
+  import InputLabel from '@/Components/InputLabel.vue'
+  import TextInput from '@/Components/TextInput.vue'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-const props = defineProps({
-  permissions: Array,
-  errors: Object,
-})
+  const props = defineProps({
+    permissions: Array,
+    errors: Object,
+  })
 
-const form = useForm({
-  name: '',
-  permissions: [],
-})
+  const form = useForm({
+    name: '',
+    permissions: [],
+  })
 
-if (props.errors) {
-  form.setError(props.errors)
-}
+  if (props.errors) {
+    form.setError(props.errors)
+  }
 
-function submit() {
-  form.post('/work/projects/roles/create')
-}
+  function submit() {
+    form.post('/work/projects/roles/create')
+  }
 </script>
 
 <template>
   <AppLayout>
+    <PageMeta :title="`Create Role`" :description="`Page Create Role`" />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },
@@ -38,7 +40,7 @@ function submit() {
       ]"
     />
 
-    <form class="max-w-3xl mx-auto space-y-6  p-6 " @submit.prevent="submit">
+    <form class="max-w-3xl mx-auto space-y-6 p-6" @submit.prevent="submit">
       <div>
         <InputLabel for="name" value="Назва ролі" />
         <TextInput id="name" v-model="form.name" class="mt-1 block w-full" autofocus />
@@ -77,5 +79,4 @@ function submit() {
   </AppLayout>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

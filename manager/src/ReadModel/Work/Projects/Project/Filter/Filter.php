@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\ReadModel\Work\Projects\Project\Filter;
 
+use App\Model\User\Entity\Account\Account;
 use App\Model\Work\Entity\Members\Member\Status;
 
 class Filter
 {
     public ?string $name = null;
     public ?string $member = null;
+    public string $account_id;
     public ?string $status = Status::ACTIVE;
 
     private function __construct(?string $member)

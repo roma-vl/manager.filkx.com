@@ -32,7 +32,8 @@ class Handler
             $actor,
             new \DateTimeImmutable(),
             $command->name,
-            $command->content
+            $command->content,
+            $command->account
         );
 
         $this->flusher->flush($task);

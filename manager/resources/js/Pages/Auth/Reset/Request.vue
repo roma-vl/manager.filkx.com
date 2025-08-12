@@ -1,18 +1,20 @@
 <script setup>
-import { useForm } from '@inertiajs/inertia-vue3'
+  import { useForm } from '@inertiajs/inertia-vue3'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-const form = useForm({
-  email: '',
-})
-
-function submit() {
-  form.post('/reset', {
-    preserveScroll: true,
+  const form = useForm({
+    email: '',
   })
-}
+
+  function submit() {
+    form.post('/reset', {
+      preserveScroll: true,
+    })
+  }
 </script>
 
 <template>
+  <PageMeta :title="`Password Reset`" :description="`Page Password Reset`" />
   <div class="max-w-md mx-auto mt-10 bg-white p-6 rounded shadow">
     <h1 class="text-xl font-bold mb-4">Password Reset</h1>
 

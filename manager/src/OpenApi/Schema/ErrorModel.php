@@ -13,7 +13,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'error', properties: [
             new OA\Property(property: 'message', type: 'string'),
             new OA\Property(property: 'code', type: 'integer'),
-        ], type: 'object')
+        ], type: 'object'),
     ],
     type: 'object'
 )]

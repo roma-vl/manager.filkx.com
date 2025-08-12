@@ -120,7 +120,6 @@ class IndexFixture extends Fixture implements DependentFixtureInterface
     }
 
     /**
-     * @param string $reference
      * @return User|object
      */
     private function getUser(string $reference): User
@@ -128,4 +127,3 @@ class IndexFixture extends Fixture implements DependentFixtureInterface
         return $this->getReference($reference);
     }
 }
-

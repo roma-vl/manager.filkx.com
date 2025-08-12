@@ -1,12 +1,12 @@
 <script setup>
-import { Link } from '@inertiajs/inertia-vue3'
+  import { Link } from '@inertiajs/inertia-vue3'
 
-defineProps({
-  projectId: {
-    type: String,
-    required: true,
-  },
-})
+  defineProps({
+    projectId: {
+      type: String,
+      required: true,
+    },
+  })
 </script>
 
 <template>

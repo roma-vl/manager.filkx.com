@@ -1,13 +1,13 @@
 <script setup>
-import { computed } from 'vue'
+  import { computed } from 'vue'
 
-const props = defineProps({
-  field: String,
-  sort: String,
-  direction: String,
-})
+  const props = defineProps({
+    field: String,
+    sort: String,
+    direction: String,
+  })
 
-const isActive = computed(() => props.field === props.sort)
+  const isActive = computed(() => props.field === props.sort)
 </script>
 
 <template>

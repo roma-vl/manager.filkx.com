@@ -28,7 +28,7 @@ class Handler
         $actor = $this->members->get(new MemberId($command->actor));
         $task = $this->tasks->get(new Id($command->id));
 
-        $task->changePriority($actor, new \DateTimeImmutable(), $command->priority);
+        $task->changePriority($actor, new \DateTimeImmutable(), $command->priority, $command->account);
 
         $this->flusher->flush($task);
     }

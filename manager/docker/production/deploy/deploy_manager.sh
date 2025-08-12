@@ -21,8 +21,24 @@ fi
 echo "🚀 Деплой Symfony у $COLOR середовище"
 cd "$RELEASE_DIR"
 
+# 🔐 Симлінк до .env
 rm -f "$RELEASE_DIR/.env"
 ln -sfn /var/www/manager.filkx.com/shared/.env "$RELEASE_DIR/.env"
+
+# 📁 Симлінк до спільного сховища файлів
+SHARED_STORAGE="$APP_DIR/shared/storage/default"
+TARGET_STORAGE="$RELEASE_DIR/manager/var/storage/default"
+
+echo "🔗 Перевірка та створення симлінку для сховища..."
+mkdir -p "$SHARED_STORAGE"
+mkdir -p "$(dirname "$TARGET_STORAGE")"
+
+if [ ! -L "$TARGET_STORAGE" ]; then
+  ln -sfn "$SHARED_STORAGE" "$TARGET_STORAGE"
+  echo "✅ Симлінк створено: $TARGET_STORAGE → $SHARED_STORAGE"
+else
+  echo "ℹ️ Симлінк вже існує: $TARGET_STORAGE"
+fi
 
 # 🛑 Зупинка поточних контейнерів
 echo "🛑 Зупинка контейнерів..."
@@ -45,11 +61,11 @@ docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" mana
     mkdir -p var/cache var/log var/storage/default && \
     chown -R www-data:www-data var && \
     chmod -R 775 var && \
-    ln -snf /app/var/storage/default /app/public/storage \
+    rm -rf public/storage && \
+    ln -snf var/storage/default public/storage \
 "
 
-
-# ⚙️ Міграції
+# ⚙️ Doctrine міграції
 echo "⚙️ Doctrine міграції..."
 docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" manager-php-cli php bin/console doctrine:migrations:migrate --no-interaction
 
@@ -57,7 +73,6 @@ docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" mana
 echo "🧹 Очистка та кешування..."
 docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" manager-php-cli php bin/console cache:clear --env=prod
 docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" manager-php-cli php bin/console cache:warmup --env=prod
-
 
 # 🔗 Перемикаємо current
 ln -sfn "$APP_DIR/$COLOR/current" "$APP_DIR/current"

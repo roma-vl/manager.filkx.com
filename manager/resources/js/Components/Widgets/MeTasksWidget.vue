@@ -1,17 +1,17 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import axios from 'axios'
+  import { ref, onMounted } from 'vue'
+  import axios from 'axios'
 
-const tasks = ref([])
+  const tasks = ref([])
 
-onMounted(async () => {
-  try {
-    const { data } = await axios.get('/api/widgets/work/projects/me-tasks')
-    tasks.value = data.tasks
-  } catch (e) {
-    console.error('Error loading own tasks:', e)
-  }
-})
+  onMounted(async () => {
+    try {
+      const { data } = await axios.get('/api/widgets/work/projects/me-tasks')
+      tasks.value = data.tasks
+    } catch (e) {
+      console.error('Error loading own tasks:', e)
+    }
+  })
 </script>
 
 <template>

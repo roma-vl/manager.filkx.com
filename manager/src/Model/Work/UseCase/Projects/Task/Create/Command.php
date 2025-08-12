@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Work\UseCase\Projects\Task\Create;
 
+use App\Model\User\Entity\Account\Account;
 use App\Model\Work\Entity\Projects\Task\Type;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -33,11 +34,16 @@ class Command
     #[Assert\NotBlank]
     public int $priority;
 
-    public function __construct(string $project, string $member)
+    #[Assert\NotBlank]
+    public Account $account;
+
+
+    public function __construct(string $project, string $member, Account $account)
     {
         $this->project = $project;
         $this->member = $member;
         $this->type = Type::NONE;
         $this->priority = 2;
+        $this->account = $account;
     }
 }

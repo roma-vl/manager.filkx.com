@@ -1,10 +1,10 @@
 <script setup>
-defineProps({
-  value: {
-    type: String,
-    default: '',
-  },
-})
+  defineProps({
+    value: {
+      type: String,
+      default: '',
+    },
+  })
 </script>
 
 <template>

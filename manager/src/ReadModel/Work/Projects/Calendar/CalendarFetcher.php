@@ -28,6 +28,12 @@ class CalendarFetcher
 
         $qb = $this->buildQuery($start, $end);
 
+        if ($query->account) {
+            $qb
+                ->andWhere('p.account_id = :account_id')
+                ->setParameter('account_id', $query->account->getId()->getValue());
+        }
+
         if ($query->member) {
             $qb->innerJoin('t', 'work_projects_project_memberships', 'ms', 't.project_id = ms.project_id');
             $qb->andWhere('ms.member_id = :member');

@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Controller\Api\Auth;
 
 use App\Model\User\UseCase\SignUp;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use OpenApi\Attributes as OA;
 
 #[OA\Tag(name: 'Auth')]
 final class SignUpController extends AbstractController
@@ -19,7 +19,8 @@ final class SignUpController extends AbstractController
     public function __construct(
         private readonly SerializerInterface $serializer,
         private readonly ValidatorInterface $validator,
-    ) {}
+    ) {
+    }
 
     #[OA\Post(
         path: '/auth/signup',
@@ -46,7 +47,6 @@ final class SignUpController extends AbstractController
             ),
         ]
     )]
-
     #[Route('/auth/signup', name: 'api.auth.signup', methods: ['POST'])]
     public function __invoke(Request $request, SignUp\Request\Handler $handler): JsonResponse
     {
@@ -56,6 +56,7 @@ final class SignUpController extends AbstractController
         $violations = $this->validator->validate($command);
         if (\count($violations) > 0) {
             $json = $this->serializer->serialize($violations, 'json');
+
             return new JsonResponse($json, JsonResponse::HTTP_BAD_REQUEST, [], true);
         }
 

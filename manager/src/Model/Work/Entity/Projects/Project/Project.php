@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Work\Entity\Projects\Project;
 
+use App\Model\User\Entity\Account\Account;
 use App\Model\Work\Entity\Members\Member\Id as MemberId;
 use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Projects\Project\Department\Department;
@@ -20,6 +21,10 @@ class Project
     #[ORM\Id]
     #[ORM\Column(type: 'work_projects_project_id')]
     private Id $id;
+
+    #[ORM\ManyToOne(targetEntity: Account::class)]
+    #[ORM\JoinColumn(name: 'account_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private Account $account;
 
     #[ORM\Column(type: 'string')]
     private string $name;
@@ -57,7 +62,7 @@ class Project
     #[ORM\Column(type: 'integer')]
     private int $version;
 
-    public function __construct(Id $id, string $name, int $sort)
+    public function __construct(Id $id, string $name, int $sort, Account $account)
     {
         $this->id = $id;
         $this->name = $name;
@@ -65,6 +70,7 @@ class Project
         $this->status = Status::active();
         $this->departments = new ArrayCollection();
         $this->memberships = new ArrayCollection();
+        $this->account = $account;
     }
 
     public function edit(string $name, int $sort): void
@@ -89,14 +95,14 @@ class Project
         $this->status = Status::active();
     }
 
-    public function addDepartment(DepartmentId $id, string $name): void
+    public function addDepartment(DepartmentId $id, string $name, Account $account): void
     {
         foreach ($this->departments as $department) {
             if ($department->isNameEqual($name)) {
                 throw new \DomainException('Department already exists.');
             }
         }
-        $this->departments->add(new Department($this, $id, $name));
+        $this->departments->add(new Department($this, $id, $name, $account));
     }
 
     public function editDepartment(DepartmentId $id, string $name): void

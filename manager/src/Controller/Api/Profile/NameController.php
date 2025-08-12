@@ -41,8 +41,9 @@ class NameController extends AbstractController
 {
     public function __construct(
         private SerializerInterface $serializer,
-        private ValidatorInterface $validator
-    ) {}
+        private ValidatorInterface $validator,
+    ) {
+    }
 
     public function __invoke(Request $request, Name\Handler $handler): Response
     {
@@ -60,6 +61,7 @@ class NameController extends AbstractController
         $violations = $this->validator->validate($command);
         if (\count($violations)) {
             $json = $this->serializer->serialize($violations, 'json');
+
             return new JsonResponse($json, 400, [], true);
         }
 

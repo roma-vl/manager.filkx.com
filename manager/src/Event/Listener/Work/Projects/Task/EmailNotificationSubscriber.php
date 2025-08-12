@@ -7,19 +7,20 @@ namespace App\Event\Listener\Work\Projects\Task;
 use App\Model\Work\Entity\Members\Member\MemberRepository;
 use App\Model\Work\Entity\Projects\Task\Event\TaskExecutorAssigned;
 use App\Model\Work\Entity\Projects\Task\TaskRepository;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mime\Address;
 
 readonly class EmailNotificationSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private TaskRepository   $tasks,
+        private TaskRepository $tasks,
         private MemberRepository $members,
-        private MailerInterface  $mailer,
-    ) {}
+        private MailerInterface $mailer,
+    ) {
+    }
 
     public static function getSubscribedEvents(): array
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mapper\Work;
 
 use App\DTO\Work\Task\TaskDto;
@@ -10,7 +12,7 @@ class TaskMapper
     public static function map(array $task): TaskDto
     {
         $dto = new TaskDto();
-        $dto->id = $task['id'];
+        $dto->id = (string) $task['id'];
         $dto->name = $task['name'];
         $dto->project_id = $task['project_id'];
         $dto->project_name = $task['project_name'];
@@ -21,13 +23,13 @@ class TaskMapper
         $dto->progress = $task['progress'];
         $dto->date = $task['date'];
         $dto->plan_date = $task['plan_date'];
-        $dto->parent = $task['parent'] ?? null;
+        $dto->parent = (string) $task['parent'] ?? null;
         $dto->type = $task['type'];
-        $dto->root = $task['parent'];
+        $dto->root = (string) $task['parent'];
 
         foreach ($task['executors'] as $exec) {
             $executorDto = new TaskExecutorDto();
-            $executorDto->task_id = $exec['task_id'];
+            $executorDto->task_id = (string) $exec['task_id'];
             $executorDto->name = $exec['name'];
             $dto->executors[] = $executorDto;
         }

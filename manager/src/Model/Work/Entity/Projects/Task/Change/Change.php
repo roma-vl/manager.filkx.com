@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Work\Entity\Projects\Task\Change;
 
+use App\Model\User\Entity\Account\Account;
 use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Projects\Task\Task;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,6 +22,10 @@ class Change
     #[ORM\Column(type: 'work_projects_task_change_id')]
     private Id $id;
 
+    #[ORM\ManyToOne(targetEntity: Account::class)]
+    #[ORM\JoinColumn(name: 'account_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    public Account  $account;
+
     #[ORM\ManyToOne(targetEntity: Member::class)]
     #[ORM\JoinColumn(name: 'actor_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private Member $actor;
@@ -31,13 +36,14 @@ class Change
     #[ORM\Embedded(class: Set::class)]
     private Set $set;
 
-    public function __construct(Task $task, Id $id, Member $actor, \DateTimeImmutable $date, Set $set)
+    public function __construct(Task $task, Id $id, Member $actor, \DateTimeImmutable $date, Set $set, Account $account)
     {
         $this->task = $task;
         $this->id = $id;
         $this->actor = $actor;
         $this->date = $date;
         $this->set = $set;
+        $this->account = $account;
     }
 
     public function getId(): Id

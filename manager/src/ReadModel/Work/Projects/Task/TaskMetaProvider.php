@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\ReadModel\Work\Projects\Task;
 
 use App\Model\Work\Entity\Projects\Task\Progress;

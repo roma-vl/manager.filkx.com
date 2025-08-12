@@ -34,7 +34,7 @@ class Handler
         foreach ($command->members as $id) {
             $member = $this->members->get(new MemberId($id));
             if (!$task->hasExecutor($member->getId())) {
-                $task->assignExecutor($actor, new \DateTimeImmutable(), $member);
+                $task->assignExecutor($actor, new \DateTimeImmutable(), $member, $command->account);
             }
         }
 

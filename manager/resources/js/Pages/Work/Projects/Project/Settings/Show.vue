@@ -1,25 +1,30 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue'
-import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
-import { Link, usePage } from '@inertiajs/inertia-vue3'
-import DepartmentsTabs from '../../../../../Components/Work/Projects/Project/Settings/Departments/DepartmentsTabs.vue'
-import { statusBadgeClass } from '../../../../../Helpers/helpers.js'
-import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import AppLayout from '@/Layouts/AppLayout.vue'
+  import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
+  import { Link, usePage } from '@inertiajs/inertia-vue3'
+  import DepartmentsTabs from '@/Components/Work/Projects/Project/Settings/Departments/DepartmentsTabs.vue'
+  import { statusBadgeClass } from '@/Helpers/helpers.js'
+  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-const { props } = usePage()
-const project = props.value.project
+  const { props } = usePage()
+  const project = props.value.project
 
-function confirmAction(message, event) {
-  if (!confirm(message)) {
-    event.preventDefault()
-  } else {
-    event.target.submit()
+  function confirmAction(message, event) {
+    if (!confirm(message)) {
+      event.preventDefault()
+    } else {
+      event.target.submit()
+    }
   }
-}
 </script>
 
 <template>
   <AppLayout>
+    <PageMeta
+      :title="`Settings for ${props.project.name}`"
+      :description="`Settings for ${props.project.name}`"
+    />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },
@@ -34,7 +39,7 @@ function confirmAction(message, event) {
     <DepartmentsTabs :project-id="project.id" />
 
     <!-- Controls -->
-    <div class=" flex-wrap items-center gap-2 mb-6 my-6 flex justify-end">
+    <div class="flex-wrap items-center gap-2 mb-6 my-6 flex justify-end">
       <Link
         :href="`/work/projects/${project.id}/settings/edit`"
         class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl shadow transition"
@@ -85,7 +90,9 @@ function confirmAction(message, event) {
     </div>
 
     <!-- Project info -->
-    <div class="bg-white dark:bg-zinc-900 rounded-2xl shadow p-6 border border-zinc-200 dark:border-zinc-700 transition-colors">
+    <div
+      class="bg-white dark:bg-zinc-900 rounded-2xl shadow p-6 border border-zinc-200 dark:border-zinc-700 transition-colors"
+    >
       <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
         <div>
           <dt class="text-sm font-medium text-gray-500 dark:text-zinc-400">Name</dt>

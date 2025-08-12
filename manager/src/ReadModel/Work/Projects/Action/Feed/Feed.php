@@ -31,15 +31,14 @@ class Feed
         foreach ($this->comments as $comment) {
             $date = $comment->date instanceof \DateTimeImmutable ? $comment->date : new \DateTimeImmutable($comment->date);
 
-            $comment->text_raw =$comment->text;
+            $comment->text_raw = $comment->text;
             $comment->text = $this->processor->process($comment->text);
 
             $items[] = Item::forComment($date, $comment);
         }
 
-        usort($items, static fn(Item $a, Item $b) => $b->getDate() <=> $a->getDate());
+        usort($items, static fn (Item $a, Item $b) => $b->getDate() <=> $a->getDate());
 
         return $items;
     }
 }
-

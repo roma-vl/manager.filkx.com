@@ -1,30 +1,36 @@
 <script setup>
-import { useForm } from '@inertiajs/inertia-vue3'
-import AppLayout from '@/Layouts/AppLayout.vue'
-import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
-import InputLabel from '@/Components/InputLabel.vue'
-import InputError from '@/Components/InputError.vue'
-import TextInput from '@/Components/TextInput.vue'
-import SecondaryButton from '@/Components/SecondaryButton.vue'
-import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import { useForm } from '@inertiajs/inertia-vue3'
+  import AppLayout from '@/Layouts/AppLayout.vue'
+  import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
+  import InputLabel from '@/Components/InputLabel.vue'
+  import InputError from '@/Components/InputError.vue'
+  import TextInput from '@/Components/TextInput.vue'
+  import SecondaryButton from '@/Components/SecondaryButton.vue'
+  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-const props = defineProps({
-  project: Object,
-  department: Object,
-  errors: Object,
-})
+  const props = defineProps({
+    project: Object,
+    department: Object,
+    errors: Object,
+  })
 
-const form = useForm({
-  name: props.department.name || '',
-})
+  const form = useForm({
+    name: props.department.name || '',
+  })
 
-function submit() {
-  form.post(`/work/projects/${props.project.id}/settings/departments/${props.department.id}/edit`)
-}
+  function submit() {
+    form.post(`/work/projects/${props.project.id}/settings/departments/${props.department.id}/edit`)
+  }
 </script>
 
 <template>
   <AppLayout>
+    <PageMeta
+      :title="`Edit Department ${props.department.name} for ${props.project.name}`"
+      :description="`Edit Department ${props.department.name} for ${props.project.name}`"
+    />
+
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },
@@ -37,10 +43,8 @@ function submit() {
       ]"
     />
 
-    <!-- Tabs -->
     <ProjectTabs :project-id="project.id" />
 
-    <!-- Form -->
     <form class="" @submit.prevent="submit">
       <div>
         <InputLabel for="name" value="Department Name" />

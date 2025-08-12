@@ -1,41 +1,43 @@
 <script setup>
-import { useForm, usePage } from '@inertiajs/inertia-vue3'
-import { computed, ref, watch } from 'vue'
+  import { useForm, usePage } from '@inertiajs/inertia-vue3'
+  import { computed, ref, watch } from 'vue'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-const page = usePage()
-const flash = computed(() => page.props.value.flash || {})
-const showFlash = ref(false)
-watch(
-  flash,
-  newVal => {
-    if (newVal.error || newVal.success) {
-      showFlash.value = true
-      setTimeout(() => {
-        showFlash.value = false
-      }, 5000)
-    }
-  },
-  { immediate: true },
-)
-
-const form = useForm({
-  firstName: '',
-  lastName: '',
-  email: '',
-  password: '',
-})
-
-function submit() {
-  form.post('/signup', {
-    preserveScroll: true,
-    onError: () => {
-      form.password = ''
+  const page = usePage()
+  const flash = computed(() => page.props.value.flash || {})
+  const showFlash = ref(false)
+  watch(
+    flash,
+    newVal => {
+      if (newVal.error || newVal.success) {
+        showFlash.value = true
+        setTimeout(() => {
+          showFlash.value = false
+        }, 5000)
+      }
     },
+    { immediate: true }
+  )
+
+  const form = useForm({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
   })
-}
+
+  function submit() {
+    form.post('/signup', {
+      preserveScroll: true,
+      onError: () => {
+        form.password = ''
+      },
+    })
+  }
 </script>
 
 <template>
+  <PageMeta :title="`Sign Up`" :description="`Page Sign Up`" />
   <div class="min-h-screen flex items-center justify-center bg-gray-100">
     <div class="max-w-md w-full bg-white p-8 rounded shadow">
       <h1 class="text-2xl font-bold mb-6">Sign Up</h1>

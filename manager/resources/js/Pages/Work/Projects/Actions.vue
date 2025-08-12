@@ -1,20 +1,18 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue'
-import ActionRow from '@/Components/ActionRow.vue'
-import RolesTabs from '@/Components/Work/Projects/Project/Roles/RolesTabs.vue'
-import {Head} from '@inertiajs/inertia-vue3'
-import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import AppLayout from '@/Layouts/AppLayout.vue'
+  import ActionRow from '@/Components/ActionRow.vue'
+  import RolesTabs from '@/Components/Work/Projects/Project/Roles/RolesTabs.vue'
+  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-
-const props = defineProps({
-  pagination: Object,
-})
+  const props = defineProps({
+    pagination: Object,
+  })
 </script>
 
 <template>
   <AppLayout>
-    <Head title="Projects" />
-
+    <PageMeta :title="`Actions`" :description="`Page Actions`" />
     <Breadcrumbs
       :items="[
         { label: 'Home', href: '/' },
@@ -68,14 +66,22 @@ const props = defineProps({
         <button
           v-if="pagination.pagination.current_page > 1"
           class="btn"
-          @click="$inertia.get(window.location.pathname + '?page=' + (pagination.pagination.current_page - 1))"
+          @click="
+            $inertia.get(
+              window.location.pathname + '?page=' + (pagination.pagination.current_page - 1)
+            )
+          "
         >
           Prev
         </button>
         <button
           v-if="pagination.pagination.current_page < pagination.pagination.total_pages"
           class="btn ml-2"
-          @click="$inertia.get(window.location.pathname + '?page=' + (pagination.pagination.current_page + 1))"
+          @click="
+            $inertia.get(
+              window.location.pathname + '?page=' + (pagination.pagination.current_page + 1)
+            )
+          "
         >
           Next
         </button>
@@ -85,7 +91,7 @@ const props = defineProps({
 </template>
 
 <style scoped>
-.btn {
+  .btn {
     @apply bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700 transition;
-}
+  }
 </style>

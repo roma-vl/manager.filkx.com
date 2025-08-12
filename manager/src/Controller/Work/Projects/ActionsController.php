@@ -8,6 +8,7 @@ use App\Infrastructure\Inertia\InertiaService;
 use App\ReadModel\Work\Projects\Action\ActionFetcher;
 use App\ReadModel\Work\Projects\Action\Filter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,18 +16,20 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/work/projects/actions', name: 'work.projects.actions')]
 class ActionsController extends AbstractController
 {
-    private const PER_PAGE = 50;
+    private const PER_PAGE = 10;
 
     public function __construct(
         private readonly ActionFetcher $actions,
-    ) {}
+    ) {
+    }
 
     #[Route('', name: '', methods: ['GET'])]
-    public function index(Request $request, InertiaService $inertia): Response
+    public function index(Request $request, InertiaService $inertia, Security $security): Response
     {
         $filter = $this->isGranted('ROLE_WORK_MANAGE_PROJECTS')
             ? Filter::all()
             : Filter::all()->forMember($this->getUser()->getId());
+        $filter->account_id = $security->getUser()->getAccount()->getId()->getValue();
 
         $pagination = $this->actions->all(
             $filter,

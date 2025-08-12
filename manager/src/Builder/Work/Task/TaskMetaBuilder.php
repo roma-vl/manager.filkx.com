@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Builder\Work\Task;
 
 use App\DTO\Work\Task\TaskMetaView;
@@ -9,7 +11,8 @@ class TaskMetaBuilder
 {
     public function __construct(
         private readonly TaskMetaProvider $provider,
-    ) {}
+    ) {
+    }
 
     public function build(): TaskMetaView
     {
@@ -24,4 +27,3 @@ class TaskMetaBuilder
         return $meta;
     }
 }
-

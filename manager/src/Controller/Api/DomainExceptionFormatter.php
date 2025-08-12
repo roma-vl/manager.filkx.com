@@ -21,9 +21,9 @@ class DomainExceptionFormatter implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
-        return array(
-            KernelEvents::EXCEPTION => 'onKernelException'
-        );
+        return [
+            KernelEvents::EXCEPTION => 'onKernelException',
+        ];
     }
 
     public function onKernelException(ExceptionEvent $event): void
@@ -36,7 +36,7 @@ class DomainExceptionFormatter implements EventSubscriberInterface
             return;
         }
 
-        if (strpos($request->attributes->get('_route'), 'api.') !== 0) {
+        if (!str_starts_with($request->attributes->get('_route'), 'api.')) {
             return;
         }
 
@@ -46,7 +46,7 @@ class DomainExceptionFormatter implements EventSubscriberInterface
             'error' => [
                 'code' => 400,
                 'message' => $exception->getMessage(),
-            ]
+            ],
         ], 400));
     }
 }

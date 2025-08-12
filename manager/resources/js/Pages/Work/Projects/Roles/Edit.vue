@@ -1,36 +1,42 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue'
-import { useForm } from '@inertiajs/inertia-vue3'
+  import AppLayout from '@/Layouts/AppLayout.vue'
+  import { useForm } from '@inertiajs/inertia-vue3'
+  import PageMeta from '@/Components/Seo/PageMeta.vue'
+  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
 
-const props = defineProps({
-  role: Object,
-  permissions: Array,
-  errors: Object,
-})
+  const props = defineProps({
+    role: Object,
+    permissions: Array,
+    errors: Object,
+  })
 
-const form = useForm({
-  name: props.role.name,
-  permissions: props.role.permissions,
-})
+  const form = useForm({
+    name: props.role.name,
+    permissions: props.role.permissions,
+  })
 
-if (props.errors) {
-  form.setError(props.errors)
-}
+  if (props.errors) {
+    form.setError(props.errors)
+  }
 
-function submit() {
-  form.post(`/work/projects/roles/${props.role.id}/edit`)
-}
+  function submit() {
+    form.post(`/work/projects/roles/${props.role.id}/edit`)
+  }
 </script>
 
 <template>
   <AppLayout>
-    <ol class="breadcrumb mb-4">
-      <li class="breadcrumb-item"><a href="/home">Home</a></li>
-      <li class="breadcrumb-item"><a href="/work">Work</a></li>
-      <li class="breadcrumb-item"><a href="/work/projects">Projects</a></li>
-      <li class="breadcrumb-item"><a href="/work/projects/roles">Roles</a></li>
-      <li class="breadcrumb-item active">Create</li>
-    </ol>
+    <PageMeta :title="`${role.name} Edit`" :description="`Page ${role.name} Edit`" />
+
+    <Breadcrumbs
+      :items="[
+        { label: 'Home', href: '/' },
+        { label: 'Work', href: '/work' },
+        { label: 'Projects', href: '/work/projects' },
+        { label: 'Roles', href: '/work/projects/roles' },
+        { label: 'Edit' },
+      ]"
+    />
 
     <form @submit.prevent="submit">
       <div class="card p-6">

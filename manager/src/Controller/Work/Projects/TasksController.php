@@ -35,6 +35,7 @@ use App\ReadModel\Work\Projects\Task\TaskFetcher;
 use App\Security\Voter\Work\Projects\TaskAccess;
 use App\Service\Uploader\FileUploader;
 use App\Service\Work\Processor\Processor;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -47,7 +48,7 @@ class TasksController extends BaseController
     public function __construct(
         private readonly ErrorHandler $errors,
         private readonly Processor $processor,
-        private readonly PaginationViewFactory $paginationFactory
+        private readonly PaginationViewFactory $paginationFactory,
     ) {
     }
 
@@ -57,8 +58,9 @@ class TasksController extends BaseController
         TaskFetcher $taskFetcher,
         MemberFetcher $memberFetcher,
         InertiaService $inertia,
-        TaskListNormalizer  $taskListNormalizer,
+        TaskListNormalizer $taskListNormalizer,
         TaskMetaBuilder $taskMetaBuilder,
+        Security $security,
     ): Response {
         $filter = $this->isGranted('ROLE_WORK_MANAGE_PROJECTS')
             ? Filter\Filter::all()
@@ -73,6 +75,7 @@ class TasksController extends BaseController
             ->withExecutor($request->query->get('executor'))
             ->withAuthor($request->query->get('author'))
             ->withRoots($request->query->get('roots'));
+        $filter->account_id = $security->getUser()->getAccount()->getId()->getValue();
 
         $pagination = $taskFetcher->all(
             $filter,
@@ -84,7 +87,9 @@ class TasksController extends BaseController
 
         return $inertia->render($request, 'Work/Projects/Tasks/Index', [
             'tasks' => $taskListNormalizer->normalize($pagination->getItems()),
-            'members' => $this->mapMembers($memberFetcher->activeGroupedList()),
+            'members' => $this->mapMembers($memberFetcher->activeGroupedList(
+                $security->getUser()->getAccount()->getId()->getValue()
+            )),
             'pagination' => $this->paginationFactory->create($pagination, self::PER_PAGE),
             'filters' => $request->query->all(),
             'sort' => $request->query->get('sort', 't.date'),
@@ -99,8 +104,9 @@ class TasksController extends BaseController
         TaskFetcher $taskFetcher,
         MemberFetcher $memberFetcher,
         InertiaService $inertia,
-        TaskListNormalizer  $taskListNormalizer,
+        TaskListNormalizer $taskListNormalizer,
         TaskMetaBuilder $taskMetaBuilder,
+        Security $security,
     ): Response {
         $filter = Filter\Filter::all();
 
@@ -113,6 +119,7 @@ class TasksController extends BaseController
             ->withExecutor($request->query->get('executor'))
             ->withAuthor($request->query->get('author'))
             ->withRoots($request->query->get('roots'));
+        $filter->account_id = $security->getUser()->getAccount()->getId()->getValue();
 
         $pagination = $taskFetcher->all(
             $filter->withExecutor($this->getUser()->getId()),
@@ -124,7 +131,9 @@ class TasksController extends BaseController
 
         return $inertia->render($request, 'Work/Projects/Tasks/Index', [
             'tasks' => $taskListNormalizer->normalize($pagination->getItems()),
-            'members' => $this->mapMembers($memberFetcher->activeGroupedList()),
+            'members' => $this->mapMembers($memberFetcher->activeGroupedList(
+                $security->getUser()->getAccount()->getId()->getValue()
+            )),
             'pagination' => $this->paginationFactory->create($pagination, self::PER_PAGE),
             'filters' => $request->query->all(),
             'sort' => $request->query->get('sort', 't.date'),
@@ -139,8 +148,9 @@ class TasksController extends BaseController
         TaskFetcher $taskFetcher,
         MemberFetcher $memberFetcher,
         InertiaService $inertia,
-        TaskListNormalizer  $taskListNormalizer,
+        TaskListNormalizer $taskListNormalizer,
         TaskMetaBuilder $taskMetaBuilder,
+        Security $security,
     ): Response {
         $filter = Filter\Filter::all();
 
@@ -153,6 +163,7 @@ class TasksController extends BaseController
             ->withExecutor($request->query->get('executor'))
             ->withAuthor($request->query->get('author'))
             ->withRoots($request->query->get('roots'));
+        $filter->account_id = $security->getUser()->getAccount()->getId()->getValue();
 
         $pagination = $taskFetcher->all(
             $filter->withAuthor($this->getUser()->getId()),
@@ -164,7 +175,9 @@ class TasksController extends BaseController
 
         return $inertia->render($request, 'Work/Projects/Tasks/Index', [
             'tasks' => $taskListNormalizer->normalize($pagination->getItems()),
-            'members' => $this->mapMembers($memberFetcher->activeGroupedList()),
+            'members' => $this->mapMembers($memberFetcher->activeGroupedList(
+                $security->getUser()->getAccount()->getId()->getValue()
+            )),
             'pagination' => $this->paginationFactory->create($pagination, self::PER_PAGE),
             'filters' => $request->query->all(),
             'sort' => $request->query->get('sort', 't.date'),
@@ -179,6 +192,7 @@ class TasksController extends BaseController
         Request $request,
         Edit\Handler $handler,
         InertiaService $inertia,
+        Security $security,
     ): Response {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
@@ -192,13 +206,15 @@ class TasksController extends BaseController
             ]);
         }
         $data = json_decode($request->getContent(), true);
-        $command = Edit\Command::fromTask($this->getUser()->getId(), $task);
+        $command = Edit\Command::fromTask($this->getUser()->getId(), $task, $security->getUser()->getAccount());
 
         $command->name = $data['name'] ?? [];
         $command->content = $data['content'] ?? null;
+        $command->account = $security->getUser()->getAccount();
 
         try {
             $handler->handle($command);
+
             return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
         } catch (\DomainException $e) {
             $this->errors->handle($e);
@@ -218,6 +234,7 @@ class TasksController extends BaseController
         Files\Add\Handler $handler,
         FileUploader $uploader,
         InertiaService $inertia,
+        Security $security,
     ): Response {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
@@ -230,7 +247,11 @@ class TasksController extends BaseController
             ]);
         }
 
-        $command = new Files\Add\Command($this->getUser()->getId(), $task->getId()->getValue());
+        $command = new Files\Add\Command(
+            $this->getUser()->getId(),
+            $task->getId()->getValue(),
+            $security->getUser()->getAccount()
+        );
 
         $uploadedFiles = $request->files->get('files');
         if (!\is_array($uploadedFiles)) {
@@ -265,10 +286,11 @@ class TasksController extends BaseController
         Task $task,
         string $file_id,
         Files\Remove\Handler $handler,
+        Security $security,
     ): Response {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
-        $command = new Files\Remove\Command($this->getUser()->getId(), $task->getId()->getValue(), $file_id);
+        $command = new Files\Remove\Command($this->getUser()->getId(), $task->getId()->getValue(), $file_id, $security->getUser()->getAccount());
 
         try {
             $handler->handle($command);
@@ -322,11 +344,16 @@ class TasksController extends BaseController
         Executor\Assign\Handler $handler,
         MemberFetcher $members,
         InertiaService $inertia,
+        Security $security,
     ): Response {
         $project = $task->getProject();
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
-        $command = new Executor\Assign\Command($this->getUser()->getId(), $task->getId()->getValue());
+        $command = new Executor\Assign\Command(
+            $this->getUser()->getId(),
+            $task->getId()->getValue(),
+            $security->getUser()->getAccount()
+        );
         $selectedMembers = [];
         foreach ($task->getExecutors() as $executor) {
             $selectedMembers[] = $executor->getId()->getValue();
@@ -376,6 +403,7 @@ class TasksController extends BaseController
         Request $request,
         Executor\Revoke\Handler $handler,
         MemberFetcher $members,
+        Security $security,
     ): Response {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
@@ -388,7 +416,8 @@ class TasksController extends BaseController
         $command = new Executor\Revoke\Command(
             $this->getUser()->getId(),
             $task->getId()->getValue(),
-            $member->getId()->getValue()
+            $member->getId()->getValue(),
+            $security->getUser()->getAccount()
         );
 
         try {
@@ -506,6 +535,7 @@ class TasksController extends BaseController
         Request $request,
         Plan\Set\Handler $handler,
         InertiaService $inertia,
+        Security $security
     ): Response {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
@@ -519,9 +549,10 @@ class TasksController extends BaseController
             ]);
         }
         $data = json_decode($request->getContent(), true);
-        $command = Plan\Set\Command::fromTask($this->getUser()->getId(), $task);
+        $command = Plan\Set\Command::fromTask($this->getUser()->getId(), $task, $security->getUser()->getAccount());
 
         $command->date = $data['plan_date'] ? new \DateTimeImmutable($data['plan_date']) : '';
+        $command->account = $security->getUser()->getAccount();
 
         try {
             $handler->handle($command);
@@ -612,8 +643,8 @@ class TasksController extends BaseController
                 'id' => $task->getProject()->getId()->getValue(),
                 'name' => $task->getProject()->getName(),
             ],
-            'feed' => array_map(fn(Item $item) => [
-                'date' => $item->getDate()->format(DATE_ATOM),
+            'feed' => array_map(fn (Item $item) => [
+                'date' => $item->getDate()->format(\DATE_ATOM),
                 'action' => $item->getAction(),
                 'comment' => $item->getComment(),
             ], $feed->getItems()),
@@ -705,7 +736,12 @@ class TasksController extends BaseController
     }
 
     #[Route('/{id}/status', name: '.status', methods: ['POST'])]
-    public function changeStatus(Task $task, Request $request, UseCaseStatus\Handler $handler): Response
+    public function changeStatus(
+        Task $task,
+        Request $request,
+        UseCaseStatus\Handler $handler,
+        Security $security,
+    ): Response
     {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
@@ -713,6 +749,7 @@ class TasksController extends BaseController
         $command = new UseCaseStatus\Command(
             $this->getUser()->getId(),
             $task->getId()->getValue(),
+            $security->getUser()->getAccount()
         );
 
         $command->status = $data['status'] ?: '';
@@ -733,7 +770,12 @@ class TasksController extends BaseController
     }
 
     #[Route('/{id}/type', name: '.type', methods: ['POST'])]
-    public function changeType(Task $task, Request $request, UseCaseType\Handler $handler): Response
+    public function changeType(
+        Task $task,
+        Request $request,
+        UseCaseType\Handler $handler,
+        Security $security,
+    ): Response
     {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
@@ -741,7 +783,8 @@ class TasksController extends BaseController
 
         $command = new UseCaseType\Command(
             $this->getUser()->getId(),
-            $task->getId()->getValue()
+            $task->getId()->getValue(),
+            $security->getUser()->getAccount()
         );
 
         $command->type = $data['type'] ?? '';
@@ -761,7 +804,9 @@ class TasksController extends BaseController
     }
 
     #[Route('/{id}/priority', name: '.priority', methods: ['POST'])]
-    public function changePriority(Task $task, Request $request, UseCasePriority\Handler $handler): Response
+    public function changePriority(
+        Task $task,
+        Request $request, UseCasePriority\Handler $handler, Security $security,): Response
     {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
@@ -769,7 +814,8 @@ class TasksController extends BaseController
 
         $command = new UseCasePriority\Command(
             $this->getUser()->getId(),
-            $task->getId()->getValue()
+            $task->getId()->getValue(),
+            $security->getUser()->getAccount()
         );
         $command->priority = $data['priority'] ?? '';
 
@@ -788,14 +834,15 @@ class TasksController extends BaseController
     }
 
     #[Route('/{id}/progress', name: '.progress', methods: ['POST'])]
-    public function changeProgress(Task $task, Request $request, UseCaseProgress\Handler $handler): Response
+    public function changeProgress(Task $task, Request $request, UseCaseProgress\Handler $handler,Security $security,): Response
     {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
         $data = json_decode($request->getContent(), true);
         $command = new UseCaseProgress\Command(
             $this->getUser()->getId(),
-            $task->getId()->getValue()
+            $task->getId()->getValue(),
+            $security->getUser()->getAccount()
         );
 
         $command->progress = (int) ($data['progress'] ?? 0);
@@ -814,7 +861,6 @@ class TasksController extends BaseController
         }
     }
 
-
     private function mapMembers(array $list): array
     {
         $result = [];
@@ -829,5 +875,4 @@ class TasksController extends BaseController
 
         return $result;
     }
-
 }

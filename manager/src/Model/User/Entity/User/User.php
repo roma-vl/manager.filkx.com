@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\User\Entity\User;
 
+use App\Model\User\Entity\Account\Account;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -28,6 +29,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $date;
 
+    #[ORM\ManyToOne(targetEntity: Account::class)]
+    #[ORM\JoinColumn(name: 'account_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private Account $account;
+
+    #[ORM\Column(type: 'string', length: 10, nullable: false)]
+    private string $locale;
     #[ORM\Column(type: 'user_user_email', nullable: true)]
     private ?Email $email = null;
 
@@ -56,7 +63,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Role $role;
 
     /** @var Collection<int, Network> */
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Network::class, orphanRemoval: true, cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Network::class, mappedBy: 'user', cascade: ['persist'], orphanRemoval: true)]
     private Collection $networks;
 
     public function __construct(Id $id, \DateTimeImmutable $date, Name $name)
@@ -64,27 +71,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->id = $id;
         $this->date = $date;
         $this->name = $name;
+        //        $this->account = $account;
         $this->role = Role::user();
         $this->networks = new ArrayCollection();
     }
 
-    public static function create(Id $id, \DateTimeImmutable $date, Name $name, Email $email, string $hash): self
+    public static function create(Id $id, \DateTimeImmutable $date, Name $name, Email $email, string $hash, Account $account): self
     {
         $user = new self($id, $date, $name);
         $user->email = $email;
         $user->passwordHash = $hash;
         $user->status = self::STATUS_ACTIVE;
-
+        $user->account = $account;
+        $user->locale = $account->getLocale();
         return $user;
     }
 
-    public static function signUpByEmail(Id $id, \DateTimeImmutable $date, Name $name, Email $email, string $hash, string $token): self
+    public static function signUpByEmail(Id $id, \DateTimeImmutable $date, Name $name, Email $email, string $hash, string $token, Account $account): self
     {
         $user = new self($id, $date, $name);
+        $user->account = $account;
         $user->email = $email;
         $user->passwordHash = $hash;
         $user->confirmToken = $token;
         $user->status = self::STATUS_WAIT;
+        $user->locale = $account->getLocale();
 
         return $user;
     }
@@ -334,5 +345,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getPassword(): ?string
     {
         return $this->passwordHash;
+    }
+
+    public function getAccount(): Account
+    {
+        return $this->account;
+    }
+
+    public function setAccount(Account $account): void
+    {
+        $this->account = $account;
+    }
+
+    /**
+     * Ефективна мова: user.language ?? account.language.
+     */
+    public function getEffectiveLanguage(): string
+    {
+        return $this->language ?? $this->account->getLanguage();
+    }
+
+    public function setLanguage(?string $language): void
+    {
+        $this->language = $language;
     }
 }

@@ -1,4 +1,3 @@
-<!-- resources/js/Components/Work/Members/Groups/Tabs.vue -->
 <template>
   <div class="tabs">
     <Link
@@ -22,7 +21,7 @@
 </template>
 
 <script setup>
-import { Link } from '@inertiajs/inertia-vue3'
+  import { Link } from '@inertiajs/inertia-vue3'
 </script>
 
 <style scoped>

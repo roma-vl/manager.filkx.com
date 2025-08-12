@@ -1,25 +1,21 @@
 <script setup>
-const props = defineProps({
-  items: {
-    type: Array,
-    required: true,
-    default: () => [],
-  },
-})
+  const props = defineProps({
+    items: {
+      type: Array,
+      required: true,
+      default: () => [],
+    },
+  })
 </script>
 
 <template>
   <nav class="mb-6" aria-label="Breadcrumb">
-    <ol
-      class="flex flex-wrap items-center space-x-2 text-sm
-               text-gray-600 dark:text-gray-400"
-    >
+    <ol class="flex flex-wrap items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
       <li v-for="(item, index) in props.items" :key="index" class="flex items-center gap-2">
         <template v-if="index < items.length - 1">
           <a
             :href="item.href"
-            class="hover:text-indigo-600 dark:hover:text-indigo-400
-                   transition-colors font-medium"
+            class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors font-medium"
           >
             {{ item.label }}
           </a>
@@ -35,10 +31,7 @@ const props = defineProps({
           </svg>
         </template>
         <template v-else>
-          <span
-            class="font-semibold text-gray-900 dark:text-white"
-            aria-current="page"
-          >
+          <span class="font-semibold text-gray-900 dark:text-white" aria-current="page">
             {{ item.label }}
           </span>
         </template>

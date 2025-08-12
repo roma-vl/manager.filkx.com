@@ -11,6 +11,7 @@ use App\Model\Work\UseCase\Projects\Project\Create;
 use App\ReadModel\Work\Projects\Project\Filter;
 use App\ReadModel\Work\Projects\Project\ProjectFetcher;
 use App\Service\CommandFactory;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -19,7 +20,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/work/projects', name: 'work.projects')]
 class ProjectsController extends BaseController
 {
-    private const PER_PAGE = 50;
+    private const PER_PAGE = 10;
 
     public function __construct(
         private readonly ErrorHandler $errors,
@@ -31,6 +32,7 @@ class ProjectsController extends BaseController
         Request $request,
         ProjectFetcher $fetcher,
         InertiaService $inertia,
+        Security $security,
     ): Response {
         $filter = $this->isGranted('ROLE_WORK_MANAGE_PROJECTS')
             ? Filter\Filter::all()
@@ -38,7 +40,7 @@ class ProjectsController extends BaseController
 
         $filter->name = $request->query->get('name');
         $filter->status = $request->query->get('status');
-
+        $filter->account_id = $security->getUser()->getAccount()->getId()->getValue();
         $page = $request->query->getInt('page', 1);
         $sort = $request->query->get('sort', 'name');
         $direction = $request->query->get('direction', 'asc');
@@ -82,6 +84,7 @@ class ProjectsController extends BaseController
         Create\Handler $handler,
         InertiaService $inertia,
         CommandFactory $commandFactory,
+        Security $security,
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_WORK_MANAGE_PROJECTS');
         if ($request->isMethod('GET')) {
@@ -92,6 +95,7 @@ class ProjectsController extends BaseController
         }
 
         $command = new Create\Command();
+        $command->account = $security->getUser()->getAccount();
         $command->sort = $projects->getMaxSort() + 1;
 
         $errors = $commandFactory->createFromRequest($request, $command);

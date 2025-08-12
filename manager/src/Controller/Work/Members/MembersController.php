@@ -19,6 +19,7 @@ use App\ReadModel\Work\Members\GroupFetcher;
 use App\ReadModel\Work\Members\Member\Filter\Filter;
 use App\ReadModel\Work\Members\Member\MemberFetcher;
 use App\Service\CommandFactory;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -28,6 +29,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_WORK_MANAGE_MEMBERS')]
 class MembersController extends BaseController
 {
+    const PER_PAGE = 10;
+
     public function __construct(
         private readonly ErrorHandler $errors,
     ) {
@@ -49,23 +52,23 @@ class MembersController extends BaseController
         $pagination = $fetcher->all(
             $filter,
             $request->query->getInt('page', 1),
-            50,
+            self::PER_PAGE,
             $request->query->get('sort', 'name'),
             $request->query->get('direction', 'asc')
         );
 
         return $inertia->render($request, 'Work/Members/Members/Index', [
             'members' => array_map(fn ($member) => [
-                'id' => $member['id'],
+                'id' => $member['id']->getValue(),
                 'name' => $member['name'],
-                'email' => $member['email'],
+                'email' => $member['email']->getValue(),
                 'group' => $member['group'],
-                'status' => $member['status'],
+                'status' => $member['status']->getName(),
                 'memberships_count' => $member['memberships_count'] ?? 0,
             ], $pagination->getItems()),
             'pagination' => [
                 'currentPage' => $pagination->getCurrentPageNumber(),
-                'lastPage' => ceil($pagination->getTotalItemCount() / 50),
+                'lastPage' => ceil($pagination->getTotalItemCount() / self::PER_PAGE),
                 'total' => $pagination->getTotalItemCount(),
             ],
             'filters' => $request->query->all(),
@@ -88,6 +91,7 @@ class MembersController extends BaseController
         Create\Handler $handler,
         InertiaService $inertia,
         CommandFactory $commandFactory,
+        Security $security,
     ): Response {
         if ($fetcher->exists($user->getId()->getValue())) {
             $this->addFlash('error', 'Учасник уже існує.');
@@ -111,6 +115,7 @@ class MembersController extends BaseController
         $command->firstName = $user->getName()->getFirst();
         $command->lastName = $user->getName()->getLast();
         $command->email = $user->getEmail()?->getValue();
+        $command->account = $security->getUser()->getAccount();
 
         $errors = $commandFactory->createFromRequest($request, $command);
 

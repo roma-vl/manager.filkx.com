@@ -28,7 +28,7 @@ class Handler
         $actor = $this->members->get(new MemberId($command->actor));
         $task = $this->tasks->get(new Id($command->id));
 
-        $task->changeProgress($actor, new \DateTimeImmutable(), $command->progress);
+        $task->changeProgress($actor, new \DateTimeImmutable(), $command->progress, $command->account);
 
         $this->flusher->flush($task);
     }

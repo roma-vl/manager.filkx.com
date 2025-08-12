@@ -14,7 +14,7 @@ class ShowTest extends DbWebTestCase
     public function testAdmin(): void
     {
         $this->client->setServerParameters(AuthFixture::adminCredentials());
-        $this->client->request('GET', sprintf(self::URI, TaskFixture::TASK_IN_PROJECT_WITH_USER));
+        $this->client->request('GET', \sprintf(self::URI, TaskFixture::TASK_IN_PROJECT_WITH_USER));
 
         self::assertEquals(200, $this->client->getResponse()->getStatusCode());
         self::assertJson($content = $this->client->getResponse()->getContent());
@@ -29,7 +29,7 @@ class ShowTest extends DbWebTestCase
     public function testMember(): void
     {
         $this->client->setServerParameters(AuthFixture::userCredentials());
-        $this->client->request('GET', sprintf(self::URI, TaskFixture::TASK_IN_PROJECT_WITH_USER));
+        $this->client->request('GET', \sprintf(self::URI, TaskFixture::TASK_IN_PROJECT_WITH_USER));
 
         self::assertEquals(200, $this->client->getResponse()->getStatusCode());
         self::assertJson($content = $this->client->getResponse()->getContent());
@@ -44,7 +44,7 @@ class ShowTest extends DbWebTestCase
     public function testNotMember(): void
     {
         $this->client->setServerParameters(AuthFixture::userCredentials());
-        $this->client->request('GET', sprintf(self::URI, TaskFixture::TASK_IN_PROJECT_WITHOUT_USER));
+        $this->client->request('GET', \sprintf(self::URI, TaskFixture::TASK_IN_PROJECT_WITHOUT_USER));
 
         self::assertEquals(403, $this->client->getResponse()->getStatusCode());
     }

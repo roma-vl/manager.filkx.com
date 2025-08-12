@@ -2,14 +2,13 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title inertia>My Inertia App</title>
+    <title inertia></title>
     <meta name="csrf-token" content="{{ csrf_token('authenticate') }}">
 
     {% if app.debug %}
         <script type="module" src="http://localhost:5173/@vite/client"></script>
         <script type="module" src="http://localhost:5173/build/js/app.js"></script>
     {% else %}
-        {# В продакшні підключаємо скомпільовані файли #}
         {{ vite_entry_link_tags('app') }}
         {{ vite_entry_script_tags('app') }}
     {% endif %}

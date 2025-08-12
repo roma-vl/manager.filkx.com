@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Service;
 
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -23,8 +26,8 @@ class CentrifugoPublisher
             ],
             'json' => [
                 'channel' => $channel,
-                'data' => $data
-            ]
+                'data' => $data,
+            ],
         ]);
 
         if ($response->getStatusCode() !== 200) {

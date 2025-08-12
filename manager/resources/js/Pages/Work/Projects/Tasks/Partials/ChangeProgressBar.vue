@@ -1,60 +1,60 @@
 <script setup>
-import axios from 'axios'
-import { ref, watch, computed } from 'vue'
+  import axios from 'axios'
+  import { ref, watch, computed } from 'vue'
 
-const props = defineProps({
-  taskId: Number,
-  progress: {
-    type: Array,
-    default: () => [],
-  },
-  currentProgress: Number,
-})
+  const props = defineProps({
+    taskId: Number,
+    progress: {
+      type: Array,
+      default: () => [],
+    },
+    currentProgress: Number,
+  })
 
-const progress = ref(props.currentProgress ?? 0)
-const isSubmitting = ref(false)
-const isEditing = ref(false)
-const error = ref(null)
-const dragging = ref(false)
+  const progress = ref(props.currentProgress ?? 0)
+  const isSubmitting = ref(false)
+  const isEditing = ref(false)
+  const error = ref(null)
+  const dragging = ref(false)
 
-const onMouseUp = async () => {
-  if (!dragging.value) return
-  dragging.value = false
-  isSubmitting.value = true
-  error.value = null
+  const onMouseUp = async () => {
+    if (!dragging.value) return
+    dragging.value = false
+    isSubmitting.value = true
+    error.value = null
 
-  try {
-    await axios.post(`/work/projects/tasks/${props.taskId}/progress`, {
-      progress: progress.value,
-    })
-    isEditing.value = false
-  } catch (e) {
-    error.value = e.response?.data?.error ?? 'Unknown error'
-  } finally {
-    isSubmitting.value = false
+    try {
+      await axios.post(`/work/projects/tasks/${props.taskId}/progress`, {
+        progress: progress.value,
+      })
+      isEditing.value = false
+    } catch (e) {
+      error.value = e.response?.data?.error ?? 'Unknown error'
+    } finally {
+      isSubmitting.value = false
+    }
   }
-}
 
-const progressIds = computed(() => props.progress.map(p => p.id))
-const min = computed(() => Math.min(...progressIds.value))
-const max = computed(() => Math.max(...progressIds.value))
-const step = computed(() => {
-  if (progressIds.value.length < 2) return 1
-  return progressIds.value[1] - progressIds.value[0]
-})
+  const progressIds = computed(() => props.progress.map(p => p.id))
+  const min = computed(() => Math.min(...progressIds.value))
+  const max = computed(() => Math.max(...progressIds.value))
+  const step = computed(() => {
+    if (progressIds.value.length < 2) return 1
+    return progressIds.value[1] - progressIds.value[0]
+  })
 
-watch(
-  () => props.currentProgress,
-  val => {
-    progress.value = val
-  },
-)
+  watch(
+    () => props.currentProgress,
+    val => {
+      progress.value = val
+    }
+  )
 
-const startEdit = () => {
-  if (!isEditing.value) {
-    isEditing.value = true
+  const startEdit = () => {
+    if (!isEditing.value) {
+      isEditing.value = true
+    }
   }
-}
 </script>
 
 <template>

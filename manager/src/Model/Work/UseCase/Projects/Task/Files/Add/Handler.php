@@ -38,7 +38,8 @@ class Handler
                     $file->path,
                     $file->name,
                     $file->size
-                )
+                ),
+                $command->account
             );
         }
 

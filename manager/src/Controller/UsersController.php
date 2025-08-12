@@ -19,6 +19,7 @@ use App\ReadModel\User\Filter;
 use App\ReadModel\User\UserFetcher;
 use App\ReadModel\Work\Members\Member\MemberFetcher;
 use App\Service\CommandFactory;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -53,16 +54,17 @@ class UsersController extends BaseController
             $request->query->get('direction', 'desc')
         );
 
+        $users = array_map(fn ($user) => [
+            'id' => $user['id']->getValue(),
+            'name' => $user['name'],
+            'email' => $user['email']?->getValue(),
+            'role' => $user['role']?->getName(),
+            'status' => $user['status'],
+            'date' => $user['date']?->format('Y-m-d'),
+        ], $pagination->getItems());
+
         return $inertia->render($request, 'Users/Index', [
-            'users' => array_map(fn ($user) => [
-                'id' => $user['id'],
-                'name' => $user['name'],
-                'email' => $user['email'],
-                'role' => $user['role'],
-                'status' => $user['status'],
-                'date' => (new \DateTimeImmutable($user['date']))->format('Y-m-d'),
-            ],
-                $pagination->getItems()),
+            'users' => $users,
             'pagination' => [
                 'currentPage' => $pagination->getCurrentPageNumber(),
                 'lastPage' => ceil($pagination->getTotalItemCount() / self::PER_PAGE),
@@ -80,12 +82,14 @@ class UsersController extends BaseController
         Create\Handler $handler,
         InertiaService $inertia,
         CommandFactory $commandFactory,
+        Security $security,
     ): Response {
         if ($request->isMethod('GET')) {
             return $inertia->render($request, 'Users/Create');
         }
 
         $command = new Create\Command();
+        $command->account = $security->getUser()->getAccount();
         $errors = $commandFactory->createFromRequest($request, $command);
 
         if ($errors) {
@@ -264,7 +268,7 @@ class UsersController extends BaseController
             array_merge(
                 $this->userShowPropsProvider->getProps(['userId' => $user->getId()->getValue()]),
                 ['member' => $member],
-                [ 'user' => [
+                ['user' => [
                     'id' => $user->getId()->getValue(),
                     'full_name' => $user->getName()->getFull(),
                     'email' => $user->getEmail()?->getValue(),
@@ -275,7 +279,7 @@ class UsersController extends BaseController
                         'network' => $n->getNetwork(),
                         'identity' => $n->getIdentity(),
                     ], $user->getNetworks()),
-                ],],
+                ], ],
             )
         );
     }

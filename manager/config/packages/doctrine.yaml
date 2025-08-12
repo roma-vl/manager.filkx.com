@@ -12,6 +12,7 @@ doctrine:
             user_user_id: App\Model\User\Entity\User\IdType
             user_user_email: App\Model\User\Entity\User\EmailType
             user_user_role: App\Model\User\Entity\User\RoleType
+            user_account_id: App\Model\User\Entity\Account\IdType
             work_members_group_id: App\Model\Work\Entity\Members\Group\IdType
             work_members_member_id: App\Model\Work\Entity\Members\Member\IdType
             work_members_member_email: App\Model\Work\Entity\Members\Member\EmailType
@@ -37,7 +38,16 @@ doctrine:
         identity_generation_preferences:
             Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
         auto_mapping: true
+        filters:
+            account_filter:
+                class: App\Tenant\Doctrine\AccountFilter
+                enabled: true
         mappings:
+            Account:
+                is_bundle: false
+                type: attribute
+                dir: '%kernel.project_dir%/src/Model/User/Entity/Account'
+                prefix: 'App\Model\User\Entity\Account'
             User:
                 type: attribute
                 is_bundle: false

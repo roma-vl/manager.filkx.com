@@ -10,6 +10,7 @@ use App\ReadModel\Work\Projects\Calendar\CalendarFetcher;
 use App\ReadModel\Work\Projects\Calendar\Query\Query;
 use App\Security\Voter\Work\Projects\ProjectAccess;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,13 +26,14 @@ class CalendarController extends AbstractController
     }
 
     #[Route('', name: '', methods: ['GET'])]
-    public function index(Project $project, Request $request): Response|JsonResponse
+    public function index(Project $project, Request $request, Security $security,): Response|JsonResponse
     {
         $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
 
         $now = new \DateTimeImmutable();
         $query = Query::fromDate($now)->forProject($project->getId()->getValue());
 
+        $query->account = $security->getUser()->getAccount();
         $query->year = (int) $request->query->get('year', $query->year);
         $query->month = (int) $request->query->get('month', $query->month);
 
