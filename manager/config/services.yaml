@@ -5,6 +5,8 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     app.url: '%env(APP_URL)%'
+    upload_local_root: '%kernel.project_dir%/public/uploads'
+    upload_base_url: '/uploads'
 
 services:
     # default configuration for services in *this* file
@@ -49,6 +51,7 @@ services:
         arguments:
             $storage: '@League\Flysystem\FilesystemOperator $defaultStorage'
             $baseUrl: '%env(STORAGE_BASE_URL)%'
+            $localRoot: '%upload_local_root%'
 #
 #    phpcent\Client:
 #        factory: [ 'App\Service\PhpCentFactory', 'create' ]

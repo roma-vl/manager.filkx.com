@@ -13,11 +13,13 @@ class FileUploader
 {
     private FilesystemOperator $storage;
     private string $baseUrl;
+    private string $localRoot;
 
-    public function __construct(FilesystemOperator $storage, string $baseUrl)
+    public function __construct(FilesystemOperator $storage, string $baseUrl, string $localRoot)
     {
         $this->storage = $storage;
-        $this->baseUrl = $baseUrl;
+        $this->baseUrl = rtrim($baseUrl, '/');
+        $this->localRoot = rtrim($localRoot, '/');
     }
 
     /**
@@ -28,9 +30,17 @@ class FileUploader
         $path = date('Y/m/d');
         $name = Uuid::uuid4()->toString() . '.' . $file->getClientOriginalExtension();
 
-        //        $this->storage->createDir($path);
-        $stream = fopen($file->getRealPath(), 'rb+');
-        $this->storage->writeStream($path . '/' . $name, $stream);
+        if (!is_dir($this->localRoot . '/' . $path)) {
+            $this->storage->createDirectory($path, ['visibility' => 'public']);
+            @chmod($this->localRoot . '/' . $path, 0775);
+        }
+
+        $stream = fopen($file->getRealPath(), 'rb');
+        $this->storage->writeStream(
+            $path . '/' . $name,
+            $stream,
+            ['visibility' => 'public']
+        );
         fclose($stream);
 
         return new File($path, $name, $file->getSize());
@@ -38,7 +48,7 @@ class FileUploader
 
     public function generateUrl(string $path): string
     {
-        return $this->baseUrl . '/' . $path;
+        return $this->baseUrl . '/' . ltrim($path, '/');
     }
 
     public function remove(string $path, string $name): void
