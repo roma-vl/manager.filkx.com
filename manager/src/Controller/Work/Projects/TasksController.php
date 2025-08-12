@@ -210,7 +210,7 @@ class TasksController extends BaseController
 
         $command->name = $data['name'] ?? [];
         $command->content = $data['content'] ?? null;
-//        $command->account = $security->getUser()->getAccount();
+        $command->account = $security->getUser()->getAccount();
 
         try {
             $handler->handle($command);

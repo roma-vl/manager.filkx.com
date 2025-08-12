@@ -20,7 +20,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/work/projects', name: 'work.projects')]
 class ProjectsController extends BaseController
 {
-    private const PER_PAGE = 50;
+    private const PER_PAGE = 10;
 
     public function __construct(
         private readonly ErrorHandler $errors,

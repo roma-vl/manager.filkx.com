@@ -29,7 +29,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_MANAGE_USERS')]
 class UsersController extends BaseController
 {
-    private const PER_PAGE = 2;
+    private const PER_PAGE = 10;
 
     public function __construct(
         private readonly UserPropsProvider $userPropsProvider,

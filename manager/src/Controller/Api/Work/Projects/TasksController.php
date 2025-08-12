@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[OA\Tag(name: 'Work Task')]
 class TasksController extends AbstractController
 {
-    private const PER_PAGE = 50;
+    private const PER_PAGE = 10;
 
     public function __construct(
         private readonly SerializerInterface $serializer,

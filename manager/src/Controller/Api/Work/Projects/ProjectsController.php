@@ -79,7 +79,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 #[Route('/api/work/projects', name: 'api.work.projects', methods: ['GET'])]
 class ProjectsController extends AbstractController
 {
-    private const PER_PAGE = 50;
+    private const PER_PAGE = 10;
 
     public function __construct(
         private DenormalizerInterface $denormalizer,
