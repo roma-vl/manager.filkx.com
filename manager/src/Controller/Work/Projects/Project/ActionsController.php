@@ -10,6 +10,7 @@ use App\ReadModel\Work\Projects\Action\ActionFetcher;
 use App\ReadModel\Work\Projects\Action\Filter;
 use App\Security\Voter\Work\Projects\ProjectAccess;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/work/projects/{id}/actions', name: 'work.projects.project.actions')]
 class ActionsController extends AbstractController
 {
-    private const PER_PAGE = 50;
+    private const PER_PAGE = 10;
 
     private $actions;
 
@@ -27,16 +28,17 @@ class ActionsController extends AbstractController
     }
 
     #[Route('', name: '', methods: ['GET'])]
-    public function index(Project $project, Request $request, InertiaService $inertia): Response
+    public function index(Project $project, Request $request, InertiaService $inertia , Security $security): Response
     {
         $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
 
         $filter = Filter::forProject($project->getId()->getValue());
+        $filter->account_id = $security->getUser()->getAccount()->getId()->getValue();
 
         $pagination = $this->actions->all(
             $filter,
             $request->query->getInt('page', 1),
-            self::PER_PAGE
+            self::PER_PAGE,
         );
 
         return $inertia->render($request, 'Work/Projects/Project/Actions', [

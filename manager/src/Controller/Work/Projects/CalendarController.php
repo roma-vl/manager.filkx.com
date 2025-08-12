@@ -8,6 +8,7 @@ use App\Controller\BaseController;
 use App\Infrastructure\Inertia\InertiaService;
 use App\ReadModel\Work\Projects\Calendar\CalendarFetcher;
 use App\ReadModel\Work\Projects\Calendar\Query\Query;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +24,10 @@ class CalendarController extends BaseController
     }
 
     #[Route('', name: '', methods: ['GET'])]
-    public function index(Request $request): Response|JsonResponse
+    public function index(
+        Request $request,
+        Security $security,
+    ): Response|JsonResponse
     {
         $now = new \DateTimeImmutable();
 
@@ -33,6 +37,7 @@ class CalendarController extends BaseController
             $query = Query::fromDate($now)->forMember($this->getUser()->getId());
         }
 
+        $query->account = $security->getUser()->getAccount();
         $query->year = (int) $request->query->get('year', $query->year);
         $query->month = (int) $request->query->get('month', $query->month);
 

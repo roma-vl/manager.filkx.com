@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\ReadModel\Work\Projects\Calendar\Query;
 
+use App\Model\User\Entity\Account\Account;
+
 class Query
 {
     public $member;
     public $project;
-    public $year;
-    public $month;
+    public Account $account;
+    public int $year;
+    public int $month;
 
     public function __construct(int $year, int $month)
     {
