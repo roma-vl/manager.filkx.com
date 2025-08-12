@@ -25,6 +25,11 @@ class ActionFetcher
     {
         $qb = $this->createQb();
 
+        if ($filter->account_id) {
+            $qb->andWhere('c.account_id = :account_id');
+            $qb->setParameter('account_id', $filter->account_id);
+        }
+
         if ($filter->member) {
             $qb->innerJoin('project', 'work_projects_project_memberships', 'membership', 'project.id = memberships.project_id');
             $qb->andWhere('membership.member_id = :member');

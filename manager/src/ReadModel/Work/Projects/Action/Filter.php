@@ -8,6 +8,7 @@ class Filter
 {
     public $member;
     public ?string $project;
+    public string $account_id;
 
     private function __construct(?string $project)
     {
