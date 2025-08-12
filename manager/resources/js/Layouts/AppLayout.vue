@@ -1,76 +1,76 @@
 <script setup>
-  import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-  import { Head, Link, usePage } from '@inertiajs/inertia-vue3'
-  import SearchBar from '../Components/SearchBar.vue'
-  import NavItem from '../Components/NavItem.vue'
-  import UserDropdown2 from '../Components/UserDropdown2.vue'
-  import DarkModeToggle from '../Components/DarkModeToggle.vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { Link, usePage } from '@inertiajs/inertia-vue3'
+import SearchBar from '../Components/SearchBar.vue'
+import NavItem from '../Components/NavItem.vue'
+import UserDropdown2 from '../Components/UserDropdown2.vue'
+import DarkModeToggle from '../Components/DarkModeToggle.vue'
 
-  const page = usePage()
-  const sidebarOpen = ref(window.innerWidth >= 1024)
-  const flash = computed(() => page.props.value.flash || {})
-  const roles = page.props.value.auth.roles
-  const canManageUsers = roles?.includes('ROLE_MANAGE_USERS')
-  const showFlash = ref(false)
-  import { useCentrifugo } from '@/services/useCentrifugo.js'
-  import { toast } from 'vue3-toastify'
+const page = usePage()
+const sidebarOpen = ref(window.innerWidth >= 1024)
+const flash = computed(() => page.props.value.flash || {})
+const roles = page.props.value.auth.roles
+const canManageUsers = roles?.includes('ROLE_MANAGE_USERS')
+const showFlash = ref(false)
+import { useCentrifugo } from '@/services/useCentrifugo.js'
+import { toast } from 'vue3-toastify'
 
-  const { init, subscribe, unsubscribe, disconnect } = useCentrifugo()
+const { init, subscribe, unsubscribe, disconnect } = useCentrifugo()
 
-  const privateMessages = ref([])
-  const userId = page.props.value.auth.user.id
-  onMounted(async () => {
-    await init()
+const privateMessages = ref([])
+const userId = page.props.value.auth.user.id
+onMounted(async () => {
+  await init()
 
-    subscribe('chat:general', {
-      publication(ctx) {
-        toast.info(ctx.data.text)
-      },
-    })
-
-    subscribe(`user:${userId}`, {
-      publication(ctx) {
-        privateMessages.value.push(ctx.data)
-        toast.info(ctx.data.text)
-      },
-    })
-  })
-
-  onBeforeUnmount(() => {
-    unsubscribe('chat:general')
-    unsubscribe(`user:${userId}`)
-    disconnect()
-  })
-
-  watch(
-    flash,
-    newVal => {
-      if (newVal.error || newVal.success) {
-        showFlash.value = true
-        setTimeout(() => (showFlash.value = false), 5000)
-      }
+  subscribe('chat:general', {
+    publication(ctx) {
+      toast.info(ctx.data.text)
     },
-    {}
-  )
-  onMounted(() => {
-    if (flash.value.success || flash.value.error) {
+  })
+
+  subscribe(`user:${userId}`, {
+    publication(ctx) {
+      privateMessages.value.push(ctx.data)
+      toast.info(ctx.data.text)
+    },
+  })
+})
+
+onBeforeUnmount(() => {
+  unsubscribe('chat:general')
+  unsubscribe(`user:${userId}`)
+  disconnect()
+})
+
+watch(
+  flash,
+  newVal => {
+    if (newVal.error || newVal.success) {
       showFlash.value = true
       setTimeout(() => (showFlash.value = false), 5000)
     }
-  })
-
-  const toggleSidebar = () => {
-    sidebarOpen.value = !sidebarOpen.value
+  },
+  {},
+)
+onMounted(() => {
+  if (flash.value.success || flash.value.error) {
+    showFlash.value = true
+    setTimeout(() => (showFlash.value = false), 5000)
   }
+})
 
-  watch(
-    () => page.url,
-    () => {
-      if (window.innerWidth < 1024) {
-        sidebarOpen.value = false
-      }
+const toggleSidebar = () => {
+  sidebarOpen.value = !sidebarOpen.value
+}
+
+watch(
+  () => page.url,
+  () => {
+    if (window.innerWidth < 1024) {
+      sidebarOpen.value = false
     }
-  )
+  },
+)
 </script>
 
 <template>

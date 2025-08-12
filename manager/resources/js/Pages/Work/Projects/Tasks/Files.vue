@@ -1,38 +1,38 @@
 <script setup>
-  import { ref } from 'vue'
-  import axios from 'axios'
-  import { Link } from '@inertiajs/inertia-vue3'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import { ref } from 'vue'
+import axios from 'axios'
+import { Link } from '@inertiajs/inertia-vue3'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  const props = defineProps({
-    task: Object,
-  })
+const props = defineProps({
+  task: Object,
+})
 
-  const isUploading = ref(false)
-  const errors = ref(null)
+const isUploading = ref(false)
+const errors = ref(null)
 
-  const uploadFiles = async e => {
-    const formData = new FormData()
-    for (const file of e.target.files) {
-      formData.append('files[]', file) // ключ "files" без []
-    }
-
-    isUploading.value = true
-    errors.value = null
-
-    try {
-      await axios.post(`/work/projects/tasks/${props.task.id}/files`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-    } catch (error) {
-      errors.value = error.response?.data?.error || 'Upload failed'
-    } finally {
-      isUploading.value = false
-    }
+const uploadFiles = async e => {
+  const formData = new FormData()
+  for (const file of e.target.files) {
+    formData.append('files[]', file) // ключ "files" без []
   }
+
+  isUploading.value = true
+  errors.value = null
+
+  try {
+    await axios.post(`/work/projects/tasks/${props.task.id}/files`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+  } catch (error) {
+    errors.value = error.response?.data?.error || 'Upload failed'
+  } finally {
+    isUploading.value = false
+  }
+}
 </script>
 
 <template>

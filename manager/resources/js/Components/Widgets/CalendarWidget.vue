@@ -1,28 +1,28 @@
 <script setup>
-  import { ref, onMounted } from 'vue'
-  import axios from 'axios'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
 
-  const dates = ref([])
-  const now = ref('')
-  const items = ref([])
+const dates = ref([])
+const now = ref('')
+const items = ref([])
 
-  onMounted(async () => {
-    const { data } = await axios.get('/api/widgets/work/projects/calendar')
-    dates.value = data.dates
-    now.value = data.now
-    items.value = data.items
-  })
+onMounted(async () => {
+  const { data } = await axios.get('/api/widgets/work/projects/calendar')
+  dates.value = data.dates
+  now.value = data.now
+  items.value = data.items
+})
 
-  function iconsForItem(item, date) {
-    const icons = []
+function iconsForItem(item, date) {
+  const icons = []
 
-    if (item.date === date) icons.push({ icon: '➕', title: 'Create' })
-    if (item.plan_date === date) icons.push({ icon: '📅', title: 'Plan' })
-    if (item.start_date === date) icons.push({ icon: '▶️', title: 'Start' })
-    if (item.end_date === date) icons.push({ icon: '⏹️', title: 'End' })
+  if (item.date === date) icons.push({ icon: '➕', title: 'Create' })
+  if (item.plan_date === date) icons.push({ icon: '📅', title: 'Plan' })
+  if (item.start_date === date) icons.push({ icon: '▶️', title: 'Start' })
+  if (item.end_date === date) icons.push({ icon: '⏹️', title: 'End' })
 
-    return icons
-  }
+  return icons
+}
 </script>
 
 <template>

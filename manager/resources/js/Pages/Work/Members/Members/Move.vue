@@ -1,45 +1,44 @@
 <script setup>
-  import { ref } from 'vue'
-  import axios from 'axios'
-  import { Head } from '@inertiajs/inertia-vue3'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import InputError from '@/Components/InputError.vue'
-  import SelectInput from '@/Components/SelectInput.vue'
-  import SecondaryButton from '@/Components/SecondaryButton.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import { ref } from 'vue'
+import axios from 'axios'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import InputError from '@/Components/InputError.vue'
+import SelectInput from '@/Components/SelectInput.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  const props = defineProps({
-    member: Object,
-    groups: Object, // { id: name }
-  })
+const props = defineProps({
+  member: Object,
+  groups: Object, // { id: name }
+})
 
-  const group = ref(props.member.group_id || '')
-  const errors = ref({})
-  const loading = ref(false)
+const group = ref(props.member.group_id || '')
+const errors = ref({})
+const loading = ref(false)
 
-  async function submit() {
-    loading.value = true
-    errors.value = {}
+async function submit() {
+  loading.value = true
+  errors.value = {}
 
-    try {
-      await axios.post(`/work/members/${props.member.id}/move`, {
-        group: group.value,
-      })
+  try {
+    await axios.post(`/work/members/${props.member.id}/move`, {
+      group: group.value,
+    })
 
-      window.location.href = `/work/members/${props.member.id}`
-    } catch (error) {
-      if (error.response?.status === 422) {
-        errors.value = error.response.data.errors || {}
-      } else {
-        alert('Unexpected error occurred.')
-        console.error(error)
-      }
-    } finally {
-      loading.value = false
+    window.location.href = `/work/members/${props.member.id}`
+  } catch (error) {
+    if (error.response?.status === 422) {
+      errors.value = error.response.data.errors || {}
+    } else {
+      alert('Unexpected error occurred.')
+      console.error(error)
     }
+  } finally {
+    loading.value = false
   }
+}
 </script>
 
 <template>

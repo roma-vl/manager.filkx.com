@@ -16,32 +16,32 @@
 </template>
 
 <script setup>
-  import { computed } from 'vue'
-  import { Link } from '@inertiajs/inertia-vue3'
+import { computed } from 'vue'
+import { Link } from '@inertiajs/inertia-vue3'
 
-  const props = defineProps({
-    to: {
-      type: String,
-      required: true,
-    },
-    icon: {
-      type: String,
-      default: 'folder',
-    },
-    active: {
-      type: Boolean,
-      default: false,
-    },
-  })
+const props = defineProps({
+  to: {
+    type: String,
+    required: true,
+  },
+  icon: {
+    type: String,
+    default: 'folder',
+  },
+  active: {
+    type: Boolean,
+    default: false,
+  },
+})
 
-  const iconComponent = computed(() => {
-    const icons = {
-      dashboard: 'DashboardIcon',
-      folder: 'FolderIcon',
-      'check-circle': 'CheckCircleIcon',
-      users: 'UsersIcon',
-      cog: 'CogIcon',
-    }
-    return icons[props.icon] || 'FolderIcon'
-  })
+const iconComponent = computed(() => {
+  const icons = {
+    dashboard: 'DashboardIcon',
+    folder: 'FolderIcon',
+    'check-circle': 'CheckCircleIcon',
+    users: 'UsersIcon',
+    cog: 'CogIcon',
+  }
+  return icons[props.icon] || 'FolderIcon'
+})
 </script>

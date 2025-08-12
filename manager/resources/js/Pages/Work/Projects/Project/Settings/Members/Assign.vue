@@ -1,38 +1,38 @@
 <script setup>
-  import { computed } from 'vue'
-  import { useForm } from '@inertiajs/inertia-vue3'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import SecondaryButton from '@/Components/SecondaryButton.vue'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import { computed } from 'vue'
+import { useForm } from '@inertiajs/inertia-vue3'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  const props = defineProps({
-    project: Object,
-    roles: Object,
-    departments: Object,
-    members: Object,
-  })
+const props = defineProps({
+  project: Object,
+  roles: Object,
+  departments: Object,
+  members: Object,
+})
 
-  const form = useForm({
-    member: '',
-    departments: [],
-    roles: [],
-  })
+const form = useForm({
+  member: '',
+  departments: [],
+  roles: [],
+})
 
-  const groupedMembers = computed(() => {
-    const groups = {}
-    for (const member of props.members) {
-      if (!groups[member.group]) groups[member.group] = []
-      groups[member.group].push(member)
-    }
-    return Object.entries(groups).map(([label, members]) => ({ label, members }))
-  })
-
-  const submit = () => {
-    form.post(`/work/projects/${props.project.id}/settings/members/assign`, {
-      preserveScroll: true,
-    })
+const groupedMembers = computed(() => {
+  const groups = {}
+  for (const member of props.members) {
+    if (!groups[member.group]) groups[member.group] = []
+    groups[member.group].push(member)
   }
+  return Object.entries(groups).map(([label, members]) => ({ label, members }))
+})
+
+const submit = () => {
+  form.post(`/work/projects/${props.project.id}/settings/members/assign`, {
+    preserveScroll: true,
+  })
+}
 </script>
 
 <template>

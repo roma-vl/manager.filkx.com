@@ -45,10 +45,10 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
-  import { Link } from '@inertiajs/inertia-vue3'
+import { ref } from 'vue'
+import { Link } from '@inertiajs/inertia-vue3'
 
-  const open = ref(false)
+const open = ref(false)
 </script>
 
 <style>

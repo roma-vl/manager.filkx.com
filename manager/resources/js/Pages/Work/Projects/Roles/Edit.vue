@@ -1,27 +1,27 @@
 <script setup>
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import { useForm } from '@inertiajs/inertia-vue3'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import { useForm } from '@inertiajs/inertia-vue3'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
 
-  const props = defineProps({
-    role: Object,
-    permissions: Array,
-    errors: Object,
-  })
+const props = defineProps({
+  role: Object,
+  permissions: Array,
+  errors: Object,
+})
 
-  const form = useForm({
-    name: props.role.name,
-    permissions: props.role.permissions,
-  })
+const form = useForm({
+  name: props.role.name,
+  permissions: props.role.permissions,
+})
 
-  if (props.errors) {
-    form.setError(props.errors)
-  }
+if (props.errors) {
+  form.setError(props.errors)
+}
 
-  function submit() {
-    form.post(`/work/projects/roles/${props.role.id}/edit`)
-  }
+function submit() {
+  form.post(`/work/projects/roles/${props.role.id}/edit`)
+}
 </script>
 
 <template>

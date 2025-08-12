@@ -1,47 +1,47 @@
 <script setup>
-  import { reactive, ref } from 'vue'
-  import { useRouter } from 'vue-router'
-  import { Inertia } from '@inertiajs/inertia'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { Inertia } from '@inertiajs/inertia'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  const props = defineProps({
-    task: Object,
-    types: Array,
-    priorities: Array,
-  })
+const props = defineProps({
+  task: Object,
+  types: Array,
+  priorities: Array,
+})
 
-  const router = useRouter()
-  const error = ref(null)
+const router = useRouter()
+const error = ref(null)
 
-  const form = reactive({
-    name: props.task.name,
-    content: props.task.content ?? '',
-  })
+const form = reactive({
+  name: props.task.name,
+  content: props.task.content ?? '',
+})
 
-  function submit() {
-    error.value = null
+function submit() {
+  error.value = null
 
-    Inertia.post(
-      `/work/projects/tasks/${props.task.id}/edit`,
-      {
-        name: form.name,
-        content: form.content,
+  Inertia.post(
+    `/work/projects/tasks/${props.task.id}/edit`,
+    {
+      name: form.name,
+      content: form.content,
+    },
+    {
+      onSuccess: () => {
+        router.push({
+          name: 'work.projects.project.tasks',
+          params: { project_id: props.project.id },
+        })
       },
-      {
-        onSuccess: () => {
-          router.push({
-            name: 'work.projects.project.tasks',
-            params: { project_id: props.project.id },
-          })
-        },
-        onError: errors => {
-          error.value = errors.error || 'Сталася помилка'
-        },
-      }
-    )
-  }
+      onError: errors => {
+        error.value = errors.error || 'Сталася помилка'
+      },
+    },
+  )
+}
 </script>
 
 <template>
@@ -63,9 +63,7 @@
       @submit.prevent="submit"
     >
       <div>
-        <label class="block mb-1 text-sm font-medium text-indigo-300"
-          >Назви задач (назви можуть бути декілька):</label
-        >
+        <label class="block mb-1 text-sm font-medium text-indigo-300">Назви задач (назви можуть бути декілька):</label>
         <!--                <div v-for="(name, index) in form.names" :key="index" class="flex items-center space-x-2 mb-2">-->
         <input
           v-model="form.name"

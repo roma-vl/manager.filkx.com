@@ -1,42 +1,42 @@
 <script setup>
-  import { Head, Link } from '@inertiajs/inertia-vue3'
-  import Tabs from '@/Components/Work/Members/Groups/Tabs.vue'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import { CheckCircleIcon, BanIcon } from 'lucide-vue-next'
-  import axios from 'axios'
-  import { statusBadgeClass } from '../../../../Helpers/helpers.js'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import { Link } from '@inertiajs/inertia-vue3'
+import Tabs from '@/Components/Work/Members/Groups/Tabs.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import { CheckCircleIcon, BanIcon } from 'lucide-vue-next'
+import axios from 'axios'
+import { statusBadgeClass } from '@/Helpers/helpers.js'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  const props = defineProps({
-    member: Object,
-    departments: Array,
-    currentUserId: String,
-  })
+const props = defineProps({
+  member: Object,
+  departments: Array,
+  currentUserId: String,
+})
 
-  async function archive() {
-    if (!confirm('Are you sure you want to archive this member?')) return
+async function archive() {
+  if (!confirm('Are you sure you want to archive this member?')) return
 
-    try {
-      await axios.post(`/work/members/${props.member.id}/archive`)
-      window.location.reload()
-    } catch (e) {
-      alert('Failed to archive member.')
-      console.error(e)
-    }
+  try {
+    await axios.post(`/work/members/${props.member.id}/archive`)
+    window.location.reload()
+  } catch (e) {
+    alert('Failed to archive member.')
+    console.error(e)
   }
+}
 
-  async function reinstate() {
-    if (!confirm('Are you sure you want to reinstate this member?')) return
+async function reinstate() {
+  if (!confirm('Are you sure you want to reinstate this member?')) return
 
-    try {
-      await axios.post(`/work/members/${props.member.id}/reinstate`)
-      window.location.reload()
-    } catch (e) {
-      alert('Failed to reinstate member.')
-      console.error(e)
-    }
+  try {
+    await axios.post(`/work/members/${props.member.id}/reinstate`)
+    window.location.reload()
+  } catch (e) {
+    alert('Failed to reinstate member.')
+    console.error(e)
   }
+}
 </script>
 <template>
   <AppLayout>

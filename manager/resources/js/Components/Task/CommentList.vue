@@ -1,58 +1,58 @@
 <script setup>
-  import { ref, computed } from 'vue'
-  import { useForm } from '@inertiajs/inertia-vue3'
-  import MarkdownRenderer from '@/Components/ui/MarkdownRenderer.vue'
-  import { formatUtcDate } from '@/Helpers/helpers.js'
+import { ref, computed } from 'vue'
+import { useForm } from '@inertiajs/inertia-vue3'
+import MarkdownRenderer from '@/Components/ui/MarkdownRenderer.vue'
+import { formatUtcDate } from '@/Helpers/helpers.js'
 
-  const props = defineProps({
-    comments: {
-      type: [Array, Object],
-      required: true,
+const props = defineProps({
+  comments: {
+    type: [Array, Object],
+    required: true,
+  },
+  taskId: [String, Number],
+})
+
+const normalizedComments = computed(() => {
+  if (Array.isArray(props.comments)) return props.comments
+  else if (props.comments && typeof props.comments === 'object') return [props.comments]
+  else return []
+})
+
+const editingId = ref(null)
+const editForm = useForm({ text: '' })
+
+function startEditComment(comment) {
+  editingId.value = comment.id
+  editForm.text = comment.text_raw
+}
+
+function cancelEdit() {
+  editingId.value = null
+  editForm.reset()
+}
+
+function saveEdit(commentId) {
+  editForm.put(`/work/projects/tasks/${props.taskId}/comments/${commentId}/edit`, {
+    preserveScroll: true,
+    onSuccess: () => {
+      const idx = normalizedComments.value.findIndex(c => c.id === commentId)
+      if (idx !== -1) normalizedComments.value[idx].text = editForm.text
+      editingId.value = null
     },
-    taskId: [String, Number],
   })
+}
 
-  const normalizedComments = computed(() => {
-    if (Array.isArray(props.comments)) return props.comments
-    else if (props.comments && typeof props.comments === 'object') return [props.comments]
-    else return []
-  })
-
-  const editingId = ref(null)
-  const editForm = useForm({ text: '' })
-
-  function startEditComment(comment) {
-    editingId.value = comment.id
-    editForm.text = comment.text_raw
-  }
-
-  function cancelEdit() {
-    editingId.value = null
-    editForm.reset()
-  }
-
-  function saveEdit(commentId) {
-    editForm.put(`/work/projects/tasks/${props.taskId}/comments/${commentId}/edit`, {
+function deleteComment(id) {
+  if (confirm('Видалити коментар?')) {
+    editForm.post(`/work/projects/tasks/${props.taskId}/comments/${id}/delete`, {
       preserveScroll: true,
       onSuccess: () => {
-        const idx = normalizedComments.value.findIndex(c => c.id === commentId)
-        if (idx !== -1) normalizedComments.value[idx].text = editForm.text
-        editingId.value = null
+        const index = normalizedComments.value.findIndex(comment => comment.id === id)
+        if (index !== -1) normalizedComments.value.splice(index, 1)
       },
     })
   }
-
-  function deleteComment(id) {
-    if (confirm('Видалити коментар?')) {
-      editForm.post(`/work/projects/tasks/${props.taskId}/comments/${id}/delete`, {
-        preserveScroll: true,
-        onSuccess: () => {
-          const index = normalizedComments.value.findIndex(comment => comment.id === id)
-          if (index !== -1) normalizedComments.value.splice(index, 1)
-        },
-      })
-    }
-  }
+}
 </script>
 
 <template>

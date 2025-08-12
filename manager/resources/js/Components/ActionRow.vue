@@ -1,35 +1,35 @@
 <script setup>
-  const props = defineProps({
-    action: Object,
-  })
+const props = defineProps({
+  action: Object,
+})
 
-  function taskPriority(priority) {
-    const map = {
-      1: 'Low',
-      2: 'Normal',
-      3: 'High',
-    }
-    return map[priority] ?? `Unknown (${priority})`
+function taskPriority(priority) {
+  const map = {
+    1: 'Low',
+    2: 'Normal',
+    3: 'High',
   }
+  return map[priority] ?? `Unknown (${priority})`
+}
 
-  function taskStatus(status) {
-    const map = {
-      new: 'New',
-      in_progress: 'In Progress',
-      completed: 'Completed',
-      failed: 'Failed',
-    }
-    return map[status] ?? status
+function taskStatus(status) {
+  const map = {
+    new: 'New',
+    in_progress: 'In Progress',
+    completed: 'Completed',
+    failed: 'Failed',
   }
+  return map[status] ?? status
+}
 
-  function taskType(type) {
-    const map = {
-      none: 'Task',
-      bug: 'Bug',
-      feature: 'Feature',
-    }
-    return map[type] ?? type
+function taskType(type) {
+  const map = {
+    none: 'Task',
+    bug: 'Bug',
+    feature: 'Feature',
   }
+  return map[type] ?? type
+}
 </script>
 
 <template>

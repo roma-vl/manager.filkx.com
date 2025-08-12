@@ -1,74 +1,74 @@
 <script setup>
-  import { useForm, Link } from '@inertiajs/inertia-vue3'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import { onBeforeUnmount, onMounted, ref } from 'vue'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import axios from 'axios'
-  import ChangeTypeDropdown from './Partials/ChangeTypeDropdown.vue'
-  import ChangeStatusDropdown from './Partials/ChangeStatusDropdown.vue'
-  import ChangePriorityDropdown from './Partials/ChangePriorityDropdown.vue'
-  import ChangeProgressBar from './Partials/ChangeProgressBar.vue'
-  import SubTasksTable from '@/Components/Task/SubTasksTable.vue'
-  import MarkdownRenderer from '@/Components/ui/MarkdownRenderer.vue'
-  import FilesList from '@/Components/Task/FilesList.vue'
-  import CommentList from '@/Components/Task/CommentList.vue'
-  import ActionRow from '@/Components/ActionRow.vue'
-  import CommentForm from '@/Components/Task/CommentForm.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import { useForm, Link } from '@inertiajs/inertia-vue3'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import axios from 'axios'
+import ChangeTypeDropdown from './Partials/ChangeTypeDropdown.vue'
+import ChangeStatusDropdown from './Partials/ChangeStatusDropdown.vue'
+import ChangePriorityDropdown from './Partials/ChangePriorityDropdown.vue'
+import ChangeProgressBar from './Partials/ChangeProgressBar.vue'
+import SubTasksTable from '@/Components/Task/SubTasksTable.vue'
+import MarkdownRenderer from '@/Components/ui/MarkdownRenderer.vue'
+import FilesList from '@/Components/Task/FilesList.vue'
+import CommentList from '@/Components/Task/CommentList.vue'
+import ActionRow from '@/Components/ActionRow.vue'
+import CommentForm from '@/Components/Task/CommentForm.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  const props = defineProps({
-    task: Object,
-    project: Object,
-    member: Object,
-    children: Array,
-    statuses: Array,
-    types: Array,
-    priorities: Array,
-    progress: Array,
-    feed: Object,
-    meta: Object,
+const props = defineProps({
+  task: Object,
+  project: Object,
+  member: Object,
+  children: Array,
+  statuses: Array,
+  types: Array,
+  priorities: Array,
+  progress: Array,
+  feed: Object,
+  meta: Object,
+})
+
+const openDropdown = ref(false)
+const form = useForm({})
+function toggleDropdown() {
+  openDropdown.value = !openDropdown.value
+}
+
+function closeDropdown(event) {
+  if (!event.target.closest('.dropdown-container')) {
+    openDropdown.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', closeDropdown)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', closeDropdown)
+})
+
+function confirmAndSubmit(url) {
+  if (!window.confirm('Are you sure?')) return
+  axios.post(url)
+}
+
+function revokeExecutor(memberId) {
+  if (!confirm('Are you sure?')) return
+
+  form.post(`/work/projects/tasks/${props.task.id}/revoke/${memberId}`, {
+    preserveScroll: true,
   })
+}
 
-  const openDropdown = ref(false)
-  const form = useForm({})
-  function toggleDropdown() {
-    openDropdown.value = !openDropdown.value
-  }
+function formatDate(date) {
+  return new Date(date).toLocaleString()
+}
 
-  function closeDropdown(event) {
-    if (!event.target.closest('.dropdown-container')) {
-      openDropdown.value = false
-    }
-  }
-
-  onMounted(() => {
-    document.addEventListener('click', closeDropdown)
-  })
-
-  onBeforeUnmount(() => {
-    document.removeEventListener('click', closeDropdown)
-  })
-
-  function confirmAndSubmit(url) {
-    if (!window.confirm('Are you sure?')) return
-    axios.post(url)
-  }
-
-  function revokeExecutor(memberId) {
-    if (!confirm('Are you sure?')) return
-
-    form.post(`/work/projects/tasks/${props.task.id}/revoke/${memberId}`, {
-      preserveScroll: true,
-    })
-  }
-
-  function formatDate(date) {
-    return new Date(date).toLocaleString()
-  }
-
-  function reloadComments() {
-    window.location.reload()
-  }
+function reloadComments() {
+  window.location.reload()
+}
 </script>
 
 <template>

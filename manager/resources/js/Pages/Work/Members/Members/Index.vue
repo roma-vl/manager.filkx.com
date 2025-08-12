@@ -1,82 +1,82 @@
 <script setup>
-  import { ref, computed } from 'vue'
-  import { Head, Link } from '@inertiajs/inertia-vue3'
-  import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import { statusBadgeClass } from '../../../../Helpers/helpers.js'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
-  import Pagination from "@/Components/ui/Pagination.vue";
-  import {Check, RefreshCw} from "lucide-vue-next";
+import { ref, computed } from 'vue'
+import { Link } from '@inertiajs/inertia-vue3'
+import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import { statusBadgeClass } from '@/Helpers/helpers.js'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
+import Pagination from '@/Components/ui/Pagination.vue'
+import {Check, RefreshCw} from 'lucide-vue-next'
 
-  const props = defineProps({
-    members: Array,
-    filters: Object,
-    groups: Array,
-    statuses: Array,
-    sort: String,
-    direction: String,
-    pagination: Object,
-  })
+const props = defineProps({
+  members: Array,
+  filters: Object,
+  groups: Array,
+  statuses: Array,
+  sort: String,
+  direction: String,
+  pagination: Object,
+})
 
-  const name = ref(props.filters.name || '')
-  const email = ref(props.filters.email || '')
-  const group = ref(props.filters.group || '')
-  const status = ref(props.filters.status || '')
-  const sort = ref(props.sort || 'name')
-  const direction = ref(props.direction || 'asc')
+const name = ref(props.filters.name || '')
+const email = ref(props.filters.email || '')
+const group = ref(props.filters.group || '')
+const status = ref(props.filters.status || '')
+const sort = ref(props.sort || 'name')
+const direction = ref(props.direction || 'asc')
 
-  const directionIcon = computed(() => (direction.value === 'asc' ? '↑' : '↓'))
+const directionIcon = computed(() => (direction.value === 'asc' ? '↑' : '↓'))
 
-  function toggleSort(field) {
-    if (sort.value === field) {
-      direction.value = direction.value === 'asc' ? 'desc' : 'asc'
-    } else {
-      sort.value = field
-      direction.value = 'asc'
-    }
-    submitFilters()
+function toggleSort(field) {
+  if (sort.value === field) {
+    direction.value = direction.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    sort.value = field
+    direction.value = 'asc'
   }
+  submitFilters()
+}
 
-  function submitFilters(page = 1) {
+function submitFilters(page = 1) {
 
-      if (typeof page !== 'number') {
-          page = 1
-      }
-    const query = new URLSearchParams({
-      name: name.value,
-      email: email.value,
-      group: group.value,
-      status: status.value,
-      sort: sort.value,
-      direction: direction.value,
-      page,
-    }).toString()
-
-    window.location.href = `/work/members?${query}`
+  if (typeof page !== 'number') {
+    page = 1
   }
+  const query = new URLSearchParams({
+    name: name.value,
+    email: email.value,
+    group: group.value,
+    status: status.value,
+    sort: sort.value,
+    direction: direction.value,
+    page,
+  }).toString()
 
-  function resetFilters() {
-    name.value = ''
-    email.value = ''
-    group.value = ''
-    status.value = ''
-    submitFilters()
-  }
+  window.location.href = `/work/members?${query}`
+}
 
-  function paginationLink(page) {
-    const query = new URLSearchParams({
-      name: name.value,
-      email: email.value,
-      group: group.value,
-      status: status.value,
-      sort: sort.value,
-      direction: direction.value,
-      page,
-    }).toString()
+function resetFilters() {
+  name.value = ''
+  email.value = ''
+  group.value = ''
+  status.value = ''
+  submitFilters()
+}
 
-    return `/work/members?${query}`
-  }
+function paginationLink(page) {
+  const query = new URLSearchParams({
+    name: name.value,
+    email: email.value,
+    group: group.value,
+    status: status.value,
+    sort: sort.value,
+    direction: direction.value,
+    page,
+  }).toString()
+
+  return `/work/members?${query}`
+}
 
 </script>
 
@@ -107,22 +107,22 @@
         <option value="">All Statuses</option>
         <option v-for="s in statuses" :key="s.id" :value="s.id">{{ s.name }}</option>
       </select>
-        <div class="flex items-center gap-2 ml-auto">
-            <button
-                type="button"
-                class="border-none flex items-center gap-1 px-3 py-1.5 text-sm border rounded-md border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-                @click="resetFilters"
-            >
-                <RefreshCw class="w-4 h-4" /> Скинути
-            </button>
+      <div class="flex items-center gap-2 ml-auto">
+        <button
+          type="button"
+          class="border-none flex items-center gap-1 px-3 py-1.5 text-sm border rounded-md border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+          @click="resetFilters"
+        >
+          <RefreshCw class="w-4 h-4" /> Скинути
+        </button>
 
-            <button
-                type="submit"
-                class="border-none flex items-center gap-1 px-4 py-1.5 text-sm rounded-md bg-indigo-600 hover:bg-indigo-700 text-white transition"
-            >
-                <Check class="w-4 h-4" /> Застосувати
-            </button>
-        </div>
+        <button
+          type="submit"
+          class="border-none flex items-center gap-1 px-4 py-1.5 text-sm rounded-md bg-indigo-600 hover:bg-indigo-700 text-white transition"
+        >
+          <Check class="w-4 h-4" /> Застосувати
+        </button>
+      </div>
     </form>
 
     <!-- Table -->
@@ -167,7 +167,7 @@
         </tbody>
       </table>
     </div>
-      <Pagination :pagination="pagination" :link-builder="paginationLink" />
+    <Pagination :pagination="pagination" :link-builder="paginationLink" />
   </AppLayout>
 </template>
 

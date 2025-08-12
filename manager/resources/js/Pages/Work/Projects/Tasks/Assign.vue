@@ -1,45 +1,45 @@
 <script setup>
-  import { reactive, ref } from 'vue'
-  import { useRouter } from 'vue-router'
-  import { Inertia } from '@inertiajs/inertia'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { Inertia } from '@inertiajs/inertia'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  const props = defineProps({
-    task: Object,
-    project: Object,
-    members: Array,
-    selectedMembers: Array,
-  })
+const props = defineProps({
+  task: Object,
+  project: Object,
+  members: Array,
+  selectedMembers: Array,
+})
 
-  const router = useRouter()
-  const error = ref(null)
+const router = useRouter()
+const error = ref(null)
 
-  const form = reactive({
-    members: props.selectedMembers ? [...props.selectedMembers] : [],
-  })
+const form = reactive({
+  members: props.selectedMembers ? [...props.selectedMembers] : [],
+})
 
-  function submit() {
-    error.value = null
-    if (!form.members.length) {
-      error.value = 'Виберіть принаймні одного виконавця'
-      return
-    }
-
-    Inertia.post(
-      `/work/projects/tasks/${props.task.id}/assign`,
-      { members: form.members },
-      {
-        onSuccess: () => {
-          router.push({ name: 'work.tasks.show', params: { id: props.task.id } })
-        },
-        onError: errors => {
-          error.value = errors.error || 'Сталася помилка'
-        },
-      }
-    )
+function submit() {
+  error.value = null
+  if (!form.members.length) {
+    error.value = 'Виберіть принаймні одного виконавця'
+    return
   }
+
+  Inertia.post(
+    `/work/projects/tasks/${props.task.id}/assign`,
+    { members: form.members },
+    {
+      onSuccess: () => {
+        router.push({ name: 'work.tasks.show', params: { id: props.task.id } })
+      },
+      onError: errors => {
+        error.value = errors.error || 'Сталася помилка'
+      },
+    },
+  )
+}
 </script>
 
 <template>

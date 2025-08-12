@@ -1,17 +1,17 @@
 <script setup>
-  import {
-    formatPriority,
-    formatStatus,
-    formatType,
-    priorityBadgeClass,
-    typeBadgeClass,
-  } from '@/Helpers/tasks.helper.js'
-  import { statusBadgeClass } from '@/Helpers/helpers.js'
+import {
+  formatPriority,
+  formatStatus,
+  formatType,
+  priorityBadgeClass,
+  typeBadgeClass,
+} from '@/Helpers/tasks.helper.js'
+import { statusBadgeClass } from '@/Helpers/helpers.js'
 
-  const props = defineProps({
-    children: Array,
-    projectId: [String, Number],
-  })
+const props = defineProps({
+  children: Array,
+  projectId: [String, Number],
+})
 </script>
 
 <template>

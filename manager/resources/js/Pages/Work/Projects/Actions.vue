@@ -1,13 +1,13 @@
 <script setup>
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import ActionRow from '@/Components/ActionRow.vue'
-  import RolesTabs from '@/Components/Work/Projects/Project/Roles/RolesTabs.vue'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import ActionRow from '@/Components/ActionRow.vue'
+import RolesTabs from '@/Components/Work/Projects/Project/Roles/RolesTabs.vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  const props = defineProps({
-    pagination: Object,
-  })
+const props = defineProps({
+  pagination: Object,
+})
 </script>
 
 <template>

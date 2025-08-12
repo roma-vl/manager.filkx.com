@@ -1,26 +1,26 @@
 <script setup>
-  import { useForm } from '@inertiajs/inertia-vue3'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
-  import InputLabel from '@/Components/InputLabel.vue'
-  import InputError from '@/Components/InputError.vue'
-  import TextInput from '@/Components/TextInput.vue'
-  import SecondaryButton from '@/Components/SecondaryButton.vue'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import { useForm } from '@inertiajs/inertia-vue3'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
+import InputLabel from '@/Components/InputLabel.vue'
+import InputError from '@/Components/InputError.vue'
+import TextInput from '@/Components/TextInput.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  const props = defineProps({
-    project: Object,
-    errors: Object,
-  })
+const props = defineProps({
+  project: Object,
+  errors: Object,
+})
 
-  const form = useForm({
-    name: '',
-  })
+const form = useForm({
+  name: '',
+})
 
-  function submit() {
-    form.post(`/work/projects/${props.project.id}/settings/departments/create`)
-  }
+function submit() {
+  form.post(`/work/projects/${props.project.id}/settings/departments/create`)
+}
 </script>
 
 <template>

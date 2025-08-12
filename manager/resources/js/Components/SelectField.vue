@@ -1,26 +1,26 @@
 <script setup>
-  import { ref, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 
-  const props = defineProps({
-    options: {
-      type: Object,
-      required: true,
-    },
-    id: String,
-    name: String,
-    required: Boolean,
-  })
+const props = defineProps({
+  options: {
+    type: Object,
+    required: true,
+  },
+  id: String,
+  name: String,
+  required: Boolean,
+})
 
-  const model = defineModel({ type: String, required: true })
-  const select = ref(null)
+const model = defineModel({ type: String, required: true })
+const select = ref(null)
 
-  onMounted(() => {
-    if (select.value?.hasAttribute('autofocus')) {
-      select.value.focus()
-    }
-  })
+onMounted(() => {
+  if (select.value?.hasAttribute('autofocus')) {
+    select.value.focus()
+  }
+})
 
-  defineExpose({ focus: () => select.value?.focus() })
+defineExpose({ focus: () => select.value?.focus() })
 </script>
 
 <template>

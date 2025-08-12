@@ -1,26 +1,26 @@
 <script setup>
-  import { useForm } from '@inertiajs/inertia-vue3'
-  import InputLabel from '@/Components/InputLabel.vue'
-  import InputError from '@/Components/InputError.vue'
-  import TextInput from '@/Components/TextInput.vue'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
-  import SecondaryButton from '@/Components/SecondaryButton.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import { useForm } from '@inertiajs/inertia-vue3'
+import InputLabel from '@/Components/InputLabel.vue'
+import InputError from '@/Components/InputError.vue'
+import TextInput from '@/Components/TextInput.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
 
-  const props = defineProps({
-    project: Object,
-  })
+const props = defineProps({
+  project: Object,
+})
 
-  const form = useForm({
-    name: props.project.name || '',
-    sort: props.project.sort || '',
-  })
+const form = useForm({
+  name: props.project.name || '',
+  sort: props.project.sort || '',
+})
 
-  function submit() {
-    form.post(`/work/projects/${props.project.id}/settings/edit`)
-  }
+function submit() {
+  form.post(`/work/projects/${props.project.id}/settings/edit`)
+}
 </script>
 
 <template>

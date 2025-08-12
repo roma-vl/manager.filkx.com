@@ -1,15 +1,14 @@
 <script setup>
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import ActionRow from '@/Components/ActionRow.vue'
-  import { Head } from '@inertiajs/inertia-vue3'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import ActionRow from '@/Components/ActionRow.vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  const props = defineProps({
-    project: Object,
-    pagination: Object,
-  })
+const props = defineProps({
+  project: Object,
+  pagination: Object,
+})
 </script>
 
 <template>

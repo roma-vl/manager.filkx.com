@@ -1,21 +1,21 @@
 <script setup>
-  import { Head, useForm } from '@inertiajs/inertia-vue3'
-  import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
-  import AppLayout from '../../../../Layouts/AppLayout.vue'
-  import InputLabel from '../../../../Components/InputLabel.vue'
-  import InputError from '../../../../Components/InputError.vue'
-  import TextInput from '../../../../Components/TextInput.vue'
-  import SecondaryButton from '../../../../Components/SecondaryButton.vue'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import { useForm } from '@inertiajs/inertia-vue3'
+import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
+import AppLayout from '../../../../Layouts/AppLayout.vue'
+import InputLabel from '../../../../Components/InputLabel.vue'
+import InputError from '../../../../Components/InputError.vue'
+import TextInput from '../../../../Components/TextInput.vue'
+import SecondaryButton from '../../../../Components/SecondaryButton.vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  const form = useForm({
-    name: '',
-  })
+const form = useForm({
+  name: '',
+})
 
-  function submit() {
-    form.post('/work/members/groups/create')
-  }
+function submit() {
+  form.post('/work/members/groups/create')
+}
 </script>
 
 <template>

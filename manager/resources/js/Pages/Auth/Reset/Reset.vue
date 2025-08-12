@@ -1,18 +1,18 @@
 <script setup>
-  import { useForm } from '@inertiajs/inertia-vue3'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import { useForm } from '@inertiajs/inertia-vue3'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  const props = defineProps({
-    token: String,
-  })
+const props = defineProps({
+  token: String,
+})
 
-  const form = useForm({
-    password: '',
-  })
+const form = useForm({
+  password: '',
+})
 
-  function submit() {
-    form.post(`/reset/${props.token}`)
-  }
+function submit() {
+  form.post(`/reset/${props.token}`)
+}
 </script>
 
 <template>

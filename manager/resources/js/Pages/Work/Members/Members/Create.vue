@@ -1,28 +1,28 @@
 <script setup>
-  import { useForm } from '@inertiajs/inertia-vue3'
-  import InputLabel from '../../../../Components/InputLabel.vue'
-  import InputError from '../../../../Components/InputError.vue'
-  import TextInput from '../../../../Components/TextInput.vue'
-  import SelectInput from '../../../../Components/SelectInput.vue'
-  import AppLayout from '../../../../Layouts/AppLayout.vue'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
-  const props = defineProps({
-    user: Object,
-    errors: Object,
-    groups: Array,
-  })
-  const form = useForm({
-    id: props.user.id,
-    group: '',
-    firstName: props.user.firstName || '',
-    lastName: props.user.lastName || '',
-    email: props.user.email || '',
-  })
+import { useForm } from '@inertiajs/inertia-vue3'
+import InputLabel from '../../../../Components/InputLabel.vue'
+import InputError from '../../../../Components/InputError.vue'
+import TextInput from '../../../../Components/TextInput.vue'
+import SelectInput from '../../../../Components/SelectInput.vue'
+import AppLayout from '../../../../Layouts/AppLayout.vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
+const props = defineProps({
+  user: Object,
+  errors: Object,
+  groups: Array,
+})
+const form = useForm({
+  id: props.user.id,
+  group: '',
+  firstName: props.user.firstName || '',
+  lastName: props.user.lastName || '',
+  email: props.user.email || '',
+})
 
-  function submit() {
-    form.post(`/work/members/create/${props.user.id}`)
-  }
+function submit() {
+  form.post(`/work/members/create/${props.user.id}`)
+}
 </script>
 
 <template>

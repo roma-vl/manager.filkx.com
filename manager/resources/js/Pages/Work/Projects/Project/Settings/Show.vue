@@ -1,22 +1,22 @@
 <script setup>
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
-  import { Link, usePage } from '@inertiajs/inertia-vue3'
-  import DepartmentsTabs from '@/Components/Work/Projects/Project/Settings/Departments/DepartmentsTabs.vue'
-  import { statusBadgeClass } from '@/Helpers/helpers.js'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
+import { Link, usePage } from '@inertiajs/inertia-vue3'
+import DepartmentsTabs from '@/Components/Work/Projects/Project/Settings/Departments/DepartmentsTabs.vue'
+import { statusBadgeClass } from '@/Helpers/helpers.js'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  const { props } = usePage()
-  const project = props.value.project
+const { props } = usePage()
+const project = props.value.project
 
-  function confirmAction(message, event) {
-    if (!confirm(message)) {
-      event.preventDefault()
-    } else {
-      event.target.submit()
-    }
+function confirmAction(message, event) {
+  if (!confirm(message)) {
+    event.preventDefault()
+  } else {
+    event.target.submit()
   }
+}
 </script>
 
 <template>

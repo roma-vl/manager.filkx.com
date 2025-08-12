@@ -1,14 +1,14 @@
 <script setup>
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import { usePage } from '@inertiajs/inertia-vue3'
-  import { Link } from '@inertiajs/inertia-vue3'
-  import RolesTabs from '@/Components/Work/Projects/Project/Roles/RolesTabs.vue'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import { usePage } from '@inertiajs/inertia-vue3'
+import { Link } from '@inertiajs/inertia-vue3'
+import RolesTabs from '@/Components/Work/Projects/Project/Roles/RolesTabs.vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  const { props } = usePage()
-  const roles = props.value.roles
-  const permissions = props.value.permissions
+const { props } = usePage()
+const roles = props.value.roles
+const permissions = props.value.permissions
 </script>
 
 <template>

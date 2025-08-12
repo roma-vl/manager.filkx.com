@@ -21,30 +21,30 @@
 </template>
 
 <script setup>
-  import { computed } from 'vue'
-  import InputLabel from './InputLabel.vue'
-  import InputError from './InputError.vue'
+import { computed } from 'vue'
+import InputLabel from './InputLabel.vue'
+import InputError from './InputError.vue'
 
-  const props = defineProps({
-    modelValue: [String, Number],
-    label: String,
-    name: String,
-    options: Object,
-    error: String,
-    required: {
-      type: Boolean,
-      default: false,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-  })
+const props = defineProps({
+  modelValue: [String, Number],
+  label: String,
+  name: String,
+  options: Object,
+  error: String,
+  required: {
+    type: Boolean,
+    default: false,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+})
 
-  const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue'])
 
-  const internalValue = computed({
-    get: () => props.modelValue,
-    set: val => emit('update:modelValue', val),
-  })
+const internalValue = computed({
+  get: () => props.modelValue,
+  set: val => emit('update:modelValue', val),
+})
 </script>

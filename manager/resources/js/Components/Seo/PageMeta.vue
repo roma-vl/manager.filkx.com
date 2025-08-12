@@ -1,43 +1,43 @@
 <script setup>
-  import { computed } from 'vue'
-  import { Head, usePage } from '@inertiajs/inertia-vue3'
-  import { BASE_APP_NAME } from '@/Helpers/config.js'
+import { computed } from 'vue'
+import { Head, usePage } from '@inertiajs/inertia-vue3'
+import { BASE_APP_NAME } from '@/Helpers/config.js'
 
-  const props = defineProps({
-    title: { type: String, default: '' },
-    description: { type: String, default: '' },
-    image: { type: String, default: '' },
-    canonical: { type: String, default: '' },
-  })
+const props = defineProps({
+  title: { type: String, default: '' },
+  description: { type: String, default: '' },
+  image: { type: String, default: '' },
+  canonical: { type: String, default: '' },
+})
 
-  const page = usePage()
+const page = usePage()
 
-  const fullTitle = computed(() => {
-    const baseTitle = `${BASE_APP_NAME}`
-    return props.title ? `${props.title} - ${baseTitle}` : baseTitle
-  })
+const fullTitle = computed(() => {
+  const baseTitle = `${BASE_APP_NAME}`
+  return props.title ? `${props.title} - ${baseTitle}` : baseTitle
+})
 
-  const fullImageUrl = computed(() => {
-    if (!props.image) return ''
-    return props.image.startsWith('http')
-      ? props.image
-      : `${page.props.value.assetBaseUrl}${props.image}`
-  })
+const fullImageUrl = computed(() => {
+  if (!props.image) return ''
+  return props.image.startsWith('http')
+    ? props.image
+    : `${page.props.value.assetBaseUrl}${props.image}`
+})
 
-  const currentUrl = computed(() => {
-    return typeof window !== 'undefined' ? window.location.href : ''
-  })
+const currentUrl = computed(() => {
+  return typeof window !== 'undefined' ? window.location.href : ''
+})
 
-  const canonicalUrl = computed(() => {
-    if (props.canonical) return props.canonical
-    return typeof window !== 'undefined' ? window.location.href.split('?')[0] : ''
-  })
+const canonicalUrl = computed(() => {
+  if (props.canonical) return props.canonical
+  return typeof window !== 'undefined' ? window.location.href.split('?')[0] : ''
+})
 
-  const titleVal = computed(() => fullTitle.value)
-  const descVal = computed(() => props.description)
-  const imageVal = computed(() => fullImageUrl.value)
-  const urlVal = computed(() => currentUrl.value)
-  const canonicalVal = computed(() => canonicalUrl.value)
+const titleVal = computed(() => fullTitle.value)
+const descVal = computed(() => props.description)
+const imageVal = computed(() => fullImageUrl.value)
+const urlVal = computed(() => currentUrl.value)
+const canonicalVal = computed(() => canonicalUrl.value)
 </script>
 
 <template>

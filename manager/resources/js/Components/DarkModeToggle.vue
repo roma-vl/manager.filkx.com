@@ -1,16 +1,16 @@
 <script setup>
-  import { ref, watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
 
-  const isDark = ref(localStorage.theme === 'dark')
+const isDark = ref(localStorage.theme === 'dark')
 
-  watchEffect(() => {
-    document.documentElement.classList.toggle('dark', isDark.value)
-    localStorage.theme = isDark.value ? 'dark' : 'light'
-  })
+watchEffect(() => {
+  document.documentElement.classList.toggle('dark', isDark.value)
+  localStorage.theme = isDark.value ? 'dark' : 'light'
+})
 
-  function toggleDark() {
-    isDark.value = !isDark.value
-  }
+function toggleDark() {
+  isDark.value = !isDark.value
+}
 </script>
 
 <template>

@@ -1,14 +1,14 @@
 <script setup>
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import { usePage } from '@inertiajs/inertia-vue3'
-  import { computed } from 'vue'
-  import CalendarWidget from '@/Components/Widgets/CalendarWidget.vue'
-  import OwnTasksWidget from '@/Components/Widgets/OwnTasksWidget.vue'
-  import MeTasksWidget from '@/Components/Widgets/MeTasksWidget.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import { usePage } from '@inertiajs/inertia-vue3'
+import { computed } from 'vue'
+import CalendarWidget from '@/Components/Widgets/CalendarWidget.vue'
+import OwnTasksWidget from '@/Components/Widgets/OwnTasksWidget.vue'
+import MeTasksWidget from '@/Components/Widgets/MeTasksWidget.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  const page = usePage()
-  const user = computed(() => page.props.value.auth?.user)
+const page = usePage()
+const user = computed(() => page.props.value.auth?.user)
 </script>
 
 <template>
@@ -20,8 +20,7 @@
       <header class="mb-6">
         <h1 class="text-xl font-bold text-indigo-200">📊 Панель Керування</h1>
         <p class="text-white/80 text-sm mt-1">
-          Вітаємо, <span class="font-semibold text-white">{{ user?.name || 'Користувачу' }}</span
-          >!
+          Вітаємо, <span class="font-semibold text-white">{{ user?.name || 'Користувачу' }}</span>!
         </p>
       </header>
 

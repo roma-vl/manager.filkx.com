@@ -1,28 +1,28 @@
 <script setup>
-  import { useForm } from '@inertiajs/inertia-vue3'
-  import InputLabel from '../../../../Components/InputLabel.vue'
-  import InputError from '../../../../Components/InputError.vue'
-  import TextInput from '../../../../Components/TextInput.vue'
-  import AppLayout from '../../../../Layouts/AppLayout.vue'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import SecondaryButton from '@/Components/SecondaryButton.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
-  const props = defineProps({
-    member: Object,
-    errors: Object,
-    groups: Array,
-  })
+import { useForm } from '@inertiajs/inertia-vue3'
+import InputLabel from '../../../../Components/InputLabel.vue'
+import InputError from '../../../../Components/InputError.vue'
+import TextInput from '../../../../Components/TextInput.vue'
+import AppLayout from '../../../../Layouts/AppLayout.vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
+const props = defineProps({
+  member: Object,
+  errors: Object,
+  groups: Array,
+})
 
-  const form = useForm({
-    id: props.member.id,
-    firstName: props.member.firstName || '',
-    lastName: props.member.lastName || '',
-    email: props.member.email || '',
-  })
+const form = useForm({
+  id: props.member.id,
+  firstName: props.member.firstName || '',
+  lastName: props.member.lastName || '',
+  email: props.member.email || '',
+})
 
-  function submit() {
-    form.post(`/work/members/${props.member.id}/edit`)
-  }
+function submit() {
+  form.post(`/work/members/${props.member.id}/edit`)
+}
 </script>
 
 <template>

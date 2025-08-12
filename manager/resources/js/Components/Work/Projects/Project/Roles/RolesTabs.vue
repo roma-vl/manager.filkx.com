@@ -1,10 +1,10 @@
 <script setup>
-  import { Link, usePage } from '@inertiajs/inertia-vue3'
-  import { computed } from 'vue'
+import { Link, usePage } from '@inertiajs/inertia-vue3'
+import { computed } from 'vue'
 
-  const page = usePage()
-  const currentUrl = computed(() => page.url.value)
-  const isActive = path => computed(() => currentUrl.value.startsWith(path))
+const page = usePage()
+const currentUrl = computed(() => page.url.value)
+const isActive = path => computed(() => currentUrl.value.startsWith(path))
 </script>
 
 <template>

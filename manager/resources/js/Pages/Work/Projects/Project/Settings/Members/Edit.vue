@@ -1,27 +1,27 @@
 <script setup>
-  import { useForm } from '@inertiajs/inertia-vue3'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import SecondaryButton from '@/Components/SecondaryButton.vue'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import { useForm } from '@inertiajs/inertia-vue3'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  const props = defineProps({
-    project: Object,
-    membership: Object,
-    roles: Object,
-    departments: Object,
+const props = defineProps({
+  project: Object,
+  membership: Object,
+  roles: Object,
+  departments: Object,
+})
+
+const form = useForm({
+  departments: props.membership?.departments ?? [],
+  roles: props.membership?.roles ?? [],
+})
+
+const submit = () => {
+  form.post(`/work/projects/${props.project.id}/settings/members/${props.membership.id}/edit`, {
+    preserveScroll: true,
   })
-
-  const form = useForm({
-    departments: props.membership?.departments ?? [],
-    roles: props.membership?.roles ?? [],
-  })
-
-  const submit = () => {
-    form.post(`/work/projects/${props.project.id}/settings/members/${props.membership.id}/edit`, {
-      preserveScroll: true,
-    })
-  }
+}
 </script>
 
 <template>

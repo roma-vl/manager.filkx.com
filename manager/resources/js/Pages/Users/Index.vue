@@ -1,81 +1,81 @@
 <script setup>
-  import { Head, Link } from '@inertiajs/inertia-vue3'
-  import { computed, ref, watch } from 'vue'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import { roleBadgeClass, statusBadgeClass } from '@/Helpers/helpers.js'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
-  import Pagination from "@/Components/ui/Pagination.vue";
-  import {Check, RefreshCw} from "lucide-vue-next";
+import { Link } from '@inertiajs/inertia-vue3'
+import { ref, watch } from 'vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import { roleBadgeClass, statusBadgeClass } from '@/Helpers/helpers.js'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
+import Pagination from '@/Components/ui/Pagination.vue'
+import {Check, RefreshCw} from 'lucide-vue-next'
 
-  const props = defineProps({
-    users: Array,
-    pagination: Object,
-    filters: {
-      type: Object,
-      default: () => ({ name: '', email: '', role: '', status: '' }),
-    },
-    sort: String,
-    direction: String,
-  })
+const props = defineProps({
+  users: Array,
+  pagination: Object,
+  filters: {
+    type: Object,
+    default: () => ({ name: '', email: '', role: '', status: '' }),
+  },
+  sort: String,
+  direction: String,
+})
 
-  const name = ref(props.filters.name || '')
-  const email = ref(props.filters.email || '')
-  const role = ref(props.filters.role || '')
-  const status = ref(props.filters.status || '')
-  const sort = ref(props.sort || 'date')
-  const direction = ref(props.direction || 'desc')
+const name = ref(props.filters.name || '')
+const email = ref(props.filters.email || '')
+const role = ref(props.filters.role || '')
+const status = ref(props.filters.status || '')
+const sort = ref(props.sort || 'date')
+const direction = ref(props.direction || 'desc')
 
-  function toggleSort(field) {
-    if (sort.value === field) {
-      direction.value = direction.value === 'asc' ? 'desc' : 'asc'
-    } else {
-      sort.value = field
-      direction.value = 'asc'
-    }
-
-    submitFilters()
+function toggleSort(field) {
+  if (sort.value === field) {
+    direction.value = direction.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    sort.value = field
+    direction.value = 'asc'
   }
 
-  function submitFilters(page = 1) {
-      if (typeof page !== 'number') {
-          page = 1
-      }
-    const query = new URLSearchParams({
-      name: name.value,
-      email: email.value,
-      role: role.value,
-      status: status.value,
-      sort: sort.value,
-      direction: direction.value,
-      page: page,
-    }).toString()
+  submitFilters()
+}
 
-      window.location.href = `/users?${query}`
+function submitFilters(page = 1) {
+  if (typeof page !== 'number') {
+    page = 1
   }
+  const query = new URLSearchParams({
+    name: name.value,
+    email: email.value,
+    role: role.value,
+    status: status.value,
+    sort: sort.value,
+    direction: direction.value,
+    page: page,
+  }).toString()
 
-  function resetFilters() {
-    name.value = ''
-    email.value = ''
-    role.value = ''
-    status.value = ''
-    submitFilters()
-  }
+  window.location.href = `/users?${query}`
+}
 
-  watch(role, () => submitFilters())
-  watch(status, () => submitFilters())
+function resetFilters() {
+  name.value = ''
+  email.value = ''
+  role.value = ''
+  status.value = ''
+  submitFilters()
+}
 
-  function paginationLink(page) {
-    const query = new URLSearchParams({
-      name: name.value,
-      email: email.value,
-      role: role.value,
-      status: status.value,
-      page,
-    }).toString()
+watch(role, () => submitFilters())
+watch(status, () => submitFilters())
 
-    return `/users?${query}`
-  }
+function paginationLink(page) {
+  const query = new URLSearchParams({
+    name: name.value,
+    email: email.value,
+    role: role.value,
+    status: status.value,
+    page,
+  }).toString()
+
+  return `/users?${query}`
+}
 
 </script>
 
@@ -97,7 +97,7 @@
 
       <!-- Filters -->
       <form
-          class="mt-5 bg-gradient-to-br from-gray-900 to-[#0e0f11] p-4 rounded-2xl shadow-md mb-8 grid grid-cols-1 md:grid-cols-5 gap-4 text-white/80"          @submit.prevent="submitFilters"
+        class="mt-5 bg-gradient-to-br from-gray-900 to-[#0e0f11] p-4 rounded-2xl shadow-md mb-8 grid grid-cols-1 md:grid-cols-5 gap-4 text-white/80" @submit.prevent="submitFilters"
       >
         <input v-model="name" placeholder="Name" class=" filter-select" />
         <input v-model="email" placeholder="Email" class="filter-select" />
@@ -113,31 +113,31 @@
           <option value="active">Active</option>
           <option value="blocked">Blocked</option>
         </select>
-          <!-- Buttons -->
-          <div class="flex items-center gap-2 ml-auto">
-              <button
-                  type="button"
-                  class="border-none flex items-center gap-1 px-3 py-1.5 text-sm border rounded-md border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-                  @click="resetFilters"
-              >
-                  <RefreshCw class="w-4 h-4" /> Скинути
-              </button>
+        <!-- Buttons -->
+        <div class="flex items-center gap-2 ml-auto">
+          <button
+            type="button"
+            class="border-none flex items-center gap-1 px-3 py-1.5 text-sm border rounded-md border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+            @click="resetFilters"
+          >
+            <RefreshCw class="w-4 h-4" /> Скинути
+          </button>
 
-              <button
-                  type="submit"
-                  class="border-none flex items-center gap-1 px-4 py-1.5 text-sm rounded-md bg-indigo-600 hover:bg-indigo-700 text-white transition"
-              >
-                  <Check class="w-4 h-4" /> Застосувати
-              </button>
-          </div>
+          <button
+            type="submit"
+            class="border-none flex items-center gap-1 px-4 py-1.5 text-sm rounded-md bg-indigo-600 hover:bg-indigo-700 text-white transition"
+          >
+            <Check class="w-4 h-4" /> Застосувати
+          </button>
+        </div>
       </form>
 
       <!-- Users Table -->
-        <div
-            class="overflow-x-auto rounded-xl shadow-md bg-gray-900/80 backdrop-blur border border-gray-700 text-white"
-        >
-            <table class="min-w-full divide-y divide-gray-800">
-                <thead class="bg-gray-800 text-left text-xs font-semibold text-white/70">
+      <div
+        class="overflow-x-auto rounded-xl shadow-md bg-gray-900/80 backdrop-blur border border-gray-700 text-white"
+      >
+        <table class="min-w-full divide-y divide-gray-800">
+          <thead class="bg-gray-800 text-left text-xs font-semibold text-white/70">
             <tr>
               <th class="p-2 cursor-pointer" @click="toggleSort('date')">
                 Date
@@ -162,7 +162,7 @@
             </tr>
           </thead>
 
-                <tbody class="divide-y divide-gray-800 text-sm">
+          <tbody class="divide-y divide-gray-800 text-sm">
             <tr v-for="user in users" :key="user.id" class="hover:bg-gray-800/70 transition duration-200">
               <td class="p-2">{{ user.date }}</td>
               <td class="p-2">
@@ -181,7 +181,7 @@
           </tbody>
         </table>
       </div>
-        <Pagination :pagination="pagination" :link-builder="paginationLink" />
+      <Pagination :pagination="pagination" :link-builder="paginationLink" />
     </div>
   </AppLayout>
 </template>

@@ -1,16 +1,16 @@
 <script setup>
-  import { useForm } from '@inertiajs/inertia-vue3'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import { useForm } from '@inertiajs/inertia-vue3'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  const form = useForm({
-    email: '',
+const form = useForm({
+  email: '',
+})
+
+function submit() {
+  form.post('/reset', {
+    preserveScroll: true,
   })
-
-  function submit() {
-    form.post('/reset', {
-      preserveScroll: true,
-    })
-  }
+}
 </script>
 
 <template>

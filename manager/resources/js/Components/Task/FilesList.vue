@@ -1,55 +1,55 @@
 <script setup>
-  import { Link } from '@inertiajs/inertia-vue3'
-  import axios from 'axios'
-  import { ref, watch } from 'vue'
+import { Link } from '@inertiajs/inertia-vue3'
+import axios from 'axios'
+import { ref, watch } from 'vue'
 
-  const props = defineProps({
-    files: Array,
-    taskId: Number,
-  })
+const props = defineProps({
+  files: Array,
+  taskId: Number,
+})
 
-  const localFiles = ref([...props.files])
-  watch(
-    () => props.files,
-    newVal => {
-      localFiles.value = [...newVal]
-    }
-  )
+const localFiles = ref([...props.files])
+watch(
+  () => props.files,
+  newVal => {
+    localFiles.value = [...newVal]
+  },
+)
 
-  async function deleteFile(fileId) {
-    if (!confirm('Are you sure?')) return
+async function deleteFile(fileId) {
+  if (!confirm('Are you sure?')) return
 
-    try {
-      await axios.post(`/work/projects/tasks/${props.taskId}/files/${fileId}/delete`)
-      localFiles.value = localFiles.value.filter(file => file.id !== fileId)
-    } catch (error) {
-      console.error('Failed to delete file:', error)
-    }
+  try {
+    await axios.post(`/work/projects/tasks/${props.taskId}/files/${fileId}/delete`)
+    localFiles.value = localFiles.value.filter(file => file.id !== fileId)
+  } catch (error) {
+    console.error('Failed to delete file:', error)
   }
+}
 
-  function formatSize(size) {
-    return (size / 1024).toFixed(2) + ' KB'
-  }
+function formatSize(size) {
+  return (size / 1024).toFixed(2) + ' KB'
+}
 
-  function fileUrl(file) {
-    return `/storage/${file.info.path}/${file.info.name}`
-  }
+function fileUrl(file) {
+  return `/storage/${file.info.path}/${file.info.name}`
+}
 
-  function isImage(file) {
-    return /\.(jpe?g|png|gif|webp|bmp|svg)$/i.test(file.info.name)
-  }
+function isImage(file) {
+  return /\.(jpe?g|png|gif|webp|bmp|svg)$/i.test(file.info.name)
+}
 
-  function truncateFileName(filename, maxBaseLength = 20) {
-    const parts = filename.split('.')
-    if (parts.length < 2) return filename
+function truncateFileName(filename, maxBaseLength = 20) {
+  const parts = filename.split('.')
+  if (parts.length < 2) return filename
 
-    const ext = parts.pop()
-    const base = parts.join('.')
+  const ext = parts.pop()
+  const base = parts.join('.')
 
-    const shortBase = base.length > maxBaseLength ? base.slice(0, maxBaseLength) + '..' : base
+  const shortBase = base.length > maxBaseLength ? base.slice(0, maxBaseLength) + '..' : base
 
-    return `${shortBase}.${ext}`
-  }
+  return `${shortBase}.${ext}`
+}
 </script>
 
 <template>

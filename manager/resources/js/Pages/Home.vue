@@ -1,13 +1,13 @@
 <script setup>
-  import AppLayout from '../Layouts/AppLayout.vue'
+import AppLayout from '../Layouts/AppLayout.vue'
 
-  import { usePage } from '@inertiajs/inertia-vue3'
-  import { computed } from 'vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import { usePage } from '@inertiajs/inertia-vue3'
+import { computed } from 'vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  const page = usePage()
+const page = usePage()
 
-  const user = computed(() => page.props.value.auth?.user)
+const user = computed(() => page.props.value.auth?.user)
 </script>
 
 <template>

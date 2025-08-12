@@ -1,26 +1,26 @@
 <script setup>
-  import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/inertia-vue3'
 
-  const props = defineProps({
-    taskId: {
-      type: [String, Number],
-      required: true,
+const props = defineProps({
+  taskId: {
+    type: [String, Number],
+    required: true,
+  },
+})
+
+const emit = defineEmits(['comment:added'])
+
+const form = useForm({ text: '' })
+
+function submitComment() {
+  form.post(`/work/projects/tasks/${props.taskId}/comments`, {
+    preserveScroll: true,
+    onSuccess: () => {
+      emit('comment:added')
+      form.reset()
     },
   })
-
-  const emit = defineEmits(['comment:added'])
-
-  const form = useForm({ text: '' })
-
-  function submitComment() {
-    form.post(`/work/projects/tasks/${props.taskId}/comments`, {
-      preserveScroll: true,
-      onSuccess: () => {
-        emit('comment:added')
-        form.reset()
-      },
-    })
-  }
+}
 </script>
 
 <template>

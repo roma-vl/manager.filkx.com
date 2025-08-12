@@ -1,33 +1,33 @@
 <script setup>
-  import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
-  import { Head, Link } from '@inertiajs/inertia-vue3'
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import axios from 'axios'
-  import { ref } from 'vue'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import GroupsTabs from '@/Components/Work/Members/Groups/Tabs.vue'
+import { Head, Link } from '@inertiajs/inertia-vue3'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import axios from 'axios'
+import { ref } from 'vue'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  defineProps({
-    groups: Array,
-    csrf: String,
-  })
+defineProps({
+  groups: Array,
+  csrf: String,
+})
 
-  const deleting = ref(null)
+const deleting = ref(null)
 
-  async function confirmDelete(id) {
-    if (!confirm('Are you sure?')) return
-    deleting.value = id
+async function confirmDelete(id) {
+  if (!confirm('Are you sure?')) return
+  deleting.value = id
 
-    try {
-      await axios.post(`/work/members/groups/${id}/delete`)
-      location.reload()
-    } catch (error) {
-      console.error('Delete error:', error)
-      alert('Failed to delete group')
-    } finally {
-      deleting.value = null
-    }
+  try {
+    await axios.post(`/work/members/groups/${id}/delete`)
+    location.reload()
+  } catch (error) {
+    console.error('Delete error:', error)
+    alert('Failed to delete group')
+  } finally {
+    deleting.value = null
   }
+}
 </script>
 
 <template>

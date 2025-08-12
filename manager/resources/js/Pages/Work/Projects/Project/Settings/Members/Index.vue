@@ -1,24 +1,24 @@
 <script setup>
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
-  import DepartmentsTabs from '@/Components/Work/Projects/Project/Settings/Departments/DepartmentsTabs.vue'
-  import { Link } from '@inertiajs/inertia-vue3'
-  import axios from 'axios'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import ProjectTabs from '@/Components/Work/Projects/ProjectTabs.vue'
+import DepartmentsTabs from '@/Components/Work/Projects/Project/Settings/Departments/DepartmentsTabs.vue'
+import { Link } from '@inertiajs/inertia-vue3'
+import axios from 'axios'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  const props = defineProps({
-    project: Object,
-    memberships: Array,
+const props = defineProps({
+  project: Object,
+  memberships: Array,
+})
+
+function confirmAndRevoke(memberId) {
+  if (!confirm('Are you sure?')) return
+
+  axios.post(`/work/projects/${props.project.id}/settings/members/${memberId}/revoke`, {
+    preserveScroll: true,
   })
-
-  function confirmAndRevoke(memberId) {
-    if (!confirm('Are you sure?')) return
-
-    axios.post(`/work/projects/${props.project.id}/settings/members/${memberId}/revoke`, {
-      preserveScroll: true,
-    })
-  }
+}
 </script>
 <template>
   <AppLayout>

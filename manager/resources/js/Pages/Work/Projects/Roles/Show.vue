@@ -1,12 +1,12 @@
 <script setup>
-  import AppLayout from '@/Layouts/AppLayout.vue'
-  import { Link, usePage } from '@inertiajs/inertia-vue3'
-  import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
-  import PageMeta from '@/Components/Seo/PageMeta.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import { Link, usePage } from '@inertiajs/inertia-vue3'
+import Breadcrumbs from '@/Components/ui/Breadcrumbs.vue'
+import PageMeta from '@/Components/Seo/PageMeta.vue'
 
-  const { props } = usePage()
+const { props } = usePage()
 
-  const role = props.value.role
+const role = props.value.role
 </script>
 
 <template>
@@ -65,13 +65,13 @@
 </template>
 
 <script>
-  function confirmDelete(event) {
-    if (!confirm('Are you sure?')) {
-      event.preventDefault()
-    } else {
-      event.target.submit()
-    }
+function confirmDelete(event) {
+  if (!confirm('Are you sure?')) {
+    event.preventDefault()
+  } else {
+    event.target.submit()
   }
+}
 </script>
 
 <style scoped>
