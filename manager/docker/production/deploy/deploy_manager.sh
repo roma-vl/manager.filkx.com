@@ -58,7 +58,7 @@ done
 # 🔐 Права та структура
 echo "🔐 Налаштування директорій кешу, логів, сховища..."
 docker-compose -f "$DOCKER_COMPOSE_FILE" exec -T -w "$WORKDIR_IN_CONTAINER" manager-php-cli sh -c "\
-    mkdir -p var/cache var/log var/storage/default && \
+    mkdir -p var/cache var/log && \
     chown -R www-data:www-data var && \
     chmod -R 775 var && \
     rm -rf public/storage && \
