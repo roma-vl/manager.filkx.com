@@ -27,7 +27,11 @@ services:
     App\:
         resource: '../src/'
         exclude: '../src/{DependencyInjection,Entity,Tests,Kernel.php,Annotation,Command}'
-#        tags: [ 'messenger.message_handler' ]
+    App\Command\:
+        resource: '../src/Command'
+        tags: [ 'console.command' ]
+
+    #        tags: [ 'messenger.message_handler' ]
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     App\Model\User\Service\ResetTokenizer:

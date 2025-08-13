@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataFixtures\Work\Members;
 
 use App\DataFixtures\UserFixture;
+use App\Model\User\Entity\Account\Account;
 use App\Model\User\Entity\User\User;
 use App\Model\Work\Entity\Members\Group\Group;
 use App\Model\Work\Entity\Members\Member\Email;
@@ -61,6 +62,7 @@ class MemberFixture extends Fixture implements DependentFixtureInterface
 
     private function createMember(User $user, Group $group): Member
     {
+        $account = $this->getReference(UserFixture::REFERENCE_ACCOUNT, Account::class);
         return new Member(
             new Id($user->getId()->getValue()),
             $group,
@@ -68,7 +70,8 @@ class MemberFixture extends Fixture implements DependentFixtureInterface
                 $user->getName()->getFirst(),
                 $user->getName()->getLast()
             ),
-            new Email($user->getEmail() ? $user->getEmail()->getValue() : null)
+            new Email($user->getEmail() ? $user->getEmail()->getValue() : null),
+            $account
         );
     }
 }

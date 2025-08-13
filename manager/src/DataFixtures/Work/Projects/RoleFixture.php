@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\DataFixtures\Work\Projects;
 
+use App\DataFixtures\UserFixture;
+use App\Model\User\Entity\Account\Account;
 use App\Model\Work\Entity\Projects\Role\Id;
 use App\Model\Work\Entity\Projects\Role\Permission;
 use App\Model\Work\Entity\Projects\Role\Role;
@@ -36,10 +38,12 @@ class RoleFixture extends Fixture
 
     private function createRole(string $name, array $permissions): Role
     {
+        $account = $this->getReference(UserFixture::REFERENCE_ACCOUNT, Account::class);
         return new Role(
             Id::next(),
             $name,
-            $permissions
+            $permissions,
+            $account
         );
     }
 }

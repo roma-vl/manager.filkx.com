@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\DataFixtures\Work\Projects;
 
+use App\DataFixtures\UserFixture;
+use App\Model\User\Entity\Account\Account;
 use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Projects\Project\Membership;
 use App\Model\Work\Entity\Projects\Project\Project;
@@ -22,6 +24,7 @@ class TaskFixture extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
+        $account = $this->getReference(UserFixture::REFERENCE_ACCOUNT, Account::class);
         $faker = Factory::create();
 
         $projects = [
@@ -43,17 +46,31 @@ class TaskFixture extends Fixture implements DependentFixtureInterface
             $date = $date->modify('+' . $faker->numberBetween(1, 3) . 'days 3minutes');
 
             if ($faker->boolean(40)) {
-                $task->plan($actor, $date, $date->modify('+' . $faker->numberBetween(1, 30) . 'days'));
+                $task->plan(
+                    $actor,
+                    $date,
+                    $date->modify('+' . $faker->numberBetween(1, 30) . 'days'),
+                    $account
+                );
             }
 
             $memberships = $project->getMemberships();
             foreach ($faker->randomElements($memberships, $faker->numberBetween(0, \count($memberships))) as $membership) {
                 /* @var Membership $membership */
-                $task->assignExecutor($actor, $date, $membership->getMember());
+                $task->assignExecutor(
+                    $actor,
+                    $date,
+                    $membership->getMember(),
+                    $account
+                );
             }
 
             if ($faker->boolean(60)) {
-                $task->changeProgress($actor, $date->modify('+5 hours'), $faker->randomElement([25, 50, 75]));
+                $task->changeProgress(
+                    $actor,
+                    $date->modify('+5 hours'), $faker->randomElement([25, 50, 75]),
+                    $account
+                );
                 $task->changeStatus(
                     $actor,
                     $date->modify('+' . $faker->numberBetween(1, 2) . 'days'),
@@ -63,16 +80,27 @@ class TaskFixture extends Fixture implements DependentFixtureInterface
                         Status::CHECKING,
                         Status::REJECTED,
                         Status::DONE,
-                    ]))
+                    ])),
+                    $account
                 );
             }
 
             if ($faker->boolean()) {
-                $task->changePriority($actor, $date->modify('+3 days'), $faker->randomElement(array_diff([1, 2, 3, 4], [$task->getPriority()])));
+                $task->changePriority(
+                    $actor,
+                    $date->modify('+3 days'),
+                    $faker->randomElement(array_diff([1, 2, 3, 4], [$task->getPriority()])),
+                    $account
+                );
             }
 
             if ($previous && $faker->boolean(30)) {
-                $task->setChildOf($actor, $date->modify('+5 days'), $faker->randomElement($previous));
+                $task->setChildOf(
+                    $actor,
+                    $date->modify('+5 days'),
+                    $faker->randomElement($previous),
+                    $account
+                );
             }
 
             $previous[] = $task;
@@ -95,6 +123,7 @@ class TaskFixture extends Fixture implements DependentFixtureInterface
      */
     private function createRandomTask(Id $id, Project $project, Generator $faker, \DateTimeImmutable $date): Task
     {
+        $account = $this->getReference(UserFixture::REFERENCE_ACCOUNT, Account::class);
         return new Task(
             $id,
             $project,
@@ -103,7 +132,8 @@ class TaskFixture extends Fixture implements DependentFixtureInterface
             new Type($faker->randomElement([Type::NONE, Type::FEATURE, Type::ERROR])),
             $faker->numberBetween(1, 4),
             trim($faker->sentence(random_int(2, 3)), '.'),
-            $faker->paragraphs(3, true)
+            $faker->paragraphs(3, true),
+            $account
         );
     }
 }

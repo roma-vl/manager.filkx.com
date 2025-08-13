@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
+use App\Model\User\Entity\Account\Account;
+use App\Model\User\Entity\Account\Id as AccountId;
 use App\Model\User\Entity\User\Email;
 use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\Name;
@@ -17,7 +19,9 @@ class UserFixture extends Fixture
 {
     public const REFERENCE_ADMIN = 'user_user_admin';
     public const REFERENCE_USER = 'user_user_user';
+    public const REFERENCE_ACCOUNT = 'user_account';
     public const REFERENCE_USER_ME = 'user_user_user_me';
+    private $account;
 
     public function __construct(
         private readonly PasswordHasher $hasher,
@@ -28,20 +32,28 @@ class UserFixture extends Fixture
     {
         echo "Loading user fixture...\n";
 
+        $this->account = Account::create(
+            AccountId::next(),
+            'Demo User',
+            'en'
+        );
+        $manager->persist($this->account);
+        $this->setReference(self::REFERENCE_ACCOUNT, $this->account);
+
         $user = User::signUpByEmail(
             Id::next(),
             new \DateTimeImmutable(),
-            new Name('Roma', 'Volkov'),
-            new Email('Drakyla60@gmail.com'),
+            new Name('Demo', 'User'),
+            new Email('demo@filkx.com'),
             '',
-            'token'
+            'token',
+            $this->account
         );
 
         $hash = $this->hasher->hash($user, '11111111');
         $user->updatePasswordHash($hash);
 
         $user->confirmSignUp();
-        $user->changeRole(Role::admin());
 
         $manager->persist($user);
         $this->setReference(self::REFERENCE_USER_ME, $user);
@@ -89,10 +101,7 @@ class UserFixture extends Fixture
 
     private function createAdminByEmail(Name $name, Email $email, string $hash): User
     {
-        $user = $this->createSignUpConfirmedByEmail($name, $email, $hash);
-        $user->changeRole(Role::admin());
-
-        return $user;
+        return $this->createSignUpConfirmedByEmail($name, $email, $hash);
     }
 
     private function createSignUpConfirmedByEmail(Name $name, Email $email, string $hash): User
@@ -111,7 +120,8 @@ class UserFixture extends Fixture
             $name,
             $email,
             $hash,
-            'token'
+            'token',
+            $this->account
         );
     }
 
@@ -122,7 +132,8 @@ class UserFixture extends Fixture
             new \DateTimeImmutable(),
             $name,
             $network,
-            $identity
+            $identity,
+            $this->account,
         );
     }
 }

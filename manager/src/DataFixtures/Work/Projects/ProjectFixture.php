@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\DataFixtures\Work\Projects;
 
+use App\DataFixtures\UserFixture;
 use App\DataFixtures\Work\Members\MemberFixture;
+use App\Model\User\Entity\Account\Account;
 use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Projects\Project\Department\Id as DepartmentId;
 use App\Model\Work\Entity\Projects\Project\Id;
@@ -21,6 +23,7 @@ class ProjectFixture extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
+        $account = $this->getReference(UserFixture::REFERENCE_ACCOUNT, Account::class);
         $admin = $this->getReference(MemberFixture::REFERENCE_ADMIN, Member::class);
         $user = $this->getReference(MemberFixture::REFERENCE_USER, Member::class);
         $userMe = $this->getReference(MemberFixture::REFERENCE_USER_ME, Member::class);
@@ -30,8 +33,16 @@ class ProjectFixture extends Fixture implements DependentFixtureInterface
 
         $active = $this->createProject('First Project', 1);
 
-        $active->addDepartment($development = DepartmentId::next(), 'Development');
-        $active->addDepartment($marketing = DepartmentId::next(), 'Marketing');
+        $active->addDepartment(
+            $development = DepartmentId::next(),
+            'Development',
+            $account
+        );
+        $active->addDepartment(
+            $marketing = DepartmentId::next(),
+            'Marketing',
+            $account
+        );
         $active->addMember($admin, [$development], [$manage]);
         $active->addMember($user, [$marketing], [$guest]);
         $active->addMember($userMe, [$marketing], [$manage]);
@@ -41,7 +52,10 @@ class ProjectFixture extends Fixture implements DependentFixtureInterface
 
         $active = $this->createProject('Second Project', 2);
 
-        $active->addDepartment($development = DepartmentId::next(), 'Development');
+        $active->addDepartment(
+            $development = DepartmentId::next(),
+            'Development',
+            $account);
         $active->addMember($admin, [$development], [$guest]);
 
         $manager->persist($active);
@@ -63,10 +77,12 @@ class ProjectFixture extends Fixture implements DependentFixtureInterface
 
     private function createProject(string $name, int $sort): Project
     {
+        $account = $this->getReference(UserFixture::REFERENCE_ACCOUNT, Account::class);
         return new Project(
             Id::next(),
             $name,
-            $sort
+            $sort,
+            $account
         );
     }
 

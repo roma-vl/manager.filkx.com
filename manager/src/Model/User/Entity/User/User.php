@@ -112,9 +112,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->confirmToken = null;
     }
 
-    public static function signUpByNetwork(Id $id, \DateTimeImmutable $date, Name $name, string $network, string $identity): self
+    public static function signUpByNetwork(Id $id, \DateTimeImmutable $date, Name $name, string $network, string $identity, Account $account): self
     {
         $user = new self($id, $date, $name);
+        $user->account = $account;
+        $user->locale = $account->getLocale();
         $user->attachNetwork($network, $identity);
         $user->status = self::STATUS_ACTIVE;
 

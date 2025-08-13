@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\DataFixtures\Work\Members;
 
+use App\DataFixtures\UserFixture;
+use App\Model\User\Entity\Account\Account;
 use App\Model\Work\Entity\Members\Group\Group;
 use App\Model\Work\Entity\Members\Group\Id;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -16,16 +18,19 @@ class GroupFixture extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        $account = $this->getReference(UserFixture::REFERENCE_ACCOUNT, Account::class);
         $staff = new Group(
             Id::next(),
-            'Our Staff'
+            'Our Staff',
+            $account
         );
         $manager->persist($staff);
         $this->setReference(self::REFERENCE_STAFF, $staff);
 
         $customers = new Group(
             Id::next(),
-            'Customers'
+            'Customers',
+            $account
         );
 
         $manager->persist($customers);
