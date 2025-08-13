@@ -118,20 +118,18 @@ function submit() {
         </button>
       </form>
 
-      <div class="mt-6 space-y-2">
+        <div class="flex items-center my-6">
+            <div class="flex-grow border-t border-gray-300"></div>
+            <span class="mx-4 text-gray-500 font-medium">OR</span>
+            <div class="flex-grow border-t border-gray-300"></div>
+        </div>
+
         <a
-          href="/oauth/facebook"
-          class="block text-center py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            href="/login"
+            class="block w-full text-center py-2 bg-green-600 text-white rounded hover:bg-green-700 transition font-semibold shadow-sm"
         >
-          Sign Up with Facebook
+            Login
         </a>
-        <a
-          href="/oauth/google"
-          class="block text-center py-2 bg-red-600 text-white rounded hover:bg-red-700"
-        >
-          Sign Up with Google
-        </a>
-      </div>
     </div>
   </div>
 </template>
