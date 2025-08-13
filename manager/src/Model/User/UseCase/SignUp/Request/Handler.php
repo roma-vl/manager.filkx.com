@@ -16,12 +16,22 @@ use App\Model\User\Entity\User\UserRepository;
 use App\Model\User\Service\PasswordHasher;
 use App\Model\User\Service\SignUpConfirmTokenizer;
 use App\Model\User\Service\SignUpConfirmTokenSender;
+use App\Model\Work\Entity\Members\Group\Group;
+use App\Model\Work\Entity\Members\Group\GroupRepository;
+use App\Model\Work\Entity\Members\Group\Id as MembersGroupId;
+use App\Model\Work\Entity\Members\Member\Email as MemberEmail;
+use App\Model\Work\Entity\Members\Member\Id as MemberId;
+use App\Model\Work\Entity\Members\Member\Member;
+use App\Model\Work\Entity\Members\Member\MemberRepository;
+use App\Model\Work\Entity\Members\Member\Name as MemberName;
 
 class Handler
 {
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly AccountRepository $accountRepository,
+        private readonly GroupRepository $groupRepository,
+        private readonly MemberRepository $memberRepository,
         private readonly PasswordHasher $hasher,
         private readonly SignUpConfirmTokenizer $tokenizer,
         private readonly SignUpConfirmTokenSender $sender,
@@ -38,7 +48,7 @@ class Handler
         }
         $account = Account::create(
             AccountId::next(),
-            'Мій перший акаунт',
+            $command->firstName . ' ' .  $command->lastName,
             'en'
         );
 
@@ -63,6 +73,27 @@ class Handler
         $account->setOwner($user);
 
         $this->accountRepository->add($account);
+
+        $group = new Group(
+            MembersGroupId::next(),
+            'Default Group',
+            $account
+        );
+
+        $this->groupRepository->add($group);
+
+        $member = new Member(
+            new MemberId($user->getId()->getValue()),
+            $group,
+            new MemberName(
+                $command->firstName,
+                $command->lastName
+            ),
+            new MemberEmail($command->email),
+            $account
+        );
+
+        $this->memberRepository->add($member);
 
         $this->sender->send($email, $token);
         $this->flusher->flush();
