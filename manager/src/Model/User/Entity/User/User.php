@@ -97,6 +97,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $user->confirmToken = $token;
         $user->status = self::STATUS_WAIT;
         $user->locale = $account->getLocale();
+        $user->role = Role::admin();
 
         return $user;
     }
